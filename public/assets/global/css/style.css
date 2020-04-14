@@ -1,0 +1,85 @@
+/*
+@Author: ThemeMascot
+@URL: http://ThemeMascot.com
+
+This is the file where you can add your custom styles to change the look of the
+theme. But don't modify style-main.css file.
+
+*/
+
+/* Your custom css codes start here: */
+
+
+@font-face {
+    font-family: 'Samim';
+    src: url("/public/fonts/Samim.eot"); /* IE9 Compat Modes */
+    src: url("/public/fonts/Samim.eot?#iefix") format('embedded-opentype'), /* IE6-IE8 */ url("/public/fonts/Samim.woff2") format('woff2'), /* Super Modern Browsers */ url("/public/fonts/Samim.woff") format('woff'), /* Pretty Modern Browsers */ url("/public/fonts/Samim.ttf") format('truetype'), /* Safari, Android, iOS */ url("/public/fonts/Samim.svg#svgFontName") format('svg'); /* Old iOS */
+}
+
+@font-face {
+    font-family: 'BSamim';
+    src: url("/public/fonts/Samim-Bold.eot"); /* IE9 Compat Modes */
+    src: url("/public/fonts/Samim-Bold.eot?#iefix") format('embedded-opentype'), /* IE6-IE8 */ url("/public/fonts/Samim-Bold.woff2") format('woff2'), /* Super Modern Browsers */ url("/public/fonts/Samim-Bold.woff") format('woff'), /* Pretty Modern Browsers */ url("/public/fonts/Samim-Bold.ttf") format('truetype'), /* Safari, Android, iOS */ url("/public/fonts/Samim-Bold.svg#svgFontName") format('svg'); /* Old iOS */
+}
+
+
+body {
+    font-family: Samim !Important;
+}
+
+::-webkit-input-placeholder {
+    text-align: right;
+}
+
+input:-moz-placeholder {
+    text-align: right;
+}
+
+.post-thumb-img{
+    width:120px;
+    height:120px;
+    object-fit:cover;
+}
+.post-side-thumb-img{
+    width:75px;
+    height:75px;
+    object-fit:cover;
+}
+
+.comment-thumb-img{
+    width:85px;
+    height:85px;
+    object-fit:cover;
+}
+
+
+.bordered_box{
+    border-bottom: 2px solid;
+    border-top: 1px solid;
+    border-color: #26b1d9;
+}
+/* width */
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px grey;
+    border-radius: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #263b32;
+    border-radius: 3px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #1a2720;
+}
+.thumbnail {
+    border: initial !important;
+    box-shadow: 0 1px 15px rgba(0, 0, 0, .04), 0 1px 6px rgba(0, 0, 0, .04) !important;
+}
