@@ -180,7 +180,7 @@ class global_view extends Controller
 
         $smsData = [
             'phone'=>$user->phone,
-            'name'=>$user->code_phone,
+            'code'=>$user->code_phone,
         ];
         event(new confirmPhone($smsData));
 
