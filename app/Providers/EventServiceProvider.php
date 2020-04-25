@@ -7,6 +7,7 @@ use App\Events\paymentReminder;
 use App\Events\payToCharityMoney;
 use App\Events\storePaymentConfirmation;
 use App\Events\userRegisterEvent;
+use App\Events\confirmPhone;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
 class EventServiceProvider extends ServiceProvider
@@ -38,10 +39,14 @@ class EventServiceProvider extends ServiceProvider
             \App\Listeners\store\smsListener::class,
         ],
         charityPaymentConfirmation::class=>
-        [
-            \App\Listeners\charity\mailListener::class,
-            \App\Listeners\charity\smsListener::class,
-        ]
+            [
+                \App\Listeners\charity\mailListener::class,
+                \App\Listeners\charity\smsListener::class,
+            ],
+        confirmPhone::class=>
+            [
+                \App\Listeners\confirmPhone\smsListener::class,
+            ]
     ];
 
     /**

@@ -17,6 +17,7 @@ use App\charity_transaction;
 use App\charity_transactions_value;
 use App\city;
 use App\Events\charityPaymentConfirmation;
+use App\Events\confirmPhone;
 use App\Events\payToCharityMoney;
 use App\Events\storePaymentConfirmation;
 use App\Events\userRegisterEvent;
@@ -177,7 +178,11 @@ class global_view extends Controller
         $user->code_phone_send = date("Y-m-d H:i:s");
         $user->save();
 
-        // SMS EVENT
+        $smsData = [
+            'phone'=>$user->phone,
+            'name'=>$user->code_phone,
+        ];
+        event(new confirmPhone($smsData));
 
         return view('global.materials.sms');
     }
