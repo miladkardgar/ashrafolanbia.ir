@@ -523,7 +523,7 @@ class global_controller extends Controller
                 if ($user->code_phone == $request['code']) {
                     $user->phone_verified_at = date("Y-m-d H:i:s");
                     $user->save();
-                    return back_normal($request, ['message' => __('messages.phone_verified')]);
+                    return redirect(route('global_profile'))->with('message',__('messages.phone_verified'))  ;
                 } else {
                     return back_error($request, __('messages.code_invalid'));
                 }

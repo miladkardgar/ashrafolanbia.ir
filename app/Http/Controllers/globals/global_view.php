@@ -184,7 +184,7 @@ class global_view extends Controller
         ];
         event(new confirmPhone($smsData));
 
-        return view('global.materials.sms');
+        return redirect(route('global_profile'));
     }
 
     public function send_email()
