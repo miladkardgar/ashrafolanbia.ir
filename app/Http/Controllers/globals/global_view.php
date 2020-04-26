@@ -574,7 +574,7 @@ class global_view extends Controller
 
         if ($res == true) {
             $phone = null;
-            $email = "";
+            $email = "info@ashrafolanbia.ir";
             $amount = 0;
             $reason = "";
             $name = "";
