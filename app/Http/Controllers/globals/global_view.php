@@ -574,6 +574,10 @@ class global_view extends Controller
         }
 
         if ($res == true) {
+            $phone = null;
+            $amount = 0;
+            $reason = "";
+            $name = "";
             $gateway = config('gateway.table', 'gateway_transactions');
             $data = \DB::table($gateway)->find($request['transaction_id']);
             if ($data->module == "charity_donate" || $data->module == "charity_vow") {
@@ -582,24 +586,18 @@ class global_view extends Controller
                 $charity->payment_date = date("Y-m-d H:i:s", time());
                 if ($charity['user_id'] != 0) {
                     $user = User::find($charity['user_id']);
-                    $mobile = $user['phone'];
+                    $phone = $user['phone'];
                 } else {
                     if ($charity['phone'] != "") {
-                        $mobile = $charity['phone'];
+                        $phone = $charity['phone'];
                     }
                 }
                 $charity->save();
-                if($charity->phone){
+                $name = $charity->name;
+                $amount = $charity->amount;
                     $this_charity = charity_payment_title::find($charity->title_id);
-                    $smsData = [
-                        'phone'=>$charity->phone,
-                        'name'=>$charity->name,
-                        'date'=>jdate('Y-n-j'),
-                        'price'=>number_format($charity->amount),
-                        'reason'=>($this_charity ? $this_charity['title']:" -- "),
-                    ];
-                    event(new payToCharityMoney($smsData));
-                }
+                $reason =($this_charity ? $this_charity['title']:" خیریه ");
+
                 $messages['des'] = $charity['title']['title'];
             } elseif ($data->module == "charity_period") {
                 $charity = charity_periods_transaction::findOrFail($data->module_id);
@@ -607,36 +605,31 @@ class global_view extends Controller
                 $charity->pay_date = date("Y-m-d H:i:s", time());
                 $messages['des'] = __('messages.charity_period');
                 $user = User::find($charity['user_id']);
-                $mobile = $user['phone'];
                 $charity->save();
-                if($mobile and $user->people){
+                $phone = $user['phone'];
+                if($user->people){
                     $name = ($user->people->gender == 1 ? " آقای " :" خانم "). $user->people->name." ".$user->people->name;
-                    $smsData = [
-                        'phone'=>$mobile,
-                        'name'=>$name,
-                        'date'=>jdate('Y-n-j'),
-                        'price'=>number_format($charity->amount),
-                        'reason'=>$charity->description,
-                    ];
-                    event(new payToCharityMoney($smsData));
                 }
+                $amount = $charity->amount;
+                $reason =$charity->description;
+
+
             } elseif ($data->module == "charity_champion") {
                 $charity = champion_transaction::with('champion')->findOrFail($data->module_id);
                 $charity->status = 'paid';
                 $messages['des'] = $charity['champion']['title'];
-                $mobile=0;
-                $name="";
                 if ($charity['user_id'] != 0) {
                     $user = User::find($charity['user_id']);
-                    $mobile = $user['phone'];
+                    $phone = $user['phone'];
                     $name = ($user->people->gender == 1 ? " آقای " :" خانم "). $user->people->name." ".$user->people->name;
                 } else {
                     if ($charity['phone'] != "") {
-                        $mobile = $charity['phone'];
+                        $phone = $charity['phone'];
                         $name = $charity['name'];
                     }
                 }
                 $charity->save();
+
                 $sum = champion_transaction::where(
                     [
                         'champion_id' => $charity['champion_id'],
@@ -648,17 +641,11 @@ class global_view extends Controller
                         'raised' => $sum
                     ]
                 );
-                if ($mobile != 0) {
-                    $chapion = charity_champion::find($charity['champion_id']);
-                    $smsData = [
-                        'phone'=>$mobile,
-                        'name'=>$name,
-                        'date'=>jdate('Y-n-j'),
-                        'price'=>number_format($charity->amount),
-                        'reason'=>($chapion ? $chapion['title']:" - "),
-                    ];
-                    event(new payToCharityMoney($smsData));
-                }
+                $chapion = charity_champion::find($charity['champion_id']);
+                $amount = $charity->amount;
+                $reason = ($chapion ? $chapion['title']:" کمپین خیریه ");
+
+
 
             } elseif ($data->module == "shop") {
                 $charity = order::findOrFail($data->module_id);
@@ -674,9 +661,21 @@ class global_view extends Controller
             $messages['result'] = "success";
             $messages['name'] = $charity->name;
             $messages['trackingCode'] = $request['transaction_id'];
-            $messages['date'] = jdate("Y/m/d");
+            $messages['date'] = jdate("Y/n/j");
 
             $messages['amount'] = number_format($charity->amount) . " " . __('messages.rial');
+
+            if($phone and $amount>0){
+                $smsData = [
+                    'phone'=> $phone,
+                    'name'=>$name,
+                    'date'=>jdate('Y/n/j'),
+                    'price'=>number_format($amount),
+                    'reason'=>$reason,
+                ];
+                event(new payToCharityMoney($smsData));
+            }
+
             return view('global.callbackmain', compact('messages'));
         } else {
             $gateway = config('gateway.table', 'gateway_transactions');
