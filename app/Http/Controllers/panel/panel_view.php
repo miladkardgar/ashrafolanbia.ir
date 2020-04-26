@@ -23,6 +23,7 @@ use App\charity_period;
 use App\charity_periods_transaction;
 use App\charity_transaction;
 use App\city;
+use App\Events\payToCharityMoney;
 use App\gallery_category;
 use App\gateway;
 use App\gateway_transaction;
@@ -837,7 +838,7 @@ class panel_view extends Controller
 
     public function charity_payment_list()
     {
-        $otherPayments = charity_transaction::with('values', 'user', 'patern', 'title','tranInfo')->get();
+        $otherPayments = charity_transaction::with('values', 'user', 'patern', 'title', 'tranInfo')->get();
         return view('panel.charity.other_payment.list', compact('periods', 'payments', 'paymentsApprove', 'otherPayments'));
     }
 
@@ -886,7 +887,7 @@ class panel_view extends Controller
         $gateway = DB::table('gateway_transactions')->select(DB::raw('port'))->groupBy('port')->get();
         $titles = charity_payment_title::get();
         $gateway = json_decode($gateway, true);
-        return view('panel.charity.reports.report', compact('gateway','titles'));
+        return view('panel.charity.reports.report', compact('gateway', 'titles'));
     }
 //end charity module
 
@@ -991,14 +992,14 @@ class panel_view extends Controller
 
     public function manage_orders_detail(Request $request)
     {
-        $orders = order::with('items','address','people', 'gateway')->find($request['id']);
-        $transInfo= gateway_transaction::where(
+        $orders = order::with('items', 'address', 'people', 'gateway')->find($request['id']);
+        $transInfo = gateway_transaction::where(
             [
-                ['module','=','shop'],
-                ['module_id','=',$request['id']],
+                ['module', '=', 'shop'],
+                ['module_id', '=', $request['id']],
             ]
         )->get();
-        return view('panel.store.manage.show', compact('orders','transInfo'));
+        return view('panel.store.manage.show', compact('orders', 'transInfo'));
     }
 
     public function store_setting()
@@ -1160,26 +1161,34 @@ class panel_view extends Controller
     public function test()
     {
 
-$message = jdate('Y-n-j');
-        return $message;
+        $amount = 30000;
+        $phone = "09365944410";
+        $name = "مهران مرندی";
+        $reason = "تست سامانه";
+        $email = "mehranmarandi90@gmail.com";
+        $messages['des'] = __('messages.shop_order');
+        $messages['result'] = "success";
+        $messages['name'] = "مهران مرندی";
+        $messages['trackingCode'] = "2323423";
+        $messages['date'] = jdate("Y/n/j");
 
-//        $template = notification_template::where('key','new_register')->first();
-//        $message = str_replace("{name}","مهران مرندی",$template->text);
-//        sendSms('09365944410',$message);
+        $messages['amount'] = number_format($amount) . " " . __('messages.rial');
 
-//        $messages['name'] = 'میلاد کاردگر';
-//        $messages['date'] = '1398/10/22';
-//        $messages['amount'] = '10000 ریال';
-//        $messages['des'] = 'پرداخت ماهیانه';
-//        $messages['trackingCode'] = '12544852';
-//        return view('global.callbackmain', compact('messages'));
-//        Artisan::call('Create:NextDateIfNull');
-//        Artisan::call('Create:NextDateIfInactive');
-//        Artisan::call('Create:charityPeriod');
-//        Artisan::call('notify:periodLate');
-//        Artisan::call('notify:periodCreation');
-        return "done";
+        if ($phone and $amount > 0) {
+            $smsData = [
+                'phone' => $phone,
+                'name' => $name,
+                'date' => jdate('Y/n/j'),
+                'price' => number_format($amount),
+                'reason' => $reason,
+            ];
+            $mailData = [
+                'address' => $email,
+                'messages' => $messages,
+            ];
+            event(new payToCharityMoney($smsData, $mailData));
+            return "done";
 
-
+        }
     }
 }
