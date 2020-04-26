@@ -3,8 +3,10 @@
 namespace App\Listeners\payment;
 
 use App\Events\payToCharityMoney;
+use App\Mail\payment_confirmation;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Support\Facades\Mail;
 
 class mailListener
 {
@@ -26,6 +28,7 @@ class mailListener
      */
     public function handle(payToCharityMoney $event)
     {
-        //
+        Mail::to($event->mailData['address'])->send(new payment_confirmation($event->mailData['messages']));
+
     }
 }

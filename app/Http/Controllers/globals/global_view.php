@@ -551,7 +551,6 @@ class global_view extends Controller
             $trackingCode = $gateway->trackingCode();
             $refId = $gateway->refId();
             $cardNumber = $gateway->cardNumber();
-            $mobile = 0;
             $res = true;
 
         } catch (\Larabookir\Gateway\Exceptions\RetryException $e) {
@@ -575,6 +574,7 @@ class global_view extends Controller
 
         if ($res == true) {
             $phone = null;
+            $email = "";
             $amount = 0;
             $reason = "";
             $name = "";
@@ -587,9 +587,11 @@ class global_view extends Controller
                 if ($charity['user_id'] != 0) {
                     $user = User::find($charity['user_id']);
                     $phone = $user['phone'];
+                    $email = $user['email'];
                 } else {
                     if ($charity['phone'] != "") {
                         $phone = $charity['phone'];
+                        $email = $charity['email'];
                     }
                 }
                 $charity->save();
@@ -607,6 +609,8 @@ class global_view extends Controller
                 $user = User::find($charity['user_id']);
                 $charity->save();
                 $phone = $user['phone'];
+                $email = $user['email'];
+
                 if($user->people){
                     $name = ($user->people->gender == 1 ? " آقای " :" خانم "). $user->people->name." ".$user->people->name;
                 }
@@ -621,10 +625,12 @@ class global_view extends Controller
                 if ($charity['user_id'] != 0) {
                     $user = User::find($charity['user_id']);
                     $phone = $user['phone'];
+                    $email = $user['email'];
                     $name = ($user->people->gender == 1 ? " آقای " :" خانم "). $user->people->name." ".$user->people->name;
                 } else {
                     if ($charity['phone'] != "") {
                         $phone = $charity['phone'];
+                        $email = $charity['email'];
                         $name = $charity['name'];
                     }
                 }
@@ -673,7 +679,11 @@ class global_view extends Controller
                     'price'=>number_format($amount),
                     'reason'=>$reason,
                 ];
-                event(new payToCharityMoney($smsData));
+                $mailData = [
+                    'address'=> $email,
+                    'messages'=>$messages,
+                ];
+                event(new payToCharityMoney($smsData,$mailData));
             }
 
             return view('global.callbackmain', compact('messages'));

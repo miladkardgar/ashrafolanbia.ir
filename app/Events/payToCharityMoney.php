@@ -14,15 +14,17 @@ class payToCharityMoney
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
     public $smsData;
+    public $mailData;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct($smsData)
+    public function __construct($smsData,$mailData)
     {
         $this->smsData = $smsData;
+        $this->mailData = $mailData;
     }
 
     /**

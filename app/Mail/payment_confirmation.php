@@ -10,22 +10,24 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 class payment_confirmation extends Mailable
 {
     use Queueable, SerializesModels;
-    public $name;
-    public $date;
-    public $amount;
-    public $ref_id;
+//    public $name;
+//    public $date;
+//    public $amount;
+//    public $ref_id;
+    public $messages;
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($name)
+    public function __construct($messages)
     {
-        $this->name =$name;
-        $this->date ="9/5/98";
-        $this->amount ='90000000';
-        $this->ref_id ='430495304-3453';
+//        $this->name =$name;
+//        $this->date ="9/5/98";
+//        $this->amount ='90000000';
+//        $this->ref_id ='430495304-3453';
                //
+        $this->messages = $messages;
     }
 
     /**
@@ -36,6 +38,8 @@ class payment_confirmation extends Mailable
     public function build()
     {
 
-        return $this->view('mail.payment_confirmation');
+        return $this->view('global.callbackmain');
+//        return view('global.callbackmain', compact('messages'));
+
     }
 }
