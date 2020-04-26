@@ -875,7 +875,7 @@ function sendSms ($mobile,$body,$farsi=true) {
             'uPassword' => '131571',
             'uNumber' => 1000454646, //شماره اختصاصی
             'uCellphones' => $mobile,
-            'uMessage' => $body,
+            'uMessage' => str_replace("&nbsp;", "", strip_tags($body)),
             'uFarsi' => $farsi
         );
         $results = $client->call('doSendSMS', $param);
@@ -883,6 +883,8 @@ function sendSms ($mobile,$body,$farsi=true) {
     }
     /*include ('/home/ashraf/public_html/include/libs/class.sms.php');
     $sms = new sms();
+    $content = str_replace("&nbsp;", "", $string);
+
     $sms->SendSMS($mobile, $body);*/
 }
 

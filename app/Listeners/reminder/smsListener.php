@@ -33,7 +33,7 @@ class smsListener
             $people = person::where('user_id')->get();
             $name = "";
             if ($people){
-            $name = ($people->gender == 1 ? " آقای " :" خانم "). $people->name." ".$people->name;
+            $name = ($people->gender == 1 ? " آقای " :" خانم "). $people->name." ".$people->family;
             }
 
             $message = str_replace("{name}",$name,$template->text);

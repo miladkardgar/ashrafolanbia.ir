@@ -26,6 +26,7 @@ use App\city;
 use App\gallery_category;
 use App\gateway;
 use App\gateway_transaction;
+use App\notification_template;
 use App\order;
 use App\period;
 use App\Permission;
@@ -1158,15 +1159,19 @@ class panel_view extends Controller
 
     public function test()
     {
-        $messages['name'] = 'میلاد کاردگر';
-        $messages['date'] = '1398/10/22';
-        $messages['amount'] = '10000 ریال';
-        $messages['des'] = 'پرداخت ماهیانه';
-        $messages['trackingCode'] = '12544852';
-        return view('global.callbackmain', compact('messages'));
-        Artisan::call('Create:NextDateIfNull');
-        Artisan::call('Create:NextDateIfInactive');
-        Artisan::call('Create:charityPeriod');
+        $template = notification_template::where('key','new_register')->first();
+        $message = str_replace("{name}","مهران مرندی",$template->text);
+        sendSms('09365944410',$message);
+
+//        $messages['name'] = 'میلاد کاردگر';
+//        $messages['date'] = '1398/10/22';
+//        $messages['amount'] = '10000 ریال';
+//        $messages['des'] = 'پرداخت ماهیانه';
+//        $messages['trackingCode'] = '12544852';
+//        return view('global.callbackmain', compact('messages'));
+//        Artisan::call('Create:NextDateIfNull');
+//        Artisan::call('Create:NextDateIfInactive');
+//        Artisan::call('Create:charityPeriod');
 //        Artisan::call('notify:periodLate');
 //        Artisan::call('notify:periodCreation');
         return "done";

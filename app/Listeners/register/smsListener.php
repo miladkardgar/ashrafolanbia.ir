@@ -27,7 +27,7 @@ class smsListener
      */
     public function handle(userRegisterEvent $event)
     {
-        //
+
         if ($event->user->phone){
             $template = notification_template::where('key','new_register')->first();
             $message = str_replace("{name}",$event->user->name,$template->text);
