@@ -44,8 +44,12 @@ class CreateCharityPeriod extends Command
 
         $charity = charity_period::where('status','active')->where("next_date","<=",date("Y-m-d"))->get();
         foreach ($charity as $item) {
-            $nextTimeStrTime = strtotime($item['next_date']." +".$item['period'] ." months");
-            $newNextDate =  date("Y-m-d",$nextTimeStrTime);
+            $newNextDate = $item['next_date'];
+            for ($i=1 ; $i<=$item['period'];$i++){
+                $monthDays = jdate('t',strtotime($newNextDate));
+                $nextTimeStrTime = strtotime($newNextDate." +". latin_num($monthDays) ." days");
+                $newNextDate =  date("Y-m-d",$nextTimeStrTime);
+            }
                 $exists = charity_periods_transaction::where('period_id',$item['id'])
                     ->where('payment_date',$item['next_date'])->exists();
 

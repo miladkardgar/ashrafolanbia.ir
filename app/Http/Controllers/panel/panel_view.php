@@ -1159,9 +1159,20 @@ class panel_view extends Controller
 
     public function test()
     {
-        $template = notification_template::where('key','new_register')->first();
-        $message = str_replace("{name}","مهران مرندی",$template->text);
-        sendSms('09365944410',$message);
+
+        $newNextDate = date('Y-m-d H:i:s');
+
+        for ($i=1 ; $i<=7;$i++){
+            $monthDays = jdate('t',strtotime($newNextDate));
+            $nextTimeStrTime = strtotime($newNextDate." +". latin_num($monthDays) ." days");
+            $newNextDate =  date("Y-m-d",$nextTimeStrTime);
+        }
+
+        dd(miladi_to_shamsi_date($newNextDate));
+
+//        $template = notification_template::where('key','new_register')->first();
+//        $message = str_replace("{name}","مهران مرندی",$template->text);
+//        sendSms('09365944410',$message);
 
 //        $messages['name'] = 'میلاد کاردگر';
 //        $messages['date'] = '1398/10/22';
