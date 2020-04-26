@@ -37,7 +37,7 @@
                         <div class="card-body ">
 
                             <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-9">
 
                             <form method="post" action="{{route('notification_template.update',[$template['id']])}}">
                                 @csrf
@@ -56,7 +56,7 @@
                                 </div>
                             </form>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <div class="card">
                                     <div class="card-header">
                                         {{__('words.variables')}}

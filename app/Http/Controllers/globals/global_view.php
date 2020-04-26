@@ -577,7 +577,7 @@ class global_view extends Controller
             $gateway = config('gateway.table', 'gateway_transactions');
             $data = \DB::table($gateway)->find($request['transaction_id']);
             if ($data->module == "charity_donate" || $data->module == "charity_vow") {
-                $charity = charity_transaction::findOrFail($data->module_id);
+                $charity = charity_transaction::with('title')->findOrFail($data->module_id);
                 $charity->status = 'success';
                 $charity->payment_date = date("Y-m-d H:i:s", time());
                 if ($charity['user_id'] != 0) {
@@ -590,9 +590,13 @@ class global_view extends Controller
                 }
                 $charity->save();
                 if($charity->phone){
+                    $this_charity = charity_payment_title::find($charity->title_id);
                     $smsData = [
                         'phone'=>$charity->phone,
                         'name'=>$charity->name,
+                        'date'=>jdate('Y-n-j'),
+                        'price'=>number_format($charity->amount),
+                        'reason'=>($this_charity ? $this_charity['title']:" -- "),
                     ];
                     event(new payToCharityMoney($smsData));
                 }
@@ -610,6 +614,9 @@ class global_view extends Controller
                     $smsData = [
                         'phone'=>$mobile,
                         'name'=>$name,
+                        'date'=>jdate('Y-n-j'),
+                        'price'=>number_format($charity->amount),
+                        'reason'=>$charity->description,
                     ];
                     event(new payToCharityMoney($smsData));
                 }
@@ -642,9 +649,13 @@ class global_view extends Controller
                     ]
                 );
                 if ($mobile != 0) {
+                    $chapion = charity_champion::find($charity['champion_id']);
                     $smsData = [
                         'phone'=>$mobile,
                         'name'=>$name,
+                        'date'=>jdate('Y-n-j'),
+                        'price'=>number_format($charity->amount),
+                        'reason'=>($chapion ? $chapion['title']:" - "),
                     ];
                     event(new payToCharityMoney($smsData));
                 }

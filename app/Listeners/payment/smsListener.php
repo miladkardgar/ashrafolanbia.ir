@@ -27,9 +27,17 @@ class smsListener
      */
     public function handle(payToCharityMoney $event)
     {
+
         if (isset($event->smsData['phone'])){
             $template = notification_template::where('key','payConfirm')->first();
-            $message = str_replace("{name}",$event->smsData['name'],$template->text);
+
+            $message = $template->text;
+            $variables = explode(',',$template['variables']);
+            foreach ($variables as $variable){
+                $newVariable = (isset($event->smsData[$variable])? $event->smsData[$variable]:" -- ");
+                $message = str_replace("{".$variable."}",$newVariable,$message);
+            }
+
             sendSms($event->smsData['phone'],$message);
         }
     }
