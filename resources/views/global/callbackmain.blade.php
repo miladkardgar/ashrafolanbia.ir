@@ -480,7 +480,7 @@
 
                     <!-- Sharingbutton E-Mail -->
                     <a class="resp-sharing-button__link"
-                       href="mailto:?subject={{$messages['share']}}&amp;body=http%3A%2F%2Fashrafolanbia.ir%2F"
+                       href="mailto:?subject=رسید پرداخت &amp;body={{$messages['share']}}%2F"
                        target="_self" rel="noopener" aria-label="Share by E-Mail">
                         <div class="resp-sharing-button resp-sharing-button--email resp-sharing-button--large">
                             <div aria-hidden="true" class="resp-sharing-button__icon resp-sharing-button__icon--solid">
