@@ -86,27 +86,26 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     @foreach($charity['fields'] as $fi)
-
                                         <div class="col-md-12">
                                             <div class="form-group">
-                                                <label>{{$fi['label']}}<span class="text-danger">{{$fi['required'] ?"*":""}}</span></label>
+                                                <label>{{$fi['label']}}<span class="text-danger">{{$fi['require'] ?"*":""}}</span></label>
                                                 @switch($fi['type'])
                                                     @case(0)
-                                                    <input type="text" class="form-control" {{$fi['required'] ?"required":""}} name="field[{{$fi['id']}}]">
+                                                    <input type="text" class="form-control" {{$fi['require'] ?"required":""}} name="field[{{$fi['id']}}]">
                                                     @break
                                                     @case(1)
-                                                    <textarea name="field[{{$fi['id']}}]" {{$fi['required'] ?"required":""}} class="form-control"
+                                                    <textarea name="field[{{$fi['id']}}]" {{$fi['require'] ?"required":""}} class="form-control"
                                                               id="field[{{$fi['id']}}]" cols="30" rows="3"></textarea>
                                                     @break
                                                     @case(2)
-                                                    <input type="number" {{$fi['required'] ?"required":""}} class="form-control"
+                                                    <input type="number" {{$fi['require'] ?"required":""}} class="form-control"
                                                            name="field[{{$fi['id']}}]">
                                                     @break
                                                     @case(3)
-                                                    <input type="date" {{$fi['required'] ?"required":""}} class="form-control" name="field[{{$fi['id']}}]">
+                                                    <input type="date" {{$fi['require'] ?"required":""}} class="form-control" name="field[{{$fi['id']}}]">
                                                     @break
                                                     @case(4)
-                                                    <input type="time" {{$fi['required'] ?"required":""}} class="form-control" name="field[{{$fi['id']}}]">
+                                                    <input type="time" {{$fi['require'] ?"required":""}} class="form-control" name="field[{{$fi['id']}}]">
                                                     @break
                                                 @endswitch
                                             </div>
