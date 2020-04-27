@@ -29,6 +29,5 @@ class mailListener
     public function handle(payToCharityMoney $event)
     {
         Mail::to($event->mailData['address'])->send(new payment_confirmation($event->mailData['messages']));
-
     }
 }
