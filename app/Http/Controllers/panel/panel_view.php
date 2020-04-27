@@ -1161,34 +1161,14 @@ class panel_view extends Controller
     public function test()
     {
 
-        $amount = 30000;
-        $phone = "09365944410";
-        $name = "مهران مرندی";
-        $reason = "تست سامانه";
-        $email = "mehranmarandi90@gmail.com";
-        $messages['des'] = __('messages.shop_order');
-        $messages['result'] = "success";
-        $messages['name'] = "مهران مرندی";
-        $messages['trackingCode'] = "2323423";
-        $messages['date'] = jdate("Y/n/j");
+        $messages['share']=
+            "رسید پرداخت"." %0D%0A ".
+            "نام خیر:"."مهران مرندی"." %0D%0A ".
+            "مبلغ:".number_format(100000000)."ریال"." %0D%0A ".
+            "در تاریخ:".jdate('Y/n/j')." %0D%0A ".
+            "بابت:"."هویجوری"." %0D%0A ".
+            "موسسه خیریه اشرف الانبیا(ص)"." %0D%0A ";
 
-        $messages['amount'] = number_format($amount) . " " . __('messages.rial');
-
-        if ($phone and $amount > 0) {
-            $smsData = [
-                'phone' => $phone,
-                'name' => $name,
-                'date' => jdate('Y/n/j'),
-                'price' => number_format($amount),
-                'reason' => $reason,
-            ];
-            $mailData = [
-                'address' => $email,
-                'messages' => $messages,
-            ];
-            event(new payToCharityMoney($smsData, $mailData));
-            return "done";
-
-        }
+        return view('global.callbackmain', compact('messages'));
     }
 }

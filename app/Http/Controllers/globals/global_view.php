@@ -580,6 +580,7 @@ class global_view extends Controller
             $name = "";
             $gateway = config('gateway.table', 'gateway_transactions');
             $data = \DB::table($gateway)->find($request['transaction_id']);
+            $date = jdate("Y/n/j",strtotime($data['created_at']));
             if ($data->module == "charity_donate" || $data->module == "charity_vow") {
                 $charity = charity_transaction::with('title')->findOrFail($data->module_id);
                 $charity->status = 'success';
@@ -675,7 +676,7 @@ class global_view extends Controller
                 $smsData = [
                     'phone'=> $phone,
                     'name'=>$name,
-                    'date'=>jdate('Y/n/j'),
+                    'date'=>$date,
                     'price'=>number_format($amount),
                     'reason'=>$reason,
                 ];
@@ -685,6 +686,16 @@ class global_view extends Controller
                 ];
                 event(new payToCharityMoney($smsData,$mailData));
             }
+            $messages['share']=
+                "رسید پرداخت"." %0D%0A ".
+                " %0D%0A ".
+                "نام خیر:".$name." %0D%0A ".
+                "مبلغ:".number_format($amount)." %0D%0A ".
+                "در تاریخ:".$date." %0D%0A ".
+                ($reason?"بابت:".$reason." %0D%0A ":"").
+                ($messages['trackingCode']?"شماره پیگیری:".$messages['trackingCode']." %0D%0A ":"").
+                " %0D%0A ".
+                "موسسه خیریه اشرف الانبیا(ص)"." %0D%0A ";
 
             return view('global.callbackmain', compact('messages'));
         } else {
