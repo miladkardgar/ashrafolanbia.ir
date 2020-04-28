@@ -580,7 +580,7 @@ class global_view extends Controller
             $name = "";
             $gateway = config('gateway.table', 'gateway_transactions');
             $data = \DB::table($gateway)->find($request['transaction_id']);
-            $date = jdate("Y/n/j",strtotime($data['created_at']));
+            $date = jdate("Y/n/j",strtotime($data->created_at));
             if ($data->module == "charity_donate" || $data->module == "charity_vow") {
                 $charity = charity_transaction::with('title')->findOrFail($data->module_id);
                 $charity->status = 'success';

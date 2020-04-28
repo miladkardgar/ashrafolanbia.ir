@@ -1161,14 +1161,18 @@ class panel_view extends Controller
     public function test()
     {
 
-        $messages['share']=
-            "رسید پرداخت"." %0D%0A ".
-            "نام خیر:"."مهران مرندی"." %0D%0A ".
-            "مبلغ:".number_format(100000000)."ریال"." %0D%0A ".
-            "در تاریخ:".jdate('Y/n/j')." %0D%0A ".
-            "بابت:"."هویجوری"." %0D%0A ".
-            "موسسه خیریه اشرف الانبیا(ص)"." %0D%0A ";
+        $data = \DB::table("charity_periods_transactions")->find(20);
+        $date = jdate("Y/n/j",strtotime($data->created_at));
 
-        return view('global.callbackmain', compact('messages'));
+        dd($date);
+//        $messages['share']=
+//            "رسید پرداخت"." %0D%0A ".
+//            "نام خیر:"."مهران مرندی"." %0D%0A ".
+//            "مبلغ:".number_format(100000000)."ریال"." %0D%0A ".
+//            "در تاریخ:".jdate('Y/n/j')." %0D%0A ".
+//            "بابت:"."هویجوری"." %0D%0A ".
+//            "موسسه خیریه اشرف الانبیا(ص)"." %0D%0A ";
+//
+//        return view('global.callbackmain', compact('messages'));
     }
 }
