@@ -39,24 +39,38 @@
 
             $(document).on("submit", '#frm_report', function (e) {
                 e.preventDefault();
+                var btn = $('button[type=submit]');
+                btn.attr('disabled',true)
+                btn.html('لطفا منتظر بمانید...<i class="fa fa-spin fa-spinner"></i>')
                 $.ajax({
                     url: '{{route('charity_reports_ajax')}}',
                     type: 'post',
                     data: $(this).serialize(),
                     success: function (response) {
                         $("#res").html(response)
+                        btn.attr('disabled',false)
+                        btn.html('دریافت گزارش')
                     },
                     error: function (error) {
                         console.log(error)
+                        btn.attr('disabled',false)
+                        btn.html('دریافت گزارش')
                     }
                 });
             })
 
-            $('#charity_donate').change(function() {
-                if(this.checked) {
-                    $(".type").css('display','block');
-                }else{
-                    $(".type").css('display','none');
+            $('#charity_donate').change(function () {
+                if (this.checked) {
+                    $(".type").css('display', 'block');
+                } else {
+                    $(".type").css('display', 'none');
+                }
+            });
+            $('input[name=checkAll]').change(function () {
+                if (this.checked) {
+                    $('.typeCh').parent().addClass('checked');
+                } else {
+                    $('.typeCh').parent().removeClass('checked');
                 }
             });
         });
@@ -113,6 +127,9 @@
                                         </div>
                                     </div>
                                 </div>
+
+                            </div>
+                            <div class="d-flex justify-content-center">
                                 <div class="m-2">
                                     <label for="">{{__('messages.gateway')}}</label>
                                     <div class="form-group mb-3 mb-md-2">
@@ -128,8 +145,6 @@
                                         @endforeach
                                     </div>
                                 </div>
-                            </div>
-                            <div class="d-flex justify-content-center">
                                 <div class="m-2">
                                     <label for="">{{__('messages.payment_type')}}</label>
                                     <div class="form-group mb-3 mb-md-2">
@@ -161,22 +176,31 @@
                                 </div>
                             </div>
                             <div class="type" style="display: none">
-                                <div class="d-flex justify-content-center ">
-                                    <div class="m-2">
-                                        <label for="">{{__('messages.type')}}</label>
-                                        <div class="form-group mb-3 mb-md-2">
-                                            @foreach($titles as $title)
-                                                <div class="form-check form-check-inline">
-                                                    <label class="form-check-label">
-                                                        <input type="checkbox" class="form-check-input-styled"
-                                                               name="chType[]" value="{{$title['id']}}"
-                                                               data-fouc>
-                                                        {{$title['title']}}
-                                                    </label>
-                                                </div>
-                                            @endforeach
+                                <label for="">{{__('messages.type')}}</label>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="form-check form-check-inline">
+                                            <label class="form-check-label">
+                                                <input type="checkbox" class="form-check-input-styled"
+                                                       name="checkAll"
+                                                       data-fouc><strong>علامت گزاری همه موارد</strong>
+                                            </label>
                                         </div>
+                                        <hr>
+
                                     </div>
+                                    @foreach($titles as $title)
+                                        <div class="col-3">
+                                            <div class="form-check form-check-inline">
+                                                <label class="form-check-label">
+                                                    <input type="checkbox" class="form-check-input-styled typeCh"
+                                                           name="chType[]" value="{{$title['id']}}"
+                                                           data-fouc>
+                                                    {{$title['title']}}
+                                                </label>
+                                            </div>
+                                        </div>
+                                    @endforeach
                                 </div>
                             </div>
 

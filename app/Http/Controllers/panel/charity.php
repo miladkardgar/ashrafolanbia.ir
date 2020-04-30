@@ -323,7 +323,6 @@ class charity extends Controller
         $date = explode("/", $explodeStart[0]);
         $startDate = jalali_to_gregorian($date[0], $date[1], $date[2], '-');
         $startDate = $startDate . " " . $explodeStart[1];
-
         $explodeEnd = str_replace("   ", " ", $request['end_date']);
         $explodeEnd = explode(" ", $explodeEnd);
         $endDate = explode("/", $explodeEnd[0]);
