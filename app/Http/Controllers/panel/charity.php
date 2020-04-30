@@ -329,8 +329,6 @@ class charity extends Controller
         $endDate = explode("/", $explodeEnd[0]);
         $endDate = jalali_to_gregorian($endDate[0], $endDate[1], $endDate[2], '-');
         $endDate = $endDate . " " . $explodeEnd[1];
-
-
         $reportPort = gateway_transaction::query();
         $reportPort->select(DB::raw('sum(price) as price'), DB::raw('port'));
         $reportPort->whereIn('module', $request['type']);
@@ -357,7 +355,6 @@ class charity extends Controller
             });
         }
         $report = $report->get();
-
         $reportRowQuery = gateway_transaction::query();
         $reportRowQuery->with('charityInfo');
         $reportRowQuery->whereIn('module', $request['type']);

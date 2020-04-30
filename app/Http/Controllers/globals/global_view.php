@@ -23,6 +23,7 @@ use App\Events\storePaymentConfirmation;
 use App\Events\userRegisterEvent;
 use App\gallery_category;
 use App\gateway;
+use App\gateway_transaction;
 use App\media;
 use App\order;
 use App\orders_item;
@@ -524,6 +525,7 @@ class global_view extends Controller
             }elseif ($gatewayInfo['function_name'] == "MelliGateway") {
                 try {
                     $gateway = \Larabookir\Gateway\Gateway::make(new Sadad());
+
                     $gateway->setCallback(route('callback', ['gateway' => 'sadad']));
                     $gateway->price($info['amount'])->moduleSet($request['type'])->moduleIDSet($info['id'])->ready();
                     $refId = $gateway->refId();
@@ -584,6 +586,7 @@ class global_view extends Controller
             if ($data->module == "charity_donate" || $data->module == "charity_vow") {
                 $charity = charity_transaction::with('title')->findOrFail($data->module_id);
                 $charity->status = 'success';
+                $charity->trans_id = $data->id;
                 $charity->payment_date = date("Y-m-d H:i:s", time());
                 if ($charity['user_id'] != 0) {
                     $user = User::find($charity['user_id']);
@@ -605,6 +608,7 @@ class global_view extends Controller
             } elseif ($data->module == "charity_period") {
                 $charity = charity_periods_transaction::findOrFail($data->module_id);
                 $charity->status = 'paid';
+                $charity->trans_id = $data->id;
                 $charity->pay_date = date("Y-m-d H:i:s", time());
                 $messages['des'] = __('messages.charity_period');
                 $user = User::find($charity['user_id']);
@@ -622,6 +626,7 @@ class global_view extends Controller
             } elseif ($data->module == "charity_champion") {
                 $charity = champion_transaction::with('champion')->findOrFail($data->module_id);
                 $charity->status = 'paid';
+                $charity->trans_id = $data->id;
                 $messages['des'] = $charity['champion']['title'];
                 if ($charity['user_id'] != 0) {
                     $user = User::find($charity['user_id']);
@@ -704,16 +709,19 @@ class global_view extends Controller
             if ($data->module == "charity_donate" || $data->module == "charity_vow") {
                 $charity = charity_transaction::findOrFail($data->module_id);
                 $charity->status = 'fail';
+                $charity->trans_id = $data->id;
                 $charity->payment_date = date("Y-m-d H:i:s", time());
                 $charity->save();
             } elseif ($data->module == "charity_champion") {
                 $charity = champion_transaction::findOrFail($data->module_id);
                 $charity->status = 'fail';
+                $charity->trans_id = $data->id;
                 $charity->payment_date = date("Y-m-d H:i:s", time());
                 $charity->save();
             } elseif ($data->module == "shop") {
                 $charity = order::findOrFail($data->module_id);
                 $charity->status = 'fail';
+                $charity->trans_id = $data->id;
                 $charity->save();
             }
             $messages['result'] = "fail";

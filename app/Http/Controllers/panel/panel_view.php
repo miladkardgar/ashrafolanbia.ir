@@ -98,13 +98,13 @@ class panel_view extends Controller
                 $now = Carbon::parse(date("Y-m-d", strtotime($value['date'])));
                 $diff = $date2->diffInDays($now);
                 if ($diff == 0) {
-                    if (isset($final[$value['module']]) AND $final[$value['module']] != "") {
+                    if (isset($final[$value['module']]) and $final[$value['module']] != "") {
                         $final[$value['module']] .= number_format($value['price']) . ",";
                     } else {
                         $final[$value['module']] = number_format($value['price']) . ",";
                     }
                 } else {
-                    if (isset($final[$value['module']]) AND $final[$value['module']] != "") {
+                    if (isset($final[$value['module']]) and $final[$value['module']] != "") {
                         $final[$value['module']] .= rand(10000, 90000) . ",";
                     } else {
                         $final[$value['module']] = "0,";
@@ -1161,10 +1161,19 @@ class panel_view extends Controller
     public function test()
     {
 
-        $data = \DB::table("charity_periods_transactions")->find(20);
-        $date = jdate("Y/n/j",strtotime($data->created_at));
-
-        dd($date);
+//        $gateways = gateway_transaction::where(
+//            [
+//                ['port', '=', 'SADAD'],
+//                ['status','=','SUCCEED'],
+//                ['module', '=', 'charity_donate'],
+//            ])->get();
+//        foreach ($gateways as $gateway) {
+//            $charity = charity_transaction::find($gateway['module_id']);
+//            if(isset($charity['id'])){
+//                $charity->trans_id = trim($gateway['id']);
+//            }
+//            $charity->save();
+//        }
 //        $messages['share']=
 //            "رسید پرداخت"." %0D%0A ".
 //            "نام خیر:"."مهران مرندی"." %0D%0A ".
