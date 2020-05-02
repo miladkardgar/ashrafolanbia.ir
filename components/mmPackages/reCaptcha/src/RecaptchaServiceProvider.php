@@ -8,7 +8,7 @@ use Mmpackages\recaptcha\Middleware\ReCaptcha;
 
 /**
  * Class RecaptchaServiceProvider
- * @package Mmpackages\Recaptcha
+ * @package Mmpackages\recaptcha
  */
 class RecaptchaServiceProvider extends ServiceProvider
 {

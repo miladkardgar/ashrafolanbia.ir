@@ -3,7 +3,7 @@
 namespace App\Http;
 
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
-use mmPackages\ReCaptcha\Middleware\ReCaptcha;
+use Mmpackages\recaptcha\Middleware\ReCaptcha;
 
 class Kernel extends HttpKernel
 {

@@ -1,4 +1,7 @@
 <?php
+shell_exec('php artisan cache:clear');
+sleep(2);
+
 return [
 
     /*
@@ -188,8 +191,8 @@ return [
 //        App\Providers\TelescopeServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         Flynsarmy\DbBladeCompiler\DbBladeCompilerServiceProvider::class,
-        Mmpackages\recaptcha\RecaptchaServiceProvider::class,
         \Larabookir\Gateway\GatewayServiceProvider::class,
+        \Mmpackages\recaptcha\RecaptchaServiceProvider::class
     ],
 
     /*

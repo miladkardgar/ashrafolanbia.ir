@@ -62,7 +62,8 @@
     "autoload": {
         "files": ["app/Http/helpers.php","app/Http/jdf.php"],
         "psr-4": {
-            "App\\": "app/"
+            "App\\": "app/",
+            "Mmpackages\\recaptcha\\": "components/mmPackages/reCaptcha/src"
         },
         "classmap": [
             "database/seeds",
@@ -72,7 +73,6 @@
     "autoload-dev": {
         "psr-4": {
             "Tests\\": "tests/",
-            "Mmpackages\\recaptcha\\": "components/mmPackages/reCaptcha/src"
         }
     },
     "minimum-stability": "dev",
