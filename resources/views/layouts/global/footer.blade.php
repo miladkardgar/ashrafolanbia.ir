@@ -200,4 +200,5 @@
         </div>
     </div>
 </footer>
+@recaptcha_initjs()
 <a class="scrollToTop" href="#"><i class="fa fa-angle-up"></i></a>

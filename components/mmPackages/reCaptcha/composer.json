@@ -1,0 +1,17 @@
+{
+    "name": "Mmpackages/recaptach",
+    "description": "recaptcha-v3 for laravel",
+    "type": "library",
+    "keywords": [
+        "laravel",
+        "recaptcha-v3"
+    ],
+    "homepage": "https://github.com/miladkardgar",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Milad Kardgar",
+            "email": "mk.kardgar@gmail.com"
+        }
+    ]
+}

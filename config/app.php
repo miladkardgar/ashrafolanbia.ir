@@ -1,5 +1,4 @@
 <?php
-
 return [
 
     /*
@@ -189,7 +188,8 @@ return [
 //        App\Providers\TelescopeServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         Flynsarmy\DbBladeCompiler\DbBladeCompilerServiceProvider::class,
-        \Larabookir\Gateway\GatewayServiceProvider::class
+        Mmpackages\recaptcha\RecaptchaServiceProvider::class,
+        \Larabookir\Gateway\GatewayServiceProvider::class,
     ],
 
     /*
@@ -246,6 +246,7 @@ return [
         'Nestable' => Nestable\Facades\NestableService::class,
         'Gateway' => Larabookir\Gateway\Gateway::class,
         'DbView' => Flynsarmy\DbBladeCompiler\Facades\DbView::class,
+
 
     ],
 
