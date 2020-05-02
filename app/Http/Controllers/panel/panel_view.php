@@ -1160,6 +1160,7 @@ class panel_view extends Controller
 
     public function test()
     {
+        return 'true';
 
 //        $gateways = gateway_transaction::where(
 //            [

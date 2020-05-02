@@ -192,7 +192,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         Flynsarmy\DbBladeCompiler\DbBladeCompilerServiceProvider::class,
         \Larabookir\Gateway\GatewayServiceProvider::class,
-        \Mmpackages\recaptcha\RecaptchaServiceProvider::class
+//        Mmpackages\recaptcha\RecaptchaServiceProvider::class
     ],
 
     /*
