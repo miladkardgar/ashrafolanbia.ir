@@ -3,7 +3,6 @@
 namespace App\Http;
 
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
-use Mmpackages\recaptcha\Middleware\ReCaptcha;
 
 class Kernel extends HttpKernel
 {
@@ -72,7 +71,6 @@ class Kernel extends HttpKernel
         'role' => \Laratrust\Middleware\LaratrustRole::class,
         'permission' => \Laratrust\Middleware\LaratrustPermission::class,
         'ability' => \Laratrust\Middleware\LaratrustAbility::class,
-        'recaptcha' => ReCaptcha::class
 
 
         //LaraTrust

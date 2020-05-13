@@ -1,6 +1,4 @@
 <?php
-shell_exec('php artisan cache:clear');
-sleep(2);
 
 return [
 
@@ -192,7 +190,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         Flynsarmy\DbBladeCompiler\DbBladeCompilerServiceProvider::class,
         \Larabookir\Gateway\GatewayServiceProvider::class,
-//        Mmpackages\recaptcha\RecaptchaServiceProvider::class
+        \Mmpackages\recaptcha\RecaptchaServiceProvider::class
     ],
 
     /*
@@ -249,7 +247,6 @@ return [
         'Nestable' => Nestable\Facades\NestableService::class,
         'Gateway' => Larabookir\Gateway\Gateway::class,
         'DbView' => Flynsarmy\DbBladeCompiler\Facades\DbView::class,
-
 
     ],
 
