@@ -1,6 +1,7 @@
 <?php
 
 return array (
+    'sumAll'=>'جمع کل',
   'item_deleted' => 'مورد حذف شد !',
   'blog_slider' => 'اسلایدر',
   'category' => 'دسته بندی',
@@ -216,11 +217,11 @@ return array (
   'display_statistics' => 'آمار نمایشی',
   'copyright' => 'کلیه حقوق این وب سایت متعلق به موسسه خیریه اشرف الانبیاء (ص) می باشد',
   'html_title' => 'موسسه خیریه اشرف الانبیا(ص)',
-  'Loading' => 
+  'Loading' =>
   array (
-    '' => 
+    '' =>
     array (
-      '' => 
+      '' =>
       array (
         '' => 'منتظر بمانید...',
       ),
@@ -537,7 +538,7 @@ return array (
   'no_any_post' => 'هیچ پستی یافت نشد.',
   'not_found_any_data' => 'اطلاعاتی یافت نشد',
   'please_insert_post' => 'لطفاً پست جدید اضافه نمایید.',
-  'messages' => 
+  'messages' =>
   array (
     'image_update_disabled' => 'بارگزاری تصویر غیر فعال می باشد.',
   ),

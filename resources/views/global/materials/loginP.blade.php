@@ -5,7 +5,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <form id="login_form" name="login_form" method="post" action="{{route('login')}}">
-                        {{@csrf_field()}}
+                        @csrf
                         <div class="row">
                             <div class="col-sm-12">
                                 <div class="form-group ">
@@ -70,7 +70,6 @@
                                 $(form).ajaxSubmit({
                                     dataType: '',
                                     success: function (data) {
-                                        console.log(11);
                                         PNotify.success({
                                             text: "{{__('messages.login_successfully')}}",
                                             delay: 3000,

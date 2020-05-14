@@ -40,7 +40,7 @@
             $(document).on("submit", '#frm_report', function (e) {
                 e.preventDefault();
                 var btn = $('button[type=submit]');
-                btn.attr('disabled',true)
+                btn.attr('disabled', true)
                 btn.html('لطفا منتظر بمانید...<i class="fa fa-spin fa-spinner"></i>')
                 $.ajax({
                     url: '{{route('charity_reports_ajax')}}',
@@ -48,12 +48,12 @@
                     data: $(this).serialize(),
                     success: function (response) {
                         $("#res").html(response)
-                        btn.attr('disabled',false)
+                        btn.attr('disabled', false)
                         btn.html('دریافت گزارش')
                     },
                     error: function (error) {
                         console.log(error)
-                        btn.attr('disabled',false)
+                        btn.attr('disabled', false)
                         btn.html('دریافت گزارش')
                     }
                 });
@@ -127,9 +127,8 @@
                                         </div>
                                     </div>
                                 </div>
-
                             </div>
-                            <div class="d-flex justify-content-center">
+                            <div class="d-flex flex-column justify-content-center">
                                 <div class="m-2">
                                     <label for="">{{__('messages.gateway')}}</label>
                                     <div class="form-group mb-3 mb-md-2">
@@ -174,19 +173,34 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="m-2">
+                                    <label for="">{{__('messages.payment_type')}}</label>
+                                    <div class="form-group mb-3 mb-md-2">
+                                        @foreach($pat as $pa)
+                                            <div class="form-check form-check-inline">
+                                                <label class="form-check-label">
+                                                    <input type="checkbox" class="form-check-input-styled" name="pat[]"
+                                                           value="{{$pa['id']}}" checked
+                                                           data-fouc>
+                                                    {{$pa['title']}}
+                                                </label>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
                             </div>
                             <div class="type" style="display: none">
                                 <label for="">{{__('messages.type')}}</label>
                                 <div class="row">
                                     <div class="col-12">
-                                        <div class="form-check form-check-inline">
-                                            <label class="form-check-label">
-                                                <input type="checkbox" class="form-check-input-styled"
-                                                       name="checkAll"
-                                                       data-fouc><strong>علامت گزاری همه موارد</strong>
-                                            </label>
-                                        </div>
-                                        <hr>
+{{--                                        <div class="form-check form-check-inline">--}}
+{{--                                            <label class="form-check-label">--}}
+{{--                                                <input type="checkbox" class="form-check-input-styled"--}}
+{{--                                                       name="checkAll"--}}
+{{--                                                       data-fouc><strong>علامت گزاری همه موارد</strong>--}}
+{{--                                            </label>--}}
+{{--                                        </div>--}}
+{{--                                        <hr>--}}
 
                                     </div>
                                     @foreach($titles as $title)

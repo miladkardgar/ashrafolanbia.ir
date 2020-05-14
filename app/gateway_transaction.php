@@ -16,7 +16,7 @@ class gateway_transaction extends Model
 
     public function charityInfo()
     {
-        return $this->hasOne('App\charity_transaction', 'trans_id', 'id')->with('title');
+        return $this->hasOne('App\charity_transaction', 'trans_id', 'id')->with('title','patern');
     }
 
     public function dayTrans($module, $startDate, $endDate)

@@ -137,29 +137,27 @@ class charity extends Controller
         }
     }
 
-    public function charity_periodic_award(Request $request,$id)
+    public function charity_periodic_award(Request $request, $id)
     {
         $user = User::findOrFail($id);
-        if ($user['loh'] == null){
+        if ($user['loh'] == null) {
             $user->loh = date('Y-m-d H:i:s');
-        }
-        else{
+        } else {
             $user->loh = null;
         }
         $user->save();
         return back_normal($request);
     }
 
-    public function changePassword(Request $request,$id)
+    public function changePassword(Request $request, $id)
     {
-        if ($request->new_password and strlen($request->new_password) > 4){
-        $user = User::findOrFail($id);
-        $user->password = Hash::make($request->new_password);
-        $user->save();
-        return back_normal($request);
-        }
-        else{
-            return back_error($request,['رمز وارد شده مناسب نیست']);
+        if ($request->new_password and strlen($request->new_password) > 4) {
+            $user = User::findOrFail($id);
+            $user->password = Hash::make($request->new_password);
+            $user->save();
+            return back_normal($request);
+        } else {
+            return back_error($request, ['رمز وارد شده مناسب نیست']);
         }
     }
 
@@ -317,7 +315,6 @@ class charity extends Controller
 
     public function reports(Request $request)
     {
-
         $explodeStart = str_replace("   ", " ", $request['start_date']);
         $explodeStart = explode(" ", $explodeStart);
         $date = explode("/", $explodeStart[0]);
@@ -328,19 +325,7 @@ class charity extends Controller
         $endDate = explode("/", $explodeEnd[0]);
         $endDate = jalali_to_gregorian($endDate[0], $endDate[1], $endDate[2], '-');
         $endDate = $endDate . " " . $explodeEnd[1];
-        $reportPort = gateway_transaction::query();
-        $reportPort->select(DB::raw('sum(price) as price'), DB::raw('port'));
-        $reportPort->whereIn('module', $request['type']);
-        $reportPort->whereIn('port', $request['gateway']);
-        $reportPort->whereBetween('created_at', [$startDate, $endDate]);
-        $reportPort->where('status', '=', 'SUCCEED');
-        if (in_array('charity_donate', $request['type'])) {
-            $reportPort->whereHas('charityInfo', function ($q) use ($request) {
-                $q->whereIn('title_id', $request['chType']);
-            });
-        }
-        $reportPort->groupBy('port');
-        $reportPort = $reportPort->get();
+
 
         $report = gateway_transaction::query();
         $report->select(DB::raw('module as mo'), DB::raw('DATE(created_at) as date'), DB::raw('price'), DB::raw('port'));
@@ -354,12 +339,12 @@ class charity extends Controller
             });
         }
         $report = $report->get();
+
         $reportRowQuery = gateway_transaction::query();
         $reportRowQuery->with('charityInfo');
         $reportRowQuery->whereIn('module', $request['type']);
-        $reportRowQuery->whereBetween('created_at', [$startDate, $endDate]);
         $reportRowQuery->whereIn('port', $request['gateway']);
-        $reportRowQuery->whereIn('module', $request['type']);
+        $reportRowQuery->whereBetween('created_at', [$startDate, $endDate]);
         $reportRowQuery->where('status', '=', 'SUCCEED');
         if (in_array('charity_donate', $request['type'])) {
             $reportRowQuery->whereHas('charityInfo', function ($q) use ($request) {
@@ -367,11 +352,48 @@ class charity extends Controller
             });
         }
         $reportRow = $reportRowQuery->get();
-
+        $reportRow = $reportRow->map(function ($q) use ($request) {
+            if($request['type']=="charity_donate") {
+                if (isset($q->charityInfo['patern']['id']) && in_array($q->charityInfo['patern']['id'], $request['pat'])) {
+                    return [
+                        'id' => $q['id'],
+                        'port' => $q['port'],
+                        'ref_id' => $q['ref_id'],
+                        'tracking_code' => $q['tracking_code'],
+                        'card_number' => $q['card_number'],
+                        'status' => __('messages.' . $q['status']),
+                        'ip' => $q['ip'],
+                        'payDate' => jdate("Y-m-d H:i:s", strtotime($q['payment_date']), '', '', 'en'),
+                        'price' => $q['price'],
+                        'module' => __('messages.' . $q['module']),
+                        'type' => $q['charityInfo']['title']['title'],
+                        'patern' => $q['charityInfo']['patern']['title'],
+                    ];
+                }
+            }elseif($request['type']="period"){
+                return [
+                    'id' => $q['id'],
+                    'port' => $q['port'],
+                    'ref_id' => $q['ref_id'],
+                    'tracking_code' => $q['tracking_code'],
+                    'card_number' => $q['card_number'],
+                    'status' => __('messages.' . $q['status']),
+                    'ip' => $q['ip'],
+                    'payDate' => jdate("Y-m-d H:i:s", strtotime($q['payment_date']), '', '', 'en'),
+                    'price' => $q['price'],
+                    'module' => __('messages.' . $q['module']),
+                    'type' => '',
+                    'patern' => '',
+                    ];
+            }
+        });
+        $sumPort = $reportRow->groupBy('port')->map(function ($row) {
+            return $row->sum('price');
+        });
+        $sumRow = $reportRow->sum('price');
         $reports = $report->groupBy(['mo', 'date']);
-        $reportPort = json_decode($reportPort, true);
         $reports = json_decode($reports, true);
         $reportRow = json_decode($reportRow, true);
-        return view('panel.charity.reports.ajax', compact('reports', 'reportPort', 'reportRow'));
+        return view('panel.charity.reports.ajax', compact('reports', 'reportRow','sumRow','sumPort'));
     }
 }

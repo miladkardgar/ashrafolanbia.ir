@@ -2,6 +2,28 @@
     <?php $color = ['indigo', 'danger', 'blue']; ?>
     <?php $i = 0; ?>
 
+        <div class="col-sm-6 col-xl-3">
+            <div class="card bg-success-400 has-bg-image">
+                <div class="card-body">
+                    <div class="d-flex">
+                        <h3 class="font-weight-semibold mb-0">{{number_format($sumRow)}}
+                            <small>{{__('messages.rial')}}</small>
+                        </h3>
+                        <div class="list-icons ml-auto">
+                            <a class="list-icons-item" data-action="reload"></a>
+                        </div>
+                    </div>
+
+                    <div>
+                        {{__('messages.sumAll')}}
+                        <div class="text-muted font-size-sm"></div>
+                    </div>
+                </div>
+                <div class="container-fluid">
+                    <div id="line_chart_color_success"></div>
+                </div>
+            </div>
+        </div>
     @foreach($reports as $report=>$val)
         <?php $sum = 0; ?>
         @foreach($val as $v=>$ff)
@@ -35,7 +57,8 @@
     @endforeach
 </div>
 <div class="row">
-    @foreach($reportPort as $port)
+    @foreach($sumPort as $key => $port)
+        @if(isset($key) && $key!="")
         <div class="col-sm-6 col-xl-3">
             <div class="card card-body">
                 <div class="media">
@@ -43,12 +66,13 @@
                         <i class="icon-enter6 icon-3x text-indigo-400"></i>
                     </div>
                     <div class="media-body text-right">
-                        <h3 class="font-weight-semibold mb-0">{{number_format($port['price'])}}</h3>
-                        <span class="text-uppercase font-size-sm text-muted">{{$port['port']}}</span>
+                        <h3 class="font-weight-semibold mb-0">{{number_format($port)}}</h3>
+                        <span class="text-uppercase font-size-sm text-muted">{{$key}}</span>
                     </div>
                 </div>
             </div>
         </div>
+        @endif
     @endforeach
 </div>
 
@@ -67,24 +91,28 @@
             <th>{{__('messages.amount')}}</th>
             <th>{{__('messages.type')}}</th>
             <th>{{__('messages.type')}}</th>
+            <th>{{__('messages.type')}}</th>
         </tr>
         </thead>
         <tbody>
         @php $i=1; @endphp
         @foreach($reportRow as $row)
-            <tr>
-                <td>{{$row['id']}}</td>
-                <td>{{$row['port']}}</td>
-                <td><span dir="ltr">{{$row['ref_id']}}</span></td>
-                <td><span dir="ltr">{{$row['tracking_code']}}</span></td>
-                <td><span dir="ltr">{{$row['card_number']}}</span></td>
-                <td>{{__('messages.'.$row['status'])}}</td>
-                <td><span dir="ltr">{{$row['ip']}}</span></td>
-                <td><span dir="ltr">{{jdate("Y-m-d H:i:s",strtotime($row['payment_date']),'','','en')}}</span></td>
-                <td>{{number_format($row['price'])}}</td>
-                <td>{{__('messages.'.$row['module'])}}</td>
-                <td>{{$row['charity_info']['title']['title']}}</td>
-            </tr>
+            @if(isset($row['id']))
+                <tr>
+                    <td>{{$row['id']}}</td>
+                    <td>{{$row['port']}}</td>
+                    <td><span dir="ltr">{{$row['ref_id']}}</span></td>
+                    <td><span dir="ltr">{{$row['tracking_code']}}</span></td>
+                    <td><span dir="ltr">{{$row['card_number']}}</span></td>
+                    <td>{{$row['status']}}</td>
+                    <td><span dir="ltr">{{$row['ip']}}</span></td>
+                    <td><span dir="ltr">{{$row['payDate']}}</span></td>
+                    <td>{{number_format($row['price'])}}</td>
+                    <td>{{$row['module']}}</td>
+                    <td>{{$row['type']}}</td>
+                    <td>{{$row['patern']}}</td>
+                </tr>
+            @endif
         @endforeach
         </tbody>
     </table>
@@ -168,7 +196,7 @@
 </script>
 <script>
     var StatisticWidgets = function () {
-                @foreach($reports as $report=>$val)
+            @foreach($reports as $report=>$val)
 
         var _barChartWidget_{{$report}} = function (element, chartHeight, lineColor, pathColor, pointerLineColor, pointerBgColor) {
                 if (typeof d3 == 'undefined') {
@@ -178,18 +206,22 @@
                 if (element) {
                     var dataset = [];
                     @foreach($val as $v=>$ff)
-                        @php
-                            $sum=0;
-                            $i=0;
-                        @endphp
-                        @foreach($ff as $f)
-                        @php
-                            $sum +=$f['price'];
-                            $i++;
-                        @endphp
-                        @endforeach
-                        dataset.push({date: '{!! jdate("Y-m-d",strtotime($v),'','','en') !!}', price: '{{$sum}}', count: '{{$i}}'});
+                    @php
+                        $sum=0;
+                        $i=0;
+                    @endphp
+                    @foreach($ff as $f)
+                    @php
+                        $sum +=$f['price'];
+                        $i++;
+                    @endphp
                     @endforeach
+                    dataset.push({
+                        date: '{!! jdate("Y-m-d",strtotime($v),'','','en') !!}',
+                        price: '{{$sum}}',
+                        count: '{{$i}}'
+                    });
+                        @endforeach
                     var d3Container = d3.select(element),
                         margin = {top: 0, right: 0, bottom: 0, left: 0},
                         width = d3Container.node().getBoundingClientRect().width - margin.left - margin.right,

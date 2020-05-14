@@ -15,7 +15,7 @@
 
                                     <div class="post-thumb thumb">
                                         <img src="{{$post['image_large'] ? URL::asset('public/images/'.config('blogetc.blog_upload_dir'))."/".$post['image_large']:''}} "
-                                                alt="" class="img-responsive img-fullwidth"></div>
+                                                alt="" class=""></div>
                                 </div>
                                 <div class="entry-content">
                                     <div class="entry-meta media no-bg no-border mt-15 pb-20">
