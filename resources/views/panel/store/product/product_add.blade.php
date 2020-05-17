@@ -363,14 +363,14 @@
                                 <div class="col-6">
                                     <div class="form-group">
                                         <label for="title">{{__('messages.product_title')}}</label>
-                                        <input type="text" name="title" id="title" class="form-control"
+                                        <input type="text" name="title" id="title" required="required" class="form-control"
                                                value="{{old('title')}}" >
                                     </div>
                                 </div>
                                 <div class="col-6">
                                     <div class="form-group">
                                         <label for="slug">{{__('messages.slug')}}</label>
-                                        <input type="text" readonly="readonly" name="slug" id="slug" class="form-control"
+                                        <input type="text" readonly="readonly" name="slug" id="slug" required="required" class="form-control"
                                                value="{{old('slug')}}">
                                     </div>
                                 </div>
@@ -638,7 +638,7 @@
                                             <label for="off">{{__('messages.code')}}</label>
                                         </div>
                                         <div class="col-12 col-md-6">
-                                            <input type="text" class="form-control" id="code" name="code">
+                                            <input type="text" class="form-control" required="required" id="code" name="code">
                                         </div>
                                     </div>
 

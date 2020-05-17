@@ -166,6 +166,7 @@ class store extends Controller
                 'filepath' => 'required',
                 'count' => 'required',
                 'price' => 'required',
+                'code'=>'required'
             ]);
         $mainFileID = get_file_id($request['filepath']);
         $product_info = store_product::create([
