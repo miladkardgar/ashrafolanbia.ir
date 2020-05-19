@@ -382,8 +382,8 @@ class charity extends Controller
                     'payDate' => jdate("Y-m-d H:i:s", strtotime($q['payment_date']), '', '', 'en'),
                     'price' => $q['price'],
                     'module' => __('messages.' . $q['module']),
-                    'type' => '',
-                    'patern' => '',
+                    'type' => $q['charityInfo']['title']['title'],
+                    'patern' => $q['charityInfo']['patern']['title'],
                     ];
             }
         });
