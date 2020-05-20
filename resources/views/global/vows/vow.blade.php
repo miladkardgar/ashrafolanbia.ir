@@ -113,7 +113,7 @@
                                     @endforeach
                                 </div>
                                 <div class="col-md-6">
-                                    @if($titles)
+                                    @if(count($titles)>0)
                                     <div class="col-md-12 col-xs-12">
                                         <div class="form-group">
                                             <label>{{__('messages.for')}}</label>
