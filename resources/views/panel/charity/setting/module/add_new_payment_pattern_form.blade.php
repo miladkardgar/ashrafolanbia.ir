@@ -95,13 +95,101 @@
                       name="description">{!!$payment_pattern['description']!!}</textarea>
         </div>
     </div>
-    <hr>
+
     <div class="form-group">
         <button type="submit" class="btn float-right btn-info">
             {{ __('messages.save') }} <i class="icon-arrow-left5"></i>
         </button>
     </div>
 </form>
+<hr>
+<form method="POST" id="" class="form-ajax-submit"
+      action="{{route('charity_payment_title_add',['payment_pattern_id'=>$payment_pattern['id']])}}"
+      autocomplete="off">
+    @csrf
+    <input type="hidden" name="payment_pattern_id" value="{{$payment_pattern['id']}}">
+
+    <div class="row">
+
+        <div class="col-md-12">
+            <div class="form-group">
+                <label for="title"
+                       class=" col-form-label text-md-right">{{ __('messages.title') }}</label>
+                <div class="input-group-btn">
+                    <input id="title" type="text" class=" form-control"
+                           name="title"
+                           value="">
+                    <button type="submit" class="btn float-right btn-warning">
+                        {{ __('messages.add') }} <i class="icon-arrow-left5"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</form>
+<hr>
+
+
+<div class="row mt-2">
+    <div class="col-md-6">
+        <span class="text-info">{{trans('messages.display_items')}}</span>
+        <table class="table table-bordered table-striped">
+            <tr class="font-size-lg font-weight-black header">
+                <th>{{trans('messages.title')}}</th>
+                <th></th>
+            </tr>
+            @foreach($payment_pattern['titles'] as $title)
+                <tr>
+                    <td>{{$title['title']}}</td>
+                    <td>
+                        <form method="POST" action="{{route('charity_payment_title_delete',['payment_pattern_id'=>$payment_pattern['id'],'payment_title_id'=>$title['id']])}}">
+                            {{csrf_field()}}
+                        <button type="submit"
+                                class="legitRipple float-right btn alpha-pink border-pink-400 text-pink-800 btn-icon rounded-round ml-2">
+                            <i class="icon-trash"></i>
+                        </button>
+                        </form>
+
+                    </td>
+
+                </tr>
+            @endforeach
+        </table>
+    </div>
+    <div class="col-md-6">
+        <span class="text-danger">{{trans('messages.deleted_items')}}</span>
+        <table class="table border-danger table-bordered table-striped">
+            <tr class="font-size-lg font-weight-black header">
+                <th>{{trans('messages.title')}}</th>
+                <th></th>
+            </tr>
+            @foreach($payment_pattern->titles()->onlyTrashed()->get() as $deleted_title)
+                <tr>
+                    <td>{{$deleted_title['title']}}</td>
+                    <td>
+                        <form method="POST" action="{{route('charity_payment_title_recover',['payment_pattern_id'=>$payment_pattern['id'],'payment_title_id'=>$deleted_title['id']])}}">
+                            @csrf
+                            <input type="hidden" name="payment_pattern_id" value="{{$payment_pattern['id']}}">
+                            <input type="hidden" name="payment_title_id" value="{{$deleted_title['id']}}">
+
+                        <button type="submit" class="float-right btn alpha-success border-success-400 text-success-800 btn-icon rounded-round ml-2">
+                            <i class="icon-rotate-cw2"></i>
+                        </button>
+                        </form>
+
+
+                    </td>
+
+                </tr>
+            @endforeach
+        </table>
+    </div>
+</div>
+
+<hr>
+
 <script>
     $(document).ready(function () {
 

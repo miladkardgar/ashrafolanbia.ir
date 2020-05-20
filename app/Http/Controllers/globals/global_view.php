@@ -316,11 +316,12 @@ class global_view extends Controller
         return view('global.store.payment', compact('tran'));
     }
 
-    public function vow_view(Request $request)
+    public function vow_view($id,Request $request)
     {
         $charity = charity_payment_patern::with('fields')->find($request['id']);
+        $titles = charity_payment_title::where('ch_pay_pattern_id',$id)->get();
         $gateways = gateway::with('bank')->where('online', 1)->get();
-        return view('global.vows.vow', compact('charity', 'gateways'));
+        return view('global.vows.vow', compact('charity', 'gateways','titles'));
     }
 
     public function vow_payment(Request $request)
@@ -393,7 +394,7 @@ class global_view extends Controller
 
     public function vow_donate()
     {
-        $title = charity_payment_title::get();
+        $title = charity_payment_title::where('ch_pay_pattern_id',2)->get();
         $patern = charity_payment_patern::find(2);
         $gateways = gateway::with('bank')->where('online', 1)->get();
         return view('global.vows.donate', compact('title', 'patern', 'gateways'));

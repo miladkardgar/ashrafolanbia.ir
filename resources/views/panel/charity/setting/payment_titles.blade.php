@@ -158,14 +158,14 @@ $active_sidbare = ['charity', 'charity_setting', 'charity_payment_titles']
                                 </div>
                                 <div class="row mb-2">
 
-                                    @foreach($other_titles as $title)
+                                    @foreach($other_titles as $custom_title)
                                         <div class="col-md-6">
                                             <div class="card">
                                                 <div class="card-header p-1 bg-info">
-                                                    <span class="font-size-lg">{{$title['title']}}</span>
+                                                    <span class="font-size-lg">{{$custom_title['title']}}</span>
                                                     <button type="button" class="float-right btn alpha-info m-0 border-info-800 text-info-800 btn-icon rounded-round ml-2
                                              modal-ajax-load"
-                                                            data-ajax-link="{{route('charity_payment_pattern_add',['payment_pattern_id'=>$title['id']])}}"
+                                                            data-ajax-link="{{route('charity_payment_pattern_add',['payment_pattern_id'=>$custom_title['id']])}}"
                                                             data-toggle="modal"
                                                             data-modal-size="modal-full"
                                                             data-modal-title="{{trans('messages.edit_item',['item'=>trans('messages.payment_pattern')])}}"
@@ -176,7 +176,7 @@ $active_sidbare = ['charity', 'charity_setting', 'charity_payment_titles']
 
                                                     <button type="button"
                                                             class="legitRipple swal-alert float-right m-0 btn alpha-pink border-pink-400 text-pink-800 btn-icon rounded-round ml-2"
-                                                            data-ajax-link="{{route('charity_payment_pattern_delete',['payment_pattern_id'=>$title['id']])}}"
+                                                            data-ajax-link="{{route('charity_payment_pattern_delete',['payment_pattern_id'=>$custom_title['id']])}}"
                                                             data-method="POST"
                                                             data-csrf="{{csrf_token()}}"
                                                             data-title="{{trans('messages.delete_item',['item'=>trans('messages.payment_pattern')])}}"
@@ -190,17 +190,17 @@ $active_sidbare = ['charity', 'charity_setting', 'charity_payment_titles']
                                                 </div>
                                                 <div class="card-body">
                                                     <div class="row">
-                                                        {!! $title['description'] !!}
+                                                        {!! $custom_title['description'] !!}
 
 
-                                                        @if(count($title['fields'])>0)
+                                                        @if(count($custom_title['fields'])>0)
                                                             <table class="table">
                                                                 <tr>
                                                                     <th>{{trans('messages.title')}}</th>
                                                                     <th>{{trans('messages.type')}}</th>
                                                                     <th></th>
                                                                 </tr>
-                                                                @foreach($title['fields'] as $field)
+                                                                @foreach($custom_title['fields'] as $field)
                                                                     <tr>
                                                                         <td>{{$field['label']}}</td>
                                                                         <td>
@@ -236,6 +236,23 @@ $active_sidbare = ['charity', 'charity_setting', 'charity_payment_titles']
                                                                 @endforeach
                                                             </table>
                                                         @endif
+
+                                                        <hr>
+
+                                                            <div class="col-md-12">
+                                                                <span class="text-info">{{trans('messages.display_items')}}</span>
+                                                                <table class="table table-bordered table-striped">
+                                                                    <tr class="font-size-lg font-weight-black header">
+                                                                        <th>{{trans('messages.title')}}</th>
+                                                                    </tr>
+                                                                    @foreach($custom_title['titles'] as $title)
+                                                                        <tr>
+                                                                            <td>{{$title['title']}}</td>
+                                                                        </tr>
+                                                                    @endforeach
+                                                                </table>
+                                                            </div>
+
                                                     </div>
                                                 </div>
                                             </div>

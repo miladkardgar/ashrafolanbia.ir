@@ -113,6 +113,19 @@
                                     @endforeach
                                 </div>
                                 <div class="col-md-6">
+                                    @if($titles)
+                                    <div class="col-md-12 col-xs-12">
+                                        <div class="form-group">
+                                            <label>{{__('messages.for')}}</label>
+                                            <select name="title" class="form-control" id="title">
+                                                @foreach($titles as $title)
+                                                    <option value="{{$title['id']}}">{{$title['title']}}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    @endif
+
                                     <div class="col-md-12">
                                         <div class="form-group">
                                             <label>{{__('messages.description')}}</label>

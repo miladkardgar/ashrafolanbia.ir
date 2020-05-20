@@ -16,4 +16,5 @@ class charity_payment_patern extends Model
     {
         return $this->hasMany('App\charity_payment_title','ch_pay_pattern_id');
     }
+
 }
