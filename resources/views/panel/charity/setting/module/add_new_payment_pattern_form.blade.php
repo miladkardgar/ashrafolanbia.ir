@@ -132,7 +132,7 @@
 
         </form>
 
-
+    @if($payment_pattern)
         <div class="row mt-2">
             <div class="col-md-6">
                 <span class="text-info">{{trans('messages.display_items')}}</span>
@@ -191,7 +191,9 @@
                 </table>
             </div>
         </div>
+    @endif
     </div>
+
 </div>
 
 <script>

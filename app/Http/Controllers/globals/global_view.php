@@ -583,7 +583,7 @@ class global_view extends Controller
             $name = "";
             $gateway = config('gateway.table', 'gateway_transactions');
             $data = \DB::table($gateway)->find($request['transaction_id']);
-            $date = jdate("Y/n/j",strtotime($data->created_at));
+            $date = jdate("Y/m/d",strtotime($data->created_at));
             if ($data->module == "charity_donate" || $data->module == "charity_vow") {
                 $charity = charity_transaction::with('title')->findOrFail($data->module_id);
                 $charity->status = 'success';
@@ -674,7 +674,7 @@ class global_view extends Controller
             $messages['result'] = "success";
             $messages['name'] = $charity->name;
             $messages['trackingCode'] = $request['transaction_id'];
-            $messages['date'] = jdate("Y/n/j");
+            $messages['date'] = jdate("Y/m/d");
 
             $messages['amount'] = number_format($charity->amount) . " " . __('messages.rial');
 

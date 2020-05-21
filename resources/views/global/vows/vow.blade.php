@@ -85,6 +85,24 @@
                             <input type="hidden" name="charity_id" value="{{$charity['id']}}">
                             <div class="row">
                                 <div class="col-md-6">
+                                    <div class="col-md-12 col-xs-12">
+                                        <div class="form-group">
+                                            <label>{{__('messages.name_op')}}</label>
+                                            <input type="text" class="form-control" name="name">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 col-xs-12">
+                                        <div class="form-group">
+                                            <label>{{__('messages.phone_op')}}</label>
+                                            <input type="number" class="form-control" name="phone">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 col-xs-12">
+                                        <div class="form-group">
+                                            <label>{{__('messages.email_op')}}</label>
+                                            <input type="email" class="form-control" name="email">
+                                        </div>
+                                    </div>
                                     @foreach($charity['fields'] as $fi)
                                         <div class="col-md-12">
                                             <div class="form-group">
@@ -111,29 +129,30 @@
                                             </div>
                                         </div>
                                     @endforeach
+
                                 </div>
                                 <div class="col-md-6">
+
                                     @if(count($titles)>0)
-                                    <div class="col-md-12 col-xs-12">
-                                        <div class="form-group">
-                                            <label>{{__('messages.for')}}</label>
-                                            <select name="title" class="form-control" id="title">
-                                                @foreach($titles as $title)
-                                                    <option value="{{$title['id']}}">{{$title['title']}}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
+
+                                        @foreach($titles as $key => $title)
+                                            <div class="col-md-6 col-xs-6" >
+                                                <div class="radio" style="text-align: right;">
+                                                    <label>
+                                                        <input type="radio" name="title"
+                                                               id="title_{{$title['id']}}"
+                                                               value="{{$title['id']}}"
+                                                              {{$key == 0 ?"checked='checked'" :""}} >
+                                                        <strong><small>{{$title['title']}}</small></strong>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        @endforeach
+
                                     @endif
 
-                                    <div class="col-md-12">
-                                        <div class="form-group">
-                                            <label>{{__('messages.description')}}</label>
-                                            <textarea name="description" class="form-control" id="description" cols="30"
-                                                      rows="5"></textarea>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-12">
+<br>
+                                    <div class="col-md-12 col-xs-12">
                                         <div class="form-group">
                                             <label for="amount">{{__('messages.amount')}} <small>({{__('messages.rial')}})</small></label>
                                             <input type="text" min="{{$charity['min']}}" max="{{$charity['max']}}" class="form-control amount" name="amount">
