@@ -1162,27 +1162,27 @@ class panel_view extends Controller
     public function test()
     {
 
-        $gateways = gateway_transaction::where(
-            [
-                ['port', '=', 'SADAD'],
-                ['status','=','SUCCEED'],
-                ['module', '=', 'charity_donate'],
-            ])->get();
-        foreach ($gateways as $gateway) {
-            $charity = charity_transaction::find($gateway['module_id']);
-            if(isset($charity['id'])){
-                $charity->trans_id = trim($gateway['id']);
-            }
-            $charity->save();
-        }
-        $messages['share']=
-            "رسید پرداخت"." %0D%0A ".
-            "نام خیر:"."مهران مرندی"." %0D%0A ".
-            "مبلغ:".number_format(100000000)."ریال"." %0D%0A ".
-            "در تاریخ:".jdate('Y/n/j')." %0D%0A ".
-            "بابت:"."هویجوری"." %0D%0A ".
-            "موسسه خیریه اشرف الانبیا(ص)"." %0D%0A ";
-
-        return view('global.callbackmain', compact('messages'));
+//        $gateways = gateway_transaction::where(
+//            [
+//                ['port', '=', 'SADAD'],
+//                ['status','=','SUCCEED'],
+//                ['module', '=', 'charity_donate'],
+//            ])->get();
+//        foreach ($gateways as $gateway) {
+//            $charity = charity_transaction::find($gateway['module_id']);
+//            if(isset($charity['id'])){
+//                $charity->trans_id = trim($gateway['id']);
+//            }
+//            $charity->save();
+//        }
+//        $messages['share']=
+//            "رسید پرداخت"." %0D%0A ".
+//            "نام خیر:"."مهران مرندی"." %0D%0A ".
+//            "مبلغ:".number_format(100000000)."ریال"." %0D%0A ".
+//            "در تاریخ:".jdate('Y/n/j')." %0D%0A ".
+//            "بابت:"."هویجوری"." %0D%0A ".
+//            "موسسه خیریه اشرف الانبیا(ص)"." %0D%0A ";
+//
+//        return view('global.callbackmain', compact('messages'));
     }
 }
