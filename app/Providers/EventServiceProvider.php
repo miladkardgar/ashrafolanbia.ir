@@ -20,27 +20,27 @@ class EventServiceProvider extends ServiceProvider
     protected $listen = [
         userRegisterEvent::class =>
             [
-                \App\Listeners\register\mailListener::class,
+//                \App\Listeners\register\mailListener::class,
                 \App\Listeners\register\smsListener::class,
             ],
         paymentReminder::class =>
             [
-                \App\Listeners\reminder\mailListener::class,
+//                \App\Listeners\reminder\mailListener::class,
                 \App\Listeners\reminder\smsListener::class,
             ],
         payToCharityMoney::class =>
             [
-                \App\Listeners\payment\mailListener::class,
+//                \App\Listeners\payment\mailListener::class,
                 \App\Listeners\payment\smsListener::class,
             ],
         storePaymentConfirmation::class=>
         [
-            \App\Listeners\store\mailListener::class,
+//            \App\Listeners\store\mailListener::class,
             \App\Listeners\store\smsListener::class,
         ],
         charityPaymentConfirmation::class=>
             [
-                \App\Listeners\charity\mailListener::class,
+//                \App\Listeners\charity\mailListener::class,
                 \App\Listeners\charity\smsListener::class,
             ],
         confirmPhone::class=>

@@ -27,6 +27,7 @@ use App\Events\payToCharityMoney;
 use App\gallery_category;
 use App\gateway;
 use App\gateway_transaction;
+use App\Mail\payment_confirmation;
 use App\notification_template;
 use App\order;
 use App\period;
@@ -61,6 +62,7 @@ use mysql_xdevapi\Collection;
 use phpDocumentor\Reflection\Types\Array_;
 use WebDevEtc\BlogEtc\Models\BlogEtcComment;
 use WebDevEtc\BlogEtc\Models\BlogEtcPost;
+use Illuminate\Support\Facades\Mail;
 
 class panel_view extends Controller
 {
@@ -886,9 +888,8 @@ class panel_view extends Controller
 
         $gateway = DB::table('gateway_transactions')->select(DB::raw('port'))->groupBy('port')->get();
         $titles = charity_payment_title::get();
-        $pat = charity_payment_patern::get();
         $gateway = json_decode($gateway, true);
-        return view('panel.charity.reports.report', compact('gateway', 'titles','pat'));
+        return view('panel.charity.reports.report', compact('gateway', 'titles'));
     }
 //end charity module
 
@@ -1161,6 +1162,7 @@ class panel_view extends Controller
 
     public function test()
     {
+        return 'true';
 
 //        $gateways = gateway_transaction::where(
 //            [

@@ -102,6 +102,7 @@
                                 <th></th>
                                 <th>{{__('messages.name')}}</th>
                                 <th>{{__('messages.amount')}}</th>
+                                <th>{{__('messages.phone')}}</th>
                                 <th>{{__('messages.start_date')}}</th>
                                 <th>{{__('messages.next_payment_date')}}</th>
                                 <th>{{__('messages.description')}}</th>
@@ -122,6 +123,7 @@
                                         @endif
                                     </td>
                                     <td>{{number_format($period['amount'])}}</td>
+                                    <td>{{$period['user']['phone'] }}</td>
                                     <td>
                                         @if(isset($period['start_date']))
                                             {{jdate("Y-m-d",strtotime($period['start_date']))}}
