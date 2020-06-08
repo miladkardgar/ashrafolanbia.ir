@@ -55,6 +55,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Laratrust\Models\LaratrustPermission;
 use Laratrust\Models\LaratrustRole;
@@ -62,7 +63,6 @@ use mysql_xdevapi\Collection;
 use phpDocumentor\Reflection\Types\Array_;
 use WebDevEtc\BlogEtc\Models\BlogEtcComment;
 use WebDevEtc\BlogEtc\Models\BlogEtcPost;
-use Illuminate\Support\Facades\Mail;
 
 class panel_view extends Controller
 {
@@ -888,8 +888,9 @@ class panel_view extends Controller
 
         $gateway = DB::table('gateway_transactions')->select(DB::raw('port'))->groupBy('port')->get();
         $titles = charity_payment_title::get();
+        $pat = charity_payment_patern::get();
         $gateway = json_decode($gateway, true);
-        return view('panel.charity.reports.report', compact('gateway', 'titles'));
+        return view('panel.charity.reports.report', compact('gateway', 'titles','pat'));
     }
 //end charity module
 
@@ -1162,8 +1163,9 @@ class panel_view extends Controller
 
     public function test()
     {
-        return 'true';
-
+//        Mail::to("mehranmarandi90@gmail.com")->send(new payment_confirmation("پول دادیا"));
+//
+//        return "yes";
 //        $gateways = gateway_transaction::where(
 //            [
 //                ['port', '=', 'SADAD'],

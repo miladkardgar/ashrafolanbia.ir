@@ -246,6 +246,8 @@ Route::group(
             Route::post('periods/show/{id}', 'panel\charity@charity_periods_delete')->name('charity_periods_delete');
             Route::post('periods/show/inactive/{id}', 'panel\charity@charity_periods_inactive')->name('charity_periods_inactive');
             Route::post('periods/show/approve/{id}', 'panel\charity@charity_payment_approve')->name('charity_payment_approve');
+            Route::post('periods/show/award/{id}', 'panel\charity@charity_periodic_award')->name('charity.periodic.award');
+            Route::post('periods/show/changePassword/{id}', 'panel\charity@changePassword')->name('charity.changeUserPassword');
             Route::get('charity/champion/add', 'panel\panel_view@charity_champion_add')->name('charity_champion_add');
             Route::post('charity/champion/add/store', 'panel\charity@charity_champion_add_store')->name('charity_champion_add_store');
             Route::post('charity/champion/delete/{id}', 'panel\charity@charity_champion_delete')->name('charity_champion_delete');
