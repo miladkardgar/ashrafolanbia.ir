@@ -90,6 +90,7 @@
                         <h6 class="card-title text-black">{{__('messages.transaction_info'). " | ".$periodInfo['user']['people']['name']." ".$periodInfo['user']['people']['family']}}</h6>
                         <hr>
                     </div>
+
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-3">
