@@ -21,6 +21,8 @@
                         targets: 7
                     }],
                     dom: '<"datatable-header"fl><"datatable-scroll"t><"datatable-footer"ip>',
+
+
                     language: {
                         search: '<span>{{__('messages.filter')}}:</span> _INPUT_',
                         searchPlaceholder: '{{__('messages.search')}}...',
@@ -34,7 +36,10 @@
                     }
                 });
                 $('.datatable-basic').DataTable({
+
+
                     pagingType: "simple",
+
                     language: {
                         paginate: {
                             'next': $('html').attr('dir') == 'rtl' ? '{{__('messages.next')}} &larr;' : '{{__('messages.next')}} &rarr;',
@@ -73,9 +78,7 @@
             }
         }();
 
-        document.addEventListener('DOMContentLoaded', function () {
-            DatatableBasic.init();
-        });
+
     </script>
 @endsection
 @section('css')
@@ -96,11 +99,12 @@
                     </div>
                     <div class="card-body">
 
-                        <table class="table datatable-basic">
+                        <table id="datatableList" class="table datatable-basic">
                             <thead>
                             <tr>
                                 <th></th>
                                 <th>{{__('messages.name')}}</th>
+                                <th>{{__('messages.username')}}</th>
                                 <th>{{__('messages.amount')}}</th>
                                 <th>{{__('messages.phone')}}</th>
                                 <th>{{__('messages.start_date')}}</th>
@@ -122,6 +126,7 @@
                                             <span class="badge badge-danger">{{__('messages.'.$period['status'])}}</span>
                                         @endif
                                     </td>
+                                    <td>{{$period['user']['name']}}</td>
                                     <td>{{number_format($period['amount'])}}</td>
                                     <td>{{$period['user']['phone'] }}</td>
                                     <td>
