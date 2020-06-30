@@ -618,7 +618,7 @@ class global_view extends Controller
                 $email = $user['email'];
 
                 if($user->people){
-                    $name = ($user->people->gender == 1 ? " آقای " :" خانم "). $user->people->name." ".$user->people->name;
+                    $name = ($user->people->gender == 1 ? " آقای " :" خانم "). $user->people->name." ".$user->people->family;
                 }
                 $amount = $charity->amount;
                 $reason =$charity->description;
@@ -633,7 +633,7 @@ class global_view extends Controller
                     $user = User::find($charity['user_id']);
                     $phone = $user['phone'];
                     $email = $user['email'];
-                    $name = ($user->people->gender == 1 ? " آقای " :" خانم "). $user->people->name." ".$user->people->name;
+                    $name = ($user->people->gender == 1 ? " آقای " :" خانم "). $user->people->name." ".$user->people->family;
                 } else {
                     if ($charity['phone'] != "") {
                         $phone = $charity['phone'];

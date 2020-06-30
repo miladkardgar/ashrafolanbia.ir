@@ -48,7 +48,7 @@ class notifyPeriodLate extends Command
         foreach ($periodicTransaction as $value){
             $phone = get_user($value['user_id'])['phone'];
             $user = User::find($value['user_id']);
-            $name = ($user->people->gender == 1 ? " آقای " :" خانم "). $user->people->name." ".$user->people->name;
+            $name = ($user->people->gender == 1 ? " آقای " :" خانم "). $user->people->name." ".$user->people->family;
             $smsText = notification_messages('sms','reminderLate3',['name' => $name]);
 
             if ($phone){

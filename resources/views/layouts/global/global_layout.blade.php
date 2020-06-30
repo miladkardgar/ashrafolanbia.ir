@@ -129,6 +129,15 @@
 
     </style>
 </noscript>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-170091333-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-170091333-1');
+</script>
 
 <body class="rtl dark">
 <!-- external javascripts -->

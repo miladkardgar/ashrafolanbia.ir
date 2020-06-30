@@ -35,10 +35,15 @@
     ?>
     <div class="content">
         <div class="row">
-            <div class="col-md-8">
+            <div class="col-md-3" >
+                @include('panel.building.materials.tree_view');
+            </div>
+            <div class="col-md-9">
                 <div class="card">
 
                     <div class="card-header bg-light">
+                        <div class="header-elements-inline">
+
                         <button type="button" class="btn btn-outline-info btn-lg modal-ajax-load"
                                 data-ajax-link="{{route('load_new_building_form')}}" data-toggle="modal"
                                 data-modal-title="{{trans('messages.add_new_building')}}"
@@ -46,18 +51,22 @@
                                 data-target="#general_modal"><i
                                     class="icon-home8 mr-2"></i> {{trans('messages.add_new_building')}}
                         </button>
+                        <div class="header-elements font-weight-bold text-danger">
+                            {{\App\city::find($selected_city)['name']}}
+                        </div>
+                        </div>
                     </div>
 
                     <div class="card-body">
-                        @foreach($projects->chunk(3) as $chunk)
+                        @foreach($projects->chunk(4) as $chunk)
                             <div class="row">
                                 @foreach($chunk as $province)
-                                    <div class="col-md-4">
+                                    <div class="col-md-3">
 
                                         <div class="card border-2px border-info alpha-info mb-0">
                                             <div class="card-img-actions px-1 pt-1 pb-1">
                                                 <img class="card-img img-fluid img-absolute "
-                                                     src="{{$lvl=='project' ? asset($province['media']['url']) : asset('/public/assets/panel/images/3.png')}}" alt="">
+                                                     src="{{$lvl=='project' ? asset('/public/assets/panel/images/building.jpg') : asset('/public/assets/panel/images/3.png')}}" alt="">
                                                 <div class="card-img-actions-overlay  card-img bg-dark-alpha">
 
                                                 </div>
@@ -68,14 +77,13 @@
                                             <div class="card-body border-2px border-info  p-0 m-0">
                                                 <div class="row p-0 m-0">
 
-                                                    <div class="m-0  col-sm-5 bg-info">
-                                                        <h1>{{$lvl=='project' ? "":$province['total'] }} </h1>
-                                                    </div>
-                                                    <div class="m-0  col-sm-7 ">
+
+                                                    <div class="m-0  col-sm-12 ">
                                                         @if($lvl == 'project')
                                                             <a href={{route('building_project',['project_id'=>$province['id']])}}>
                                                                 <h3>
                                                                     <b class="text-info">{{$province['title']}}</b>
+
                                                                 </h3>
                                                             </a>
 
@@ -84,6 +92,7 @@
                                                         <a href="{{route('building_dashboard')}}/?city={{$province[$lvl]}}">
                                                             <h3>
                                                                 <b class="text-info">{{get_cites($province[$lvl])['name']}}</b>
+                                                                <span class="badge-info badge badge-pill" data-popup="tooltip" title="پروژه ها">{{$lvl=='project' ? "":$province['total'] }} </span>
                                                             </h3>
                                                         </a>
                                                             @endif
@@ -99,9 +108,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-4">
-                @include('panel.building.materials.tree_view');
-            </div>
+
         </div>
     </div>
 @endsection

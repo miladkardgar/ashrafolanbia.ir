@@ -269,7 +269,7 @@ class panel_view extends Controller
     public function permissions_team_list(Request $request)
     {
         $teamInfo = Team::find($request['team_id']);
-        $permissionRoles = Permission::with('roles')->find(1);
+        $permissionRoles = Permission::with('roles')->get() ;
         $teams_roles = [];
         $teamForeignKey = Config::get('laratrust.foreign_keys.team');
         foreach ($permissionRoles['roles'] as $role) {
@@ -618,15 +618,34 @@ class panel_view extends Controller
         }
         $selected_city = $request['city'];
         $projects = $projects_query->get();
-        $provinces = city::where('parent', '=', 0)->whereHas('province_project')->get();
+        $provinces = city::where('parent', '=', 0)->whereHas('province_project')->get()->map(function ($city){
+
+            return[
+                'name'=>$city->name,
+                'id'=>$city->id,
+                'parent'=>$city->parent,
+                'openProjects'=>building_project::where('archived',0)->where(function ($q)use($city){$q->where('city_id',$city->id)->orWhere('city_id_2',$city->id)->orWhere('city_id_3',$city->id);})->count(),
+                'archivedProjects'=>building_project::where('archived',1)->where(function ($q)use($city){$q->where('city_id',$city->id)->orWhere('city_id_2',$city->id)->orWhere('city_id_3',$city->id);})->count(),
+                'cities'=>$this->cityLoop($city->id)
+            ];
+        });
         return view('panel.building.dashboard', compact('projects', 'lvl', 'provinces', 'selected_city'));
     }
+    private function cityLoop($cityId){
+        $subCities=city::where('parent',$cityId)->get();
+        $mapSubCities=[];
+        foreach ($subCities as $subCity){
+            $mapSubCities[]=[
+                'name'=>$subCity->name,
+                'id'=>$subCity->id,
+                'parent'=>$subCity->parent,
+                'openProjects'=>building_project::where('archived',0)->where(function ($q)use($subCity){$q->where('city_id',$subCity->id)->orWhere('city_id_2',$subCity->id)->orWhere('city_id_3',$subCity->id);})->count(),
+                'archivedProjects'=>building_project::where('archived',1)->where(function ($q)use($subCity){$q->where('city_id',$subCity->id)->orWhere('city_id_2',$subCity->id)->orWhere('city_id_3',$subCity->id);})->count(),
+                'cities'=>$this->cityLoop($subCity->id)
+            ];
+        }
+        return $mapSubCities;
 
-    public function building_tree_view()
-    {
-        $provinces = city::where('parent', '=', 0)->get();
-        $all_cities = city::pluck('name', 'id')->all();
-        return view('panel.building.materials.tree_view', compact('provinces', 'all_cities'));
     }
 
     public function building_project($project_id, Request $request)
@@ -672,6 +691,14 @@ class panel_view extends Controller
         return view('panel.building.building_project_page', compact('projects', 'total_progress', 'items_progress',
             'ticket_item_checkbox', 'ticket_item_filter', 'ticket_status_checkbox', 'ticket_status_filter'));
     }
+
+    public function building_tree_view()
+    {
+        $provinces = city::where('parent', '=', 0)->get();
+        $all_cities = city::pluck('name', 'id')->all();
+        return view('panel.building.materials.tree_view', compact('provinces', 'all_cities'));
+    }
+
 
     public function building_types()
     {
