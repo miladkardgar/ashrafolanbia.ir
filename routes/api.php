@@ -19,3 +19,9 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::get('/blog/slider', 'app\api@blogSlider')->name('blogSlider');
 Route::get('/blog/list', 'app\api@blogList')->name('blogList');
 
+Route::group(['middleware' => ['auth:api']], function () {
+
+    Route::get('/test', 'app\api@test')->name('test');
+
+});
+

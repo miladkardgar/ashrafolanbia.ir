@@ -1190,6 +1190,8 @@ class panel_view extends Controller
 
     public function test()
     {
+
+
 //        Mail::to("mehranmarandi90@gmail.com")->send(new payment_confirmation("پول دادیا"));
 //
 //        return "yes";

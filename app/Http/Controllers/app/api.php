@@ -21,4 +21,8 @@ class api extends Controller
         $posts = get_posts(null,[],['last_post'],10);
         return response()->json(['data'=>$posts]);
     }
+    public function test()
+    {
+        return response()->json(['data'=>auth('api')->user()->phone]);
+    }
 }

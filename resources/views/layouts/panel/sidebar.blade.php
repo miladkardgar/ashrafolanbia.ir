@@ -439,6 +439,20 @@ if (!isset($active_sidbare)) {
                     </ul>
                 </li>
                 @endpermission
+                <li class="nav-item nav-item-submenu {{in_array("mobile-app", $active_sidbare) ? ' nav-item-open' : '' }}">
+                    <a href="#" class=" nav-link"><i class="icon-mobile"></i>
+                        <span>{{trans('messages.mobile-app')}}</span></a>
+
+                    <ul class="nav nav-group-sub" data-submenu-title="{{trans('messages.mobile-app')}}"
+                        style="display:{{in_array("mobile-app", $active_sidbare) ? 'block' : 'none' }}">
+
+                        <li class="nav-item">
+                            <a href="{{route('contact.index')}}"
+                               class="nav-link {{in_array("mobile-app-manage", $active_sidbare) ? 'active' : '' }}">{{trans('messages.mobile-app-manage')}}</a>
+                        </li>
+
+                    </ul>
+                </li>
                 <!-- /main -->
             </ul>
         </div>
