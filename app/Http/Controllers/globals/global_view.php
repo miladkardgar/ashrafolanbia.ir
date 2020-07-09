@@ -384,12 +384,11 @@ class global_view extends Controller
     public function vow_cart(Request $request)
     {
         $charityIn = charity_periods_transaction::with('period')->findOrFail($request['id']);
-        if ($charityIn['user_id'] == Auth::id()) {
-            $gateways = gateway::with('bank')->get();
-            return view('global.vows.cart', compact('charityIn', 'gateways'));
-        } else {
-            return abort(403);
-        }
+        $user = User::with('people')->find($charityIn['user_id']);
+        $name = $user['people']['name']." ".$user['people']['family'];
+        $gateways = gateway::with('bank')->get();
+        return view('global.vows.cart', compact('charityIn', 'gateways','name'));
+
     }
 
     public function vow_donate()

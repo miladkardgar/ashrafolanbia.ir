@@ -69,6 +69,12 @@
                                         <h4>{{$charityIn['description']}}</h4>
                                     </div>
                                     <div class="col-md-4 col-xs-12 pt-20">
+                                        <strong>{{__('messages.name')}}</strong>
+                                    </div>
+                                    <div class="col-md-8 col-xs-12 pt-20 text-center">
+                                        <h4>{{$name}}</h4>
+                                    </div>
+                                    <div class="col-md-4 col-xs-12 pt-20">
                                         <strong>{{__('messages.price')}}:</strong>
                                     </div>
                                     <div class="col-md-8 col-xs-12 pt-20 text-center">
