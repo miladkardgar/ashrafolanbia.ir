@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\app;
 
 use App\Http\Controllers\Controller;
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use WebDevEtc\BlogEtc\Captcha\CaptchaAbstract;
 use WebDevEtc\BlogEtc\Events\CommentAdded;
 use WebDevEtc\BlogEtc\Models\BlogEtcComment;
@@ -41,12 +43,6 @@ class api extends Controller
 
         return response()->json(['posts'=>$posts,'payments'=>$payment_titles,'notification'=>$notification]);
     }
-
-//    public function more_posts()
-//    {
-//        $posts = get_posts(null,[],['last_post'],10);
-//        return response()->json(['data'=>$posts]);
-//    }
 
     public function show_post($slug)
     {
@@ -120,55 +116,43 @@ class api extends Controller
         return $new_comment;
     }
 
-    public function payment()
-    {
-        $posts = get_posts(null,[],['last_post'],10);
-        return response()->json(['data'=>$posts]);
-    }
 
-    public function transaction(Request $request)
-    {
-        $posts = get_posts(null,[],['last_post'],10);
-        return response()->json(['data'=>$posts]);
-    }
 
-    public function callback()
-    {
-        $posts = get_posts(null,[],['last_post'],10);
-        return response()->json(['data'=>$posts]);
-    }
-
-    public function show_from()
-    {
-        $posts = get_posts(null,[],['last_post'],10);
-        return response()->json(['data'=>$posts]);
-    }
-
-    public function set_from(Request $request)
-    {
-        $posts = get_posts(null,[],['last_post'],10);
-        return response()->json(['data'=>$posts]);
-    }
 
     public function login(Request $request)
     {
-        $posts = get_posts(null,[],['last_post'],10);
-        return response()->json(['data'=>$posts]);
+        if (!$request['username'] or !$request['password']){
+            return response()->json(['result'=>'fail','message'=>"نام کاربری یا رمز عبور اشتباه است"]);
+        }
+        else{
+            $user_by_name = User::where('name',$request['username'])->first();
+            $user_by_phone = User::where('phone',$request['username'])->first();
+            $user_by_email = User::where('email',$request['username'])->first();
+            $user = $user_by_name ? $user_by_name : $user_by_phone;
+            $user = $user ? $user : $user_by_email;
+        }
+        $password_is_match = !$user ? false : Hash::check($request['password'], $user->password);
+
+        if ($password_is_match){
+            if (!$user['api_token']){
+                $user['api_token'] = Str::random(60);
+                $user->save();
+            }
+            return response()->json(['result'=>'fail','message'=>"ورود با موفقیت انجام شد",'api_token'=>$user['api_token']]);
+        }
+        else{
+            return response()->json(['result'=>'fail','message'=>"نام کاربری یا رمز عبور اشتباه است"]);
+        }
+
     }
 
-    public function profile()
+    public function user_payment_data()
     {
         $posts = get_posts(null,[],['last_post'],10);
         return response()->json(['data'=>$posts]);
     }
 
     public function set_periodic(Request $request)
-    {
-        $posts = get_posts(null,[],['last_post'],10);
-        return response()->json(['data'=>$posts]);
-    }
-
-    public function payment_history()
     {
         $posts = get_posts(null,[],['last_post'],10);
         return response()->json(['data'=>$posts]);

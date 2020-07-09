@@ -11,12 +11,12 @@ Route::group(['middleware' => 'throttle:5,3'], function () {
     Route::post('/comment/{blog_post_slug}','app\api@addNewComment')->name('comment');
 });
 
-Route::get('/payment', 'app\api@payment')->name('payment');//صفحه پرداخت
-Route::post('/transaction', 'app\api@transaction')->name('transaction');// ساخت ترنزاکشن
-Route::get('/callback', 'app\api@callback')->name('callback');// ثبت پرداخت موفق
+//Route::get('/payment', 'app\api@payment')->name('payment');//صفحه پرداخت
+//Route::post('/transaction', 'app\api@transaction')->name('transaction');// ساخت ترنزاکشن
+//Route::get('/callback', 'app\api@callback')->name('callback');// ثبت پرداخت موفق
 
-Route::get('/show_from', 'app\api@show_from')->name('show_from'); //صفحه فرم درخواست
-Route::post('/submit_from', 'app\api@set_from')->name('set_from');//ارسال فرم
+//Route::get('/show_from', 'app\api@show_from')->name('show_from'); //صفحه فرم درخواست
+//Route::post('/submit_from', 'app\api@set_from')->name('set_from');//ارسال فرم
 
 Route::post('/login', 'app\api@login')->name('login'); // ورود به حساب کاربری
 
