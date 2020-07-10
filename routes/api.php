@@ -22,7 +22,7 @@ Route::post('/login', 'app\api@login')->name('login'); // ورود به حساب
 
 Route::group(['middleware' => ['auth:api']], function () {
     Route::get('/profile', 'app\api@profile')->name('profile'); // مشاهده پروفایل شامل تعهد های فعال و در انتظار پرداخت ها
+    Route::post('/user_data', 'app\api@user_data')->name('user_data'); // مشاهده سوابق پرداخت
     Route::post('/set_periodic', 'app\api@set_periodic')->name('set_periodic'); // ثبت تعهد جدید
-    Route::get('/payment_history', 'app\api@payment_history')->name('payment_history'); // مشاهده سوابق پرداخت
 });
 

@@ -121,9 +121,32 @@ class global_view extends Controller
         return view('global.materials.login_page');
     }
 
+    public function profile_app()
+    {
+
+        if (isset($_GET['lt'])){
+            $user = User::where('login_token',$_GET['lt'])->first();
+            if ($user){
+                $user['login_token']='';
+                $user->save();
+                Auth::loginUsingId($user['id']);
+            }
+        }
+        return redirect(route('global_profile'));
+    }
     public function profile_page()
     {
         Artisan::call("cache:clear");
+
+        if (isset($_GET['lt'])){
+            $user = User::where('login_token',$_GET['lt'])->first();
+            if ($user){
+                $user['login_token']='';
+                $user->save();
+                Auth::loginUsingId($user['id']);
+            }
+        }
+
         $periods = charity_period::where('user_id', Auth::id())->get();
         $unpaidPeriod = charity_periods_transaction::where(
             [

@@ -31,6 +31,7 @@ class CreateUsersTable extends Migration
             $table->integer('last_modifier')->nullable()->unsigned();
             $table->string('password');
             $table->string('api_token')->unique()->nullable()->default(null);
+            $table->string('login_token')->unique()->nullable()->default(null);
             $table->rememberToken();
             $table->timestamps();
         });

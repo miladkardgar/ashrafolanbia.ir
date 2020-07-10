@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers\app;
 
+use App\charity_period;
+use App\charity_periods_transaction;
 use App\Http\Controllers\Controller;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use WebDevEtc\BlogEtc\Captcha\CaptchaAbstract;
 use WebDevEtc\BlogEtc\Events\CommentAdded;
 use WebDevEtc\BlogEtc\Models\BlogEtcComment;
@@ -40,6 +43,7 @@ class api extends Controller
             'text'=>'این یک اطلاعیه است',
             'href'=>'link'
         ];
+
 
         return response()->json(['posts'=>$posts,'payments'=>$payment_titles,'notification'=>$notification]);
     }
@@ -116,9 +120,6 @@ class api extends Controller
         return $new_comment;
     }
 
-
-
-
     public function login(Request $request)
     {
         if (!$request['username'] or !$request['password']){
@@ -146,10 +147,32 @@ class api extends Controller
 
     }
 
-    public function user_payment_data()
+    public function user_data()
     {
-        $posts = get_posts(null,[],['last_post'],10);
-        return response()->json(['data'=>$posts]);
+        $user = Auth::guard('api')->user();
+
+        $active_periods = charity_period::where('user_id', Auth::id())->get();
+        $unpaid = charity_periods_transaction::where(
+            [
+                ['status', '=', 'unpaid'],
+                ['user_id', '=', Auth::id()],
+            ])->get();
+        $paid_history = charity_periods_transaction::where(
+            [
+                ['status', '=', 'paid'],
+                ['user_id', '=', Auth::id()],
+            ])->get();
+        $user->login_token = Str::random(60);
+        $user->Save();
+        $userInfo = User::with('people')->find($user['id']);
+        $userInfo =[
+            'name' =>$userInfo['people']['name']." ".$userInfo['people']['family'],
+            'phone' =>$userInfo['phone'],
+            'email' =>$userInfo['email'],
+            'profile_link' => route('app_profile')."?lt=".$userInfo->login_token,
+        ];
+
+        return response()->json(['userInfo'=>$userInfo,'paid_history'=>$paid_history,'unpaid'=>$unpaid,'active_periods'=>$active_periods] );
     }
 
     public function set_periodic(Request $request)

@@ -636,6 +636,7 @@ Route::group(
     Route::get('sform/{id}', 'panel\supportFormController@show')->name('sform_view');
     Route::POST('vow/payment', 'globals\global_view@vow_payment')->name('add_charity_transaction');
     Route::get('vow/cart/{id}', 'globals\global_view@vow_cart')->name('vow_cart');
+    Route::get('app/profile', 'globals\global_view@profile_app')->name('app_profile');
 
     Route::post('panel/profile/period/delete', 'globals\global_controller@profile_period_delete')->name('global_profile_delete_period');
     Route::get('panel/profile/period/check', 'globals\global_controller@profile_period_check')->name('global_profile_check');
