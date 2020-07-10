@@ -11,18 +11,18 @@ Route::group(['middleware' => 'throttle:5,3'], function () {
     Route::post('/comment/{blog_post_slug}','app\api@addNewComment')->name('comment');
 });
 
-Route::get('/payment', 'app\api@payment')->name('payment');//صفحه پرداخت
-Route::post('/transaction', 'app\api@transaction')->name('transaction');// ساخت ترنزاکشن
-Route::get('/callback', 'app\api@callback')->name('callback');// ثبت پرداخت موفق
+//Route::get('/payment', 'app\api@payment')->name('payment');//صفحه پرداخت
+//Route::post('/transaction', 'app\api@transaction')->name('transaction');// ساخت ترنزاکشن
+//Route::get('/callback', 'app\api@callback')->name('callback');// ثبت پرداخت موفق
 
-Route::get('/show_from', 'app\api@show_from')->name('show_from'); //صفحه فرم درخواست
-Route::post('/submit_from', 'app\api@set_from')->name('set_from');//ارسال فرم
+//Route::get('/show_from', 'app\api@show_from')->name('show_from'); //صفحه فرم درخواست
+//Route::post('/submit_from', 'app\api@set_from')->name('set_from');//ارسال فرم
 
 Route::post('/login', 'app\api@login')->name('login'); // ورود به حساب کاربری
 
 Route::group(['middleware' => ['auth:api']], function () {
     Route::get('/profile', 'app\api@profile')->name('profile'); // مشاهده پروفایل شامل تعهد های فعال و در انتظار پرداخت ها
+    Route::post('/user_data', 'app\api@user_data')->name('user_data'); // مشاهده سوابق پرداخت
     Route::post('/set_periodic', 'app\api@set_periodic')->name('set_periodic'); // ثبت تعهد جدید
-    Route::get('/payment_history', 'app\api@payment_history')->name('payment_history'); // مشاهده سوابق پرداخت
 });
 
