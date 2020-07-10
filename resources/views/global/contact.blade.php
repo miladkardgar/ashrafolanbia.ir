@@ -113,8 +113,10 @@
 
                                     </div>
                                     <div class="form-group">
-                                        <label for="phone">{{__('messages.phone')}}</label>
-                                        <input id="phone" name="phone" class="form-control" type="text"
+                                        <label for="phone">{{__('messages.phone')}}
+                                            <small>*</small>
+                                        </label>
+                                        <input id="phone" name="phone" class="form-control" type="text" required="required"
                                                placeholder="{{__('messages.enter_Phone')}}">
                                     </div>
                                     <div class="form-group">

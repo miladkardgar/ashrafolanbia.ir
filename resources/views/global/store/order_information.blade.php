@@ -124,36 +124,36 @@
                                 </tbody>
                             </table>
                         </div>
-                        <div class="col-md-6">
-                            <label><i class="fa fa-angle-left"></i> {{__('messages.how_to_send')}}</label>
-                            <table class="table table-bordered border text-center" style="vertical-align: middle">
-                                <tbody>
-                                @foreach($tran as $tra)
-                                    <tr>
-                                        <td colspan="1" class="col-md-1 success" style="vertical-align: middle">
-                                            <i class="fa fa-check-square-o fa-3x text-success align-middle text-center"></i>
-                                        </td>
-                                        <td class="align-middle" style="vertical-align: middle">
-                                            <i class="fa fa-truck fa-2x pull-right mr-20"></i>
-                                            <span class="pull-right align-middle mr-20">{{$tra['title']}}</span>
-                                            <span
-                                                class="pull-left align-middle ml-20 text-success">{{__("messages.free")}}</span>
-                                        </td>
-                                        <td>
-                                            <div class="radio">
-                                                <label>
-                                                    <input type="radio" name="transportation" required="required"
-                                                           id="trans_radio_{{$tra['id']}}" value="{{$tra['id']}}">
-                                                    {{__('messages.select')}}
-                                                </label>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="col-md-6">
+{{--                        <div class="col-md-6">--}}
+{{--                            <label><i class="fa fa-angle-left"></i> {{__('messages.how_to_send')}}</label>--}}
+{{--                            <table class="table table-bordered border text-center" style="vertical-align: middle">--}}
+{{--                                <tbody>--}}
+{{--                                @foreach($tran as $tra)--}}
+{{--                                    <tr>--}}
+{{--                                        <td colspan="1" class="col-md-1 success" style="vertical-align: middle">--}}
+{{--                                            <i class="fa fa-check-square-o fa-3x text-success align-middle text-center"></i>--}}
+{{--                                        </td>--}}
+{{--                                        <td class="align-middle" style="vertical-align: middle">--}}
+{{--                                            <i class="fa fa-truck fa-2x pull-right mr-20"></i>--}}
+{{--                                            <span class="pull-right align-middle mr-20">{{$tra['title']}}</span>--}}
+{{--                                            <span--}}
+{{--                                                class="pull-left align-middle ml-20 text-success">{{__("messages.free")}}</span>--}}
+{{--                                        </td>--}}
+{{--                                        <td>--}}
+{{--                                            <div class="radio">--}}
+{{--                                                <label>--}}
+{{--                                                    <input type="radio" name="transportation" required="required"--}}
+{{--                                                           id="trans_radio_{{$tra['id']}}" value="{{$tra['id']}}">--}}
+{{--                                                    {{__('messages.select')}}--}}
+{{--                                                </label>--}}
+{{--                                            </div>--}}
+{{--                                        </td>--}}
+{{--                                    </tr>--}}
+{{--                                @endforeach--}}
+{{--                                </tbody>--}}
+{{--                            </table>--}}
+{{--                        </div>--}}
+                        <div class="col-md-12">
                             <label><i class="fa fa-angle-left"></i> {{__('messages.payment_type')}}</label>
                             <table class="table table-bordered border text-center" style="vertical-align: middle">
                                 <tbody>
@@ -252,37 +252,26 @@
                                 </tbody>
                             </table>
                         </div>
-                        <div class="col-md-12">
-                            <label><i class="fa fa-angle-left"></i> {{__('messages.send_time')}}</label>
-                            <table class="table table-bordered border text-center" style="vertical-align: middle">
-                                <tbody>
-                                <?php
-                                $time = 0;
-                                ?>
-                                @if(session('cart')['order'])
-                                    @foreach(session('cart')['order'] as $id => $details)
-                                        <?php
-                                        if ($details['time'] > $time) {
-                                            $time = $details['time'];
-                                        }
-                                        ?>
-                                    @endforeach
-                                @endif
-                                <tr>
-                                    <td colspan="1" class="col-md-1 success" style="vertical-align: middle">
-                                        <i class="fa fa-check-square-o fa-3x text-success align-middle text-center"></i>
-                                    </td>
-                                    <td class="align-middle" style="vertical-align: middle">
-                                        <i class="fa fa-truck fa-2x pull-right mr-20"></i>
-                                        <span
-                                            class="pull-right align-middle mr-20">{{__('messages.max_send_time_your_order')}}</span>
-                                        <span
-                                            class="pull-left align-middle ml-20 text-success">{{$time."  ". __("messages.work_day")}}</span>
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </div>
+{{--                        <div class="col-md-6">--}}
+{{--                            <label><i class="fa fa-angle-left"></i> {{__('messages.send_time')}}</label>--}}
+{{--                            <table class="table table-bordered border text-center" style="vertical-align: middle">--}}
+{{--                                <tbody>--}}
+{{--
+{{--                                <tr>--}}
+{{--                                    <td colspan="1" class="col-md-1 success" style="vertical-align: middle">--}}
+{{--                                        <i class="fa fa-check-square-o fa-3x text-success align-middle text-center"></i>--}}
+{{--                                    </td>--}}
+{{--                                    <td class="align-middle" style="vertical-align: middle">--}}
+{{--                                        <i class="fa fa-truck fa-2x pull-right mr-20"></i>--}}
+{{--                                        <span--}}
+{{--                                            class="pull-right align-middle mr-20">{{__('messages.max_send_time_your_order')}}</span>--}}
+{{--                                        <span--}}
+{{--                                            class="pull-left align-middle ml-20 text-success">{{$time."  ". __("messages.work_day")}}</span>--}}
+{{--                                    </td>--}}
+{{--                                </tr>--}}
+{{--                                </tbody>--}}
+{{--                            </table>--}}
+{{--                        </div>--}}
                         <button type="submit"
                                 class="btn btn-success pull-left p-10 pr-20 pl-20">{{__('messages.continue_shopping')}}
                             <i class="fa fa-caret-left pr-10"></i></button>

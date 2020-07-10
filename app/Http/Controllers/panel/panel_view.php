@@ -424,7 +424,6 @@ class panel_view extends Controller
     public function more_blog_setting(Request $request)
     {
         return view('panel.blog_setting.more_setting');
-
     }
 
 
@@ -1131,14 +1130,35 @@ class panel_view extends Controller
 
     public function blog_setting_more_setting(Request $request)
     {
-        foreach ($request->all() as $item => $val) {
-            if ($item != "_token") {
-                Config::set('blog_setting.social_media.' . $item . '.link', $val['link']);
+
+        foreach ($request->all() as $item => $value) {
+            if ($item != '_token' && $item != '_method' && isset($value) && $value!='' && $item!="files") {
+                $k = '.social_media.' . $item . '.link';
+                self::updateConfig('blog_setting', $k, trim($value['link']));
             }
         }
+        Artisan::call('config:cache');
+        sleep(6);
+        session()->flash('type', 'success');
+        session()->flash('message', 'تنظمیات ویرایش گردید.');
+        return redirect()->back();
     }
 
+    public static function updateConfig($configFile, $configKey, $newValue)
+    {
+        config([$configFile . $configKey => $newValue]);
+        $export = var_export(config($configFile), TRUE);
+        $patterns = [
+            "/array \(/" => '[',
+            "/^([ ]*)\)(,?)$/m" => '$1]$2',
+            "/=>[ ]?\n[ ]+\[/" => '=> [',
+            "/([ ]*)(\'[^\']+\') => ([\[\'])/" => '$1$2 => $3',
+        ];
+        $export = preg_replace(array_keys($patterns), array_values($patterns), $export);
+        $output = "<?php return " . $export . ';';
+        file_put_contents(config_path($configFile . '.php'), $output);
 
+    }
     public function updateDate()
     {
         $d = array();

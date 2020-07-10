@@ -144,6 +144,7 @@ Route::group(
             Route::get('setting_how_to_send_edit', 'panel\panel_view@setting_how_to_send_edit')->name('setting_how_to_send_edit');
             Route::get('setting_how_to_send_delete', 'panel\setting@setting_how_to_send_delete')->name('setting_how_to_send_delete');
             Route::post('setting_how_to_send_update', 'panel\setting@setting_how_to_send_update')->name('setting_how_to_send_update');
+            Route::post('contact/response', 'panel\contactController@response')->name('contact.response');
 
         });
         Route::prefix('store')->group(function () {
@@ -194,6 +195,7 @@ Route::group(
         });
         Route::prefix('building')->group(function () {
             Route::get('dashboard', 'panel\panel_view@building_dashboard')->name('building_dashboard');
+            Route::post('dashboard/excel_report', 'panel\building@excel_report')->name('building_excel_report');
             Route::get('building_project/{project_id}', 'panel\panel_view@building_project')->name('building_project');
             Route::get('building_types', 'panel\panel_view@building_types')->name('building_types');
             Route::get('building_archive', 'panel\panel_view@building_archive')->name('building_archive');
@@ -636,6 +638,7 @@ Route::group(
     Route::get('sform/{id}', 'panel\supportFormController@show')->name('sform_view');
     Route::POST('vow/payment', 'globals\global_view@vow_payment')->name('add_charity_transaction');
     Route::get('vow/cart/{id}', 'globals\global_view@vow_cart')->name('vow_cart');
+    Route::get('app/profile', 'globals\global_view@profile_app')->name('app_profile');
 
     Route::post('panel/profile/period/delete', 'globals\global_controller@profile_period_delete')->name('global_profile_delete_period');
     Route::get('panel/profile/period/check', 'globals\global_controller@profile_period_check')->name('global_profile_check');

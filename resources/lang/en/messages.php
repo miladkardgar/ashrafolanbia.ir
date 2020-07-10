@@ -1,6 +1,52 @@
 <?php
 
 return array (
+    'transport_type'=>'Transport type',
+    'title'=>'Title',
+    'name_family'=>'Name and Family',
+    'phone'=>'Phone',
+    'completion_edit_information'=>'Completion Information',
+    'change_password'=>'Change Password',
+    'edit_add_addresses'=>'Add and edit addresses',
+    'buy_report'=>'Buy Report',
+    'new_charity_period'=>'New Charity Period',
+    'payment_list'=>'Payment List',
+    'periodic_payment'=>'Periodic Payment',
+    'paid'=>'Paid',
+    'amount'=>'Amount',
+    'rial'=>'Rial',
+    'start_date'=>'Start Date',
+    'description'=>'Description',
+    'unpaid'=>'unpaid',
+    'pay'=>'Pay',
+    'welcome'=>'Welcome',
+    'register_page_title'=>'Register',
+    'register_page_description'=>'Register site',
+    'duplicate_email'=>'Duplicate Email',
+    'login_page_title'=>'Login',
+    'remember_me'=>'Remember Me',
+    'nothing_to_display'=>'Empty',
+    'image_gallery_ashraf'=>'Medias Gallery',
+    'show'=>'Show',
+    'search_blog'=>'Search',
+    'latest_post'=>'Latest Post',
+    'search_results_for'=>'Search Result',
+    'search_results_null'=>'Not found any post',
+    'end_date'=>'End Date',
+    'departure'=>'Departure',
+    'executer'=>'Executer',
+    'capacity'=>'Capacity',
+    'supervisor'=>'Supervisor',
+    'birth_date'=>'Birthday',
+    'status'=>'Status',
+    'national_code'=>'National Code',
+    'photos_gallery'=>'Gallery',
+    'random_photos'=>'Random Photos',
+    'caravan'=>'caravan',
+  'you_have_unpaid_period'=>'You have unpaid period',
+  'account'=>'account',
+  'logout'=>'logout',
+  'buy_basket'=>'cert',
   'test' => 'Test.',
   'html_title' => 'Ashraf-ol-Anbia(G).Charity Institute',
   'users_management' => 'Users Management',
@@ -8,11 +54,11 @@ return array (
   'users_list' => 'List of Users',
   'roles_permission' => 'roles and Permissions',
   'groups' => 'Group management',
-  'Loading' => 
+  'Loading' =>
   array (
-    '' => 
+    '' =>
     array (
-      '' => 
+      '' =>
       array (
         '' => 'Loading...',
       ),

@@ -121,9 +121,32 @@ class global_view extends Controller
         return view('global.materials.login_page');
     }
 
+    public function profile_app()
+    {
+
+        if (isset($_GET['lt'])){
+            $user = User::where('login_token',$_GET['lt'])->first();
+            if ($user){
+                $user['login_token']='';
+                $user->save();
+                Auth::loginUsingId($user['id']);
+            }
+        }
+        return redirect(route('global_profile'));
+    }
     public function profile_page()
     {
         Artisan::call("cache:clear");
+
+        if (isset($_GET['lt'])){
+            $user = User::where('login_token',$_GET['lt'])->first();
+            if ($user){
+                $user['login_token']='';
+                $user->save();
+                Auth::loginUsingId($user['id']);
+            }
+        }
+
         $periods = charity_period::where('user_id', Auth::id())->get();
         $unpaidPeriod = charity_periods_transaction::where(
             [
@@ -241,7 +264,6 @@ class global_view extends Controller
         $card2 = [
             "extraInfo" => [
                 'address' => $request['address'],
-                'transportation' => $request['transportation'],
                 'payment' => $request['payment']
             ]];
         session()->put('info', $card2);
@@ -263,7 +285,7 @@ class global_view extends Controller
                 'user_id' => Auth::id(),
                 'count' => $count,
                 'address_id' => $request['address'],
-                'transportation_id' => $request['transportation'],
+                'transportation_id' => 2,
                 'payment' => $request['payment'],
                 'price' => $price . "0",
                 'tax' => 0,
@@ -285,12 +307,12 @@ class global_view extends Controller
         }
         $gateways = gateway::where('status', 'active')->get();
         $address = users_address::with('extraInfo', 'city', 'province')->find($request['address']);
-        $transport = setting_transportation::find($request['transportation']);
+        $transport = setting_transportation::find(2);
         $trnasCost = 0;
         if ($trna = setting_transportation_cost::where(
             [
                 ['c_id', '=', $address['city_id']],
-                ['t_id', '=', $request['transportation']],
+                ['t_id', '=', 2],
             ]
         )->first()) {
             $trnasCost = $trna['cost'];

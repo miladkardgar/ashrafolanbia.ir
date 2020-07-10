@@ -3,9 +3,14 @@
 namespace App\Http\Controllers\panel;
 
 use App\contact;
+use App\Events\email;
 use App\Http\Controllers\Controller;
+use App\Mail\ContactResponseMail;
+use App\Mail\payment_confirmation;
+use App\Mail\userRegisterMail;
 use App\video_gallery;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class contactController extends Controller
 {
@@ -17,8 +22,8 @@ class contactController extends Controller
     public function index()
     {
         //
-        $contacts =contact::all();
-        return view('panel.setting.contact',compact('contacts'));
+        $contacts = contact::all();
+        return view('panel.setting.contact', compact('contacts'));
     }
 
     /**
@@ -70,9 +75,9 @@ class contactController extends Controller
     {
         //
         $info = contact::findOrFail($id);
-        $info->status='read';
+        $info->status = 'read';
         $info->save();
-        return view('panel.setting.contact.show',compact('info'));
+        return view('panel.setting.contact.show', compact('info'));
     }
 
     /**
@@ -107,9 +112,33 @@ class contactController extends Controller
     public function destroy($id)
     {
         //
-        if($info = contact::findOrFail($id)){
+        if ($info = contact::findOrFail($id)) {
             $info->delete();
         }
         return redirect();
+    }
+
+    public function response(Request $request)
+    {
+
+        $info = contact::findOrFail($request['id']);
+        $info->response = $request['response'];
+        $info->status = 'response';
+        $info->save();
+        $res = 'پاسخ شما ';
+        if (isset($info['phone']) && $info['phone'] != "" && strlen($info['phone']) == 11) {
+            $message = 'با احترام از حسن نیست شما پاسخ موسسه اشرف النبیاء به شرح زیر میباشد:' . "\n\n" . $request['response'];
+            \sendSms($info['phone'], $message, true);
+            $res .=' | از طریق پیامک';
+        }
+        if (isset($info['email'])) {
+            $message = 'با احترام از حسن نیست شما پاسخ موسسه اشرف النبیاء به شرح زیر میباشد:' . "<br/><br/>" . $request['response'];
+            Mail::to($info['email'])->send(new ContactResponseMail($message));
+            $res .=' | از طریق ایمیل';
+        }
+        $res .=' ارسال گردید.';
+        session()->flash('type','success');
+        session()->flash('message',$res);
+        return view('panel.setting.contact.show', compact('info'));
     }
 }

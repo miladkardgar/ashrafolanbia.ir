@@ -73,12 +73,15 @@
     <!-- CSS | Responsive media queries -->
     <link href="{{ URL::asset('/public/assets/global/css/responsive.css') }}" rel="stylesheet" type="text/css">
     <!-- CSS | RTL Layout -->
+    @if(App()->getLocale()=="fa")
     <link href="{{ URL::asset('/public/assets/global/css/bootstrap-rtl.min.css') }}" rel="stylesheet" type="text/css">
     <link href="{{ URL::asset('/public/assets/global/css/style-main-rtl.css') }}" rel="stylesheet" type="text/css">
     <link href="{{ URL::asset('/public/css/mmenu-light.css') }}?i=4" rel="stylesheet" type="text/css">
     <link href="{{ URL::asset('/public/assets/global/css/style-main-rtl-extra.css') }}" rel="stylesheet"
           type="text/css">
-    <!-- CSS | Style css. This is the file where you can place your own custom css code. Just uncomment it and use it. -->
+    @endif
+
+<!-- CSS | Style css. This is the file where you can place your own custom css code. Just uncomment it and use it. -->
     <!-- <link href="css/style.css" rel="stylesheet" type="text/css"> -->
 
 
@@ -139,7 +142,7 @@
     gtag('config', 'UA-170091333-1');
 </script>
 
-<body class="rtl dark">
+<body class=" {{App()->getLocale()=="en"?'ltr':'rtl'}} dark">
 <!-- external javascripts -->
 <script src="{{ URL::asset('/public/assets/global/js/jquery-2.2.4.min.js') }}"></script>
 <script src="{{ URL::asset('/public/assets/global/js/bootstrap.min.js') }}"></script>
@@ -195,8 +198,9 @@
 
 <!-- JS | jquery plugin collection for this theme -->
 <script src="{{ URL::asset('/public/assets/global/js/jquery-plugin-collection.js') }}?i=2"></script>
+@if(App()->getLocale()=="fa")
 <script src="{{ URL::asset('/public/assets/global/js/localization/messages_fa.js') }}"></script>
-
+@endif
 
 <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
 <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -218,7 +222,7 @@
 
 <script>
     $(document).ready(function () {
-        @if(!$errors->isEmpty())
+        @isset($errors)
         @foreach ($errors->all() as $key => $error)
         PNotify.error({
             title: '{{$key}}',

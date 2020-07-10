@@ -331,8 +331,8 @@ class charity extends Controller
         $report->select(DB::raw('module as mo'), DB::raw('DATE(created_at) as date'), DB::raw('price'), DB::raw('port'));
         $report->whereIn('module', $request['type']);
         $report->whereIn('port', $request['gateway']);
+        $report->whereIn('status', $request['status']);
         $report->whereBetween('created_at', [$startDate, $endDate]);
-        $report->where('status', '=', 'SUCCEED');
         if (in_array('charity_donate', $request['type'])) {
             $report->whereHas('charityInfo', function ($q) use ($request) {
                 $q->whereIn('title_id', $request['chType']);
@@ -344,8 +344,8 @@ class charity extends Controller
         $reportRowQuery->with('charityInfo');
         $reportRowQuery->whereIn('module', $request['type']);
         $reportRowQuery->whereIn('port', $request['gateway']);
+        $reportRowQuery->whereIn('status', $request['status']);
         $reportRowQuery->whereBetween('created_at', [$startDate, $endDate]);
-        $reportRowQuery->where('status', '=', 'SUCCEED');
         if (in_array('charity_donate', $request['type'])) {
             $reportRowQuery->whereHas('charityInfo', function ($q) use ($request) {
                 $q->whereIn('title_id', $request['chType']);
@@ -363,7 +363,7 @@ class charity extends Controller
                         'card_number' => $q['card_number'],
                         'status' => __('messages.' . $q['status']),
                         'ip' => $q['ip'],
-                        'payDate' => jdate("Y-m-d H:i:s", strtotime($q['payment_date']), '', '', 'en'),
+                        'payDate' => isset($q['payment_date'])?jdate("Y-m-d H:i:s", strtotime($q['payment_date']), '', '', 'en'):'',
                         'price' => $q['price'],
                         'module' => __('messages.' . $q['module']),
                         'type' => $q['charityInfo']['title']['title'],
@@ -379,7 +379,7 @@ class charity extends Controller
                     'card_number' => $q['card_number'],
                     'status' => __('messages.' . $q['status']),
                     'ip' => $q['ip'],
-                    'payDate' => jdate("Y-m-d H:i:s", strtotime($q['payment_date']), '', '', 'en'),
+                    'payDate' => isset($q['payment_date'])?jdate("Y-m-d H:i:s", strtotime($q['payment_date']), '', '', 'en'):'',
                     'price' => $q['price'],
                     'module' => __('messages.' . $q['module']),
                     'type' => $q['charityInfo']['title']['title'],

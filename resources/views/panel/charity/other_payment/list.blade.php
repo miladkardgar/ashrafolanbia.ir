@@ -7,6 +7,8 @@
         src="{{ URL::asset('/public/assets/panel/global_assets/js/plugins/tables/datatables/datatables.min.js') }}"></script>
     <script
         src="{{ URL::asset('/public/assets/panel/global_assets/js/plugins/forms/selects/select2.min.js') }}"></script>
+    <script
+        src="{{ URL::asset('/public/assets/panel/global_assets/js/plugins/tables/datatables/extensions/buttons.min.js') }}"></script>
     <script>
         var DatatableBasic = function () {
             var _componentDatatableBasic = function () {
@@ -21,8 +23,16 @@
                         width: 100,
                         targets: [8]
                     }],
-                    dom: '<"datatable-header"fl><"datatable-scroll"t><"datatable-footer"ip>',
-                    language: {
+                    "order": [[ 0, "desc" ]],
+                    dom: 'Bfrtip',
+                    buttons: [
+                        {
+                            extend: 'csv',
+                            charset: 'utf-8',
+                            extension: '.xls',
+                            bom: true,
+                        }
+                    ],                    language: {
                         search: '<span>{{__('messages.filter')}}:</span> _INPUT_',
                         searchPlaceholder: '{{__('messages.search')}}...',
                         lengthMenu: '<span>{{__('messages.show')}}:</span> _MENU_',
@@ -58,6 +68,7 @@
         }();
         document.addEventListener('DOMContentLoaded', function () {
             DatatableBasic.init();
+            $("body").addClass('sidebar-xs')
         });
 
     </script>

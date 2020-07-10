@@ -43,7 +43,7 @@
 
 @endsection
 @section('footer_js')
-    <<script src="https://www.google.com/recaptcha/api.js?render={{env('SITE_KEY')}}&hl=fa"></script>
+    <<script src="https://www.google.com/recaptcha/api.js?render={{env('SITE_KEY')}}&hl={{App()->getLocale()=="fa"?'fa':'en'}}"></script>
     <script>
         grecaptcha.ready(function () {
             grecaptcha.execute("{{env('SITE_KEY')}}", {action: 'contact'}).then(function (token) {

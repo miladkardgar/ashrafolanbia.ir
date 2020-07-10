@@ -7,7 +7,7 @@
     <script src="{{asset('public/assets/global/js/leatflat/leaflet.js')}}"></script>
     <script
             src="{{ URL::asset('/node_modules/md.bootstrappersiandatetimepicker/src/jquery.md.bootstrap.datetimepicker.js') }}"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/clockpicker/0.0.7/bootstrap-clockpicker.min.js"></script>
+    <script src="{{URL::asset('/public/js/bootstrap-clockpicker.min.js')}}"></script>
     <script>
         $(document).ready(function () {
             var map = L.map('mapid').setView([35.700, 51.400], 11);
@@ -97,7 +97,8 @@
                 targetTextSelector: '#meeting_date',
                 enableTimePicker: false,
                 disableBeforeToday: true,
-                englishNumber: true
+                englishNumber: true,
+                disabledDays:[6],
             });
             $(document).on('change', '#province', function () {
                 var pro = $(this).val();
@@ -124,6 +125,8 @@
                 });
             })
             $('.clockpicker').clockpicker();
+
+
         })
 
     </script>

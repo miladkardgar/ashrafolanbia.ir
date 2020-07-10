@@ -189,8 +189,7 @@ return [
 //        App\Providers\TelescopeServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         Flynsarmy\DbBladeCompiler\DbBladeCompilerServiceProvider::class,
-        \Larabookir\Gateway\GatewayServiceProvider::class,
-        \Mmpackages\recaptcha\RecaptchaServiceProvider::class
+        \Larabookir\Gateway\GatewayServiceProvider::class
     ],
 
     /*

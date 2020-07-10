@@ -20,6 +20,7 @@
 
     <script>
         $(document).ready(function () {
+            $("body").addClass('sidebar-xs')
             $('#start_date_btn').MdPersianDateTimePicker({
                 targetTextSelector: '#start_date',
                 fromDate: true,
@@ -193,14 +194,14 @@
                                 <label for="">{{__('messages.type')}}</label>
                                 <div class="row">
                                     <div class="col-12">
-{{--                                        <div class="form-check form-check-inline">--}}
-{{--                                            <label class="form-check-label">--}}
-{{--                                                <input type="checkbox" class="form-check-input-styled"--}}
-{{--                                                       name="checkAll"--}}
-{{--                                                       data-fouc><strong>علامت گزاری همه موارد</strong>--}}
-{{--                                            </label>--}}
-{{--                                        </div>--}}
-{{--                                        <hr>--}}
+                                        {{--                                        <div class="form-check form-check-inline">--}}
+                                        {{--                                            <label class="form-check-label">--}}
+                                        {{--                                                <input type="checkbox" class="form-check-input-styled"--}}
+                                        {{--                                                       name="checkAll"--}}
+                                        {{--                                                       data-fouc><strong>علامت گزاری همه موارد</strong>--}}
+                                        {{--                                            </label>--}}
+                                        {{--                                        </div>--}}
+                                        {{--                                        <hr>--}}
 
                                     </div>
                                     @foreach($titles as $title)
@@ -215,6 +216,28 @@
                                             </div>
                                         </div>
                                     @endforeach
+                                </div>
+                            </div>
+
+                            <div class="status">
+                                <label for="">{{__('messages.status')}}</label>
+                                <div class="row">
+                                    <div class="col-3">
+                                        <div class="form-check form-check-inline">
+                                            <label class="form-check-label">
+                                                <input type="checkbox" class="form-check-input-styled status"
+                                                       name="status[]" value="SUCCEED"
+                                                       data-fouc>
+                                                پرداخت موفق
+                                            </label>
+                                            <label class="form-check-label">
+                                                <input type="checkbox" class="form-check-input-styled status"
+                                                       name="status[]" value="FAILED"
+                                                       data-fouc>
+                                                پرداخت ناموفق
+                                            </label>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 

@@ -9,28 +9,9 @@
                     console.warn('Warning - datatables.min.js is not loaded.');
                     return;
                 }
-                $.extend($.fn.dataTable.defaults, {
-                    autoWidth: false,
-                    columnDefs: [{
-                        orderable: false,
-                        width: 100,
-                        targets: [5]
-                    }],
-                    dom: '<"datatable-header"fl><"datatable-scroll"t><"datatable-footer"ip>',
-                    language: {
-                        search: '<span>{{__('messages.filter')}}:</span> _INPUT_',
-                        searchPlaceholder: '{{__('messages.search')}}...',
-                        lengthMenu: '<span>{{__('messages.show')}}:</span> _MENU_',
-                        paginate: {
-                            'first': '{{__('messages.first')}}',
-                            'last': '{{__('messages.last')}}',
-                            'next': $('html').attr('dir') == 'rtl' ? '&larr;' : '&rarr;',
-                            'previous': $('html').attr('dir') == 'rtl' ? '&rarr;' : '&larr;'
-                        }
-                    }
-                });
                 $('.datatable-basic').DataTable({
                     pagingType: "simple",
+                    order:[[0,'desc']],
                     language: {
                         paginate: {
                             'next': $('html').attr('dir') == 'rtl' ? '{{__('messages.next')}} &larr;' : '{{__('messages.next')}} &rarr;',
@@ -82,7 +63,7 @@ $active_sidbare = ['blog', 'blog_posts', 'blog_posts_list']
                                 <span class="card-title">{{__('messages.post_list')}}</span>
                             </div>
                             <div class="card-body ">
-                                <table class="table ddatatable-basic">
+                                <table class="table datatable-basic">
                                     <thead class="fullwidth">
                                     <tr>
                                         <th>{{__('messages.id')}}</th>

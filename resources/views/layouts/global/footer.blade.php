@@ -60,7 +60,6 @@
                             </article>
 
                         @empty
-
                             <article class="post media-post clearfix pb-0 mb-10">
                                 <a href="#" class="post-thumb"><img alt="" src="http://placehold.it/80x55"></a>
                                 <div class="post-right">
@@ -89,23 +88,11 @@
             <div class="col-sm-6 col-md-3">
                 <div class="widget dark">
 
-                    {{--                    <h5 class="widget-title line-bottom">Opening Hours</h5>--}}
-                    {{--                    <div class="opening-hours">--}}
-                    {{--                        <ul class="list-border">--}}
-                    {{--                            <li class="clearfix"> <span> Mon - Tues :  </span>--}}
-                    {{--                                <div class="value pull-right"> 6.00 am - 10.00 pm </div>--}}
-                    {{--                            </li>--}}
-                    {{--                            <li class="clearfix"> <span> Wednes - Thurs :</span>--}}
-                    {{--                                <div class="value pull-right"> 8.00 am - 6.00 pm </div>--}}
-                    {{--                            </li>--}}
-                    {{--                            <li class="clearfix"> <span> Fri : </span>--}}
-                    {{--                                <div class="value pull-right"> 3.00 pm - 8.00 pm </div>--}}
-                    {{--                            </li>--}}
-                    {{--                            <li class="clearfix"> <span> Sun : </span>--}}
-                    {{--                                <div class="value pull-right"> Colosed </div>--}}
-                    {{--                            </li>--}}
-                    {{--                        </ul>--}}
-                    {{--                    </div>--}}
+                    @foreach(config('blog_setting.social_media') as $social_media)
+                        <a href="{{$social_media['link']}}" target="_blank" class="m-5" title="{{$social_media['name']}}">
+                            <i class="font-size-lg {{$social_media['icon']}} fa-3x"></i>
+                        </a>
+                    @endforeach
                 </div>
             </div>
         </div>
@@ -200,5 +187,4 @@
         </div>
     </div>
 </footer>
-@recaptcha_initjs()
 <a class="scrollToTop" href="#"><i class="fa fa-angle-up"></i></a>

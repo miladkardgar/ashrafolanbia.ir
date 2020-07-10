@@ -5,6 +5,8 @@
 @section('js')
     <script src="{{ URL::asset('/public/assets/panel/global_assets/js/plugins/tables/datatables/datatables.min.js') }}"></script>
     <script src="{{ URL::asset('/public/assets/panel/global_assets/js/plugins/forms/selects/select2.min.js') }}"></script>
+    <script
+        src="{{ URL::asset('/public/assets/panel/global_assets/js/plugins/tables/datatables/extensions/buttons.min.js') }}"></script>
     <script>
         var DatatableBasic = function () {
             var _componentDatatableBasic = function () {
@@ -12,17 +14,23 @@
                     console.warn('Warning - datatables.min.js is not loaded.');
                     return;
                 }
-                $.extend($.fn.dataTable.defaults, {
-                    autoWidth: true,
+                $('.datatable-basic').DataTable({
+                    autoWidth: false,
                     columnDefs: [{
                         orderable: false,
-                        autoWidth: false,
-                        width: 150,
-                        targets: 7
+                        width: 100,
+                        targets: [0]
                     }],
-                    dom: '<"datatable-header"fl><"datatable-scroll"t><"datatable-footer"ip>',
-
-
+                    dom: 'Bfrtip',
+                    buttons: [
+                        {
+                            extend: 'csv',
+                            charset: 'utf-8',
+                            extension: '.xls',
+                            bom: true,
+                        }
+                    ],
+                    "order": [[ 0, "desc" ]],
                     language: {
                         search: '<span>{{__('messages.filter')}}:</span> _INPUT_',
                         searchPlaceholder: '{{__('messages.search')}}...',
@@ -35,30 +43,10 @@
                         }
                     }
                 });
-                $('.datatable-basic').DataTable({
-
-
-                    pagingType: "simple",
-
-                    language: {
-                        paginate: {
-                            'next': $('html').attr('dir') == 'rtl' ? '{{__('messages.next')}} &larr;' : '{{__('messages.next')}} &rarr;',
-                            'previous': $('html').attr('dir') == 'rtl' ? '&rarr; {{__('messages.prev')}}' : '&larr; {{__('messages.prev')}}'
-                        }
-                    },
-                    stateSave: true,
-                    autoWidth: false,
-                    columnDefs: [{
-                        orderable: false,
-                        autoWidth: false,
-                        width: 200,
-                        targets: 7
-                    }],
-                });
                 $('.sidebar-control').on('click', function () {
                     table.columns.adjust().draw();
                 });
-            };
+            }
             var _componentSelect2 = function () {
                 if (!$().select2) {
                     console.warn('Warning - select2.min.js is not loaded.');
@@ -77,6 +65,10 @@
                 }
             }
         }();
+        document.addEventListener('DOMContentLoaded', function () {
+            DatatableBasic.init();
+            $("body").addClass('sidebar-xs')
+        });
 
 
     </script>
@@ -111,6 +103,7 @@
                                 <th>{{__('messages.next_payment_date')}}</th>
                                 <th>{{__('messages.description')}}</th>
                                 <th>{{__('messages.waiting_paid')}}</th>
+                                <th>{{__('messages.period')}}</th>
                                 <th>{{__('messages.status')}}</th>
                             </tr>
                             </thead>
@@ -121,9 +114,11 @@
                                     <td>{{$i}}</td>
                                     <td>{{$period['user']['people']['name']}} {{$period['user']['people']['family']}}
                                         @if($period['status']=='active')
-                                            <span class="badge badge-success">{{__('messages.'.$period['status'])}}</span>
+                                            <span
+                                                class="badge badge-success">{{__('messages.'.$period['status'])}}</span>
                                         @else
-                                            <span class="badge badge-danger">{{__('messages.'.$period['status'])}}</span>
+                                            <span
+                                                class="badge badge-danger">{{__('messages.'.$period['status'])}}</span>
                                         @endif
                                     </td>
                                     <td>{{$period['user']['name']}}</td>
@@ -141,16 +136,14 @@
                                     </td>
                                     <td>{{$period['description']}}</td>
                                     @php
-                                    $unpaids = \App\charity_periods_transaction::where('period_id',$period['id'])->where('pay_date',null)->count();
+                                        $unpaids = \App\charity_periods_transaction::where('period_id',$period['id'])->where('pay_date',null)->count();
                                     @endphp
                                     <td>{{$unpaids}}</td>
+                                    <td>{{$period['period']}} ماه </td>
                                     <td>
-
                                         <a data-toggle="tooltip" data-placement="top" title="{{__('messages.view')}}"
                                            href="{{route('charity_periods_show',['user_id'=>$period['user_id'],'id'=>$period['id']])}}"
                                            class="btn btn-outline-dark btn-sm"><i class="icon-eye"></i></a>
-
-
                                         <a href="javascript:;"
                                            class="btn btn-outline-danger btn-sm swal-alert "
                                            data-ajax-link="{{route('charity_periods_delete',['id'=>$period['id']])}}"
@@ -164,7 +157,6 @@
                                            data-confirm-text="{{trans('messages.delete')}}"
                                            data-cancel-text="{{trans('messages.cancel')}}">
                                             <i class="icon-bin top-0"></i></a>
-
                                         @if($period['status']=='active')
                                             <a href="javascript:;"
                                                class="btn btn-outline-warning btn-sm swal-alert "
@@ -195,7 +187,8 @@
                                                data-confirm-text="{{trans('messages.activate')}}"
                                                data-cancel-text="{{trans('messages.cancel')}}">
                                                 <i class="icon-check top-0"></i></a>
-                                    @endif
+                                        @endif
+                                    </td>
                                 </tr>
                                 @php $i++; @endphp
                             @endforeach

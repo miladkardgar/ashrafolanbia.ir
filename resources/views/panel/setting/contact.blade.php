@@ -85,9 +85,11 @@
                                     <td>{{$contact['subject']}}</td>
                                     <td>
                                         @if($contact['status']=='new')
-                                            <span class="badge badge-success">{{__('messages.'.$contact['status'])}}</span>
+                                            <span class="badge badge-danger">{{__('messages.'.$contact['status'])}}</span>
                                         @elseif($contact['status']=='read')
-                                            <span class="badge badge-default">{{__('messages.'.$contact['status'])}}</span>
+                                            <span class="badge badge-info">{{__('messages.'.$contact['status'])}}</span>
+                                        @elseif($contact['status']=='response')
+                                            <span class="badge badge-success">{{__('messages.'.$contact['status'])}} داده شده</span>
                                         @endif
                                     </td>
                                     <td>

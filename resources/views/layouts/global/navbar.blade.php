@@ -26,7 +26,7 @@
                 <div class="col-xs-12 col-sm-6 col-md-6">
                     <div class="widget no-border m-0">
                         <a class="menuzord-brand pull-right sm-text-center xs-text-center xs-pull-center"
-                            href="{{route('home')}}">
+                            href="/">
                             <img class="img img-responsive sm-text-center xs-text-center"
                                  src="{{ URL::asset('/public/assets/global/images/logo-wide@2x.png')}}?i=4" alt=""></a>
 
@@ -139,7 +139,8 @@
                             @endif
                         @endforeach
                     </div>
-                    <ul class="menuzord-menu pull-right">
+
+                    <ul class="menuzord-menu {{App()->getLocale()=="en"?'pull-left':'pull-right'}}">
                         @foreach($menu as $item)
                             <li><a class="text-white-f6" href="{{$item['url']}}">{{$item['name']}}</a>
                                 @if($item->subMenu()->exists())

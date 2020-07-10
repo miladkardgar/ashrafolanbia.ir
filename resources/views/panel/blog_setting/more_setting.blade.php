@@ -37,11 +37,12 @@ $active_sidbare = ['blog', 'blog_setting', 'more_blog_setting']
                                     <tbody>
                                     @foreach(config('blog_setting.social_media') as $social_media)
                                         <tr class="p-0">
-                                            <td class="text-center"><i
-                                                        class="font-size-lg {{$social_media['icon']}} fa-3x"></i></td>
+                                            <td class="text-center">
+                                                <i class="font-size-lg {{$social_media['icon']}} fa-3x"></i>
+                                            </td>
                                             <td class="text-center">{{$social_media['name']}}</td>
                                             <td class="text-center">
-                                                <input class="form-control" name="{{$social_media['name']}}[link]">
+                                                <input class="form-control" dir="ltr" name="{{$social_media['name']}}[link]" value="{{$social_media['link']}}">
                                             </td>
                                             <td class="text-center">
                                                 <input type="hidden" value="{{$social_media['name']}}"

@@ -5,6 +5,8 @@
 @section('js')
     <script src="{{ URL::asset('/public/assets/panel/global_assets/js/plugins/tables/datatables/datatables.min.js') }}"></script>
     <script src="{{ URL::asset('/public/assets/panel/global_assets/js/plugins/forms/selects/select2.min.js') }}"></script>
+    <script
+        src="{{ URL::asset('/public/assets/panel/global_assets/js/plugins/tables/datatables/extensions/buttons.min.js') }}"></script>
     <script>
         var DatatableBasic = function () {
             var _componentDatatableBasic = function () {
@@ -12,18 +14,23 @@
                     console.warn('Warning - datatables.min.js is not loaded.');
                     return;
                 }
-                $.extend($.fn.dataTable.defaults, {
-
-                });
-
                 $('.datatable-payments').DataTable({
                     autoWidth: false,
                     columnDefs: [{
                         orderable: false,
                         width: 100,
-                        targets: [8]
+                        targets: [0]
                     }],
-                    dom: '<"datatable-header"fl><"datatable-scroll"t><"datatable-footer"ip>',
+                    dom: 'Bfrtip',
+                    buttons: [
+                        {
+                            extend: 'csv',
+                            charset: 'utf-8',
+                            extension: '.xls',
+                            bom: true,
+                        }
+                    ],
+                    "order": [[ 0, "desc" ]],
                     language: {
                         search: '<span>{{__('messages.filter')}}:</span> _INPUT_',
                         searchPlaceholder: '{{__('messages.search')}}...',
@@ -38,12 +45,21 @@
                 });
                 $('.datatable-payments2').DataTable({
                     autoWidth: false,
+                    dom: 'Bfrtip',
+                    buttons: [
+                        {
+                            extend: 'csv',
+                            charset: 'utf-8',
+                            extension: '.xls',
+                            bom: true,
+                        }
+                    ],
                     columnDefs: [{
                         orderable: false,
                         width: 100,
-                        targets: [7,8]
+                        targets: [0]
                     }],
-                    dom: '<"datatable-header"fl><"datatable-scroll"t><"datatable-footer"ip>',
+                    "order": [[ 0, "desc" ]],
                     language: {
                         search: '<span>{{__('messages.filter')}}:</span> _INPUT_',
                         searchPlaceholder: '{{__('messages.search')}}...',
@@ -80,8 +96,8 @@
         }();
         document.addEventListener('DOMContentLoaded', function () {
             DatatableBasic.init();
+            $("body").addClass('sidebar-xs')
         });
-
     </script>
 @endsection
 @section('css')

@@ -12,12 +12,14 @@ $active_sidbare = ['user_manager', 'users_list']
                     console.warn('Warning - datatables.min.js is not loaded.');
                     return;
                 }
-                $.extend($.fn.dataTable.defaults, {
-                    autoWidth: true,
+                $('.datatable-basic').DataTable({
+                    autoWidth: false,
                     columnDefs: [{
                         orderable: false,
-                        targets: [6]
+                        width: 100,
+                        targets: [4]
                     }],
+                    order:[0,'desc'],
                     dom: '<"datatable-header"fl><"datatable-scroll"t><"datatable-footer"ip>',
                     language: {
                         search: '<span>{{__('messages.filter')}}:</span> _INPUT_',
@@ -31,24 +33,10 @@ $active_sidbare = ['user_manager', 'users_list']
                         }
                     }
                 });
-                // Basic datatable
-                $('.datatable-basic').DataTable({
-                    pagingType: "simple",
-                    language: {
-                        paginate: {
-                            'next': $('html').attr('dir') == 'rtl' ? '{{__('messages.next')}} &larr;' : '{{__('messages.next')}} &rarr;',
-                            'previous': $('html').attr('dir') == 'rtl' ? '&rarr; {{__('messages.prev')}}' : '&larr; {{__('messages.prev')}}'
-                        }
-                    },
-                    stateSave: true,
-                    autoWidth: true,
-                });
-
-                // Resize scrollable table when sidebar width changes
                 $('.sidebar-control').on('click', function () {
                     table.columns.adjust().draw();
                 });
-            };
+            }
             var _componentSelect2 = function () {
                 if (!$().select2) {
                     console.warn('Warning - select2.min.js is not loaded.');
@@ -67,7 +55,6 @@ $active_sidbare = ['user_manager', 'users_list']
                 }
             }
         }();
-
         document.addEventListener('DOMContentLoaded', function () {
             DatatableBasic.init();
         });
@@ -90,7 +77,7 @@ $active_sidbare = ['user_manager', 'users_list']
                             <h4 class="card-title">{{__('messages.users_list')}}</h4>
                         </div>
                         <div class="card-body">
-                            <table class="table  datatable-basic">
+                            <table class="table datatable-basic">
                                 <thead>
                                 <tr>
                                     <th>{{__('messages.id')}}</th>

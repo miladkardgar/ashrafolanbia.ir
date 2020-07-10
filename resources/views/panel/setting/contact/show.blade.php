@@ -46,12 +46,14 @@
                             </div>
                         </div>
                         <hr>
-                        <form action="" method="post">
+                        <form action="{{route('contact.response')}}" method="post">
+                            @csrf
+                            <input type="hidden" name="id" value="{{$info['id']}}">
                             <div class="row text-center">
                                 <div class="col-12 form-group">
                                     <label for="">{{__('messages.response')}}</label>
                                     <textarea name="response" id="response" cols="30" rows="10"
-                                              class="form-control"></textarea>
+                                              class="form-control">{{isset($info['response'])?$info['response']:''}}</textarea>
                                 </div>
                                 <div class="col-12 form-group">
                                     <button type="submit"

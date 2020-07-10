@@ -51,14 +51,13 @@
             $('[data-toggle="tooltip"]').tooltip()
         })
         $(document).ready(function () {
-            @if(!$errors->isEmpty())
+            @isset($errors)
             @foreach ($errors->all() as $key => $error)
             new PNotify({
                 title: '{{$key}}',
                 text: '{{ $error }}',
                 type: 'error'
             });
-
             @endforeach
             @endif
             @if ($message = Session::get('message'))

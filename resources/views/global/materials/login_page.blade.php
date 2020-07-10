@@ -23,7 +23,7 @@
                             @endif
                         </p>
                         <form name="login-form" class="clearfix" method="POST" action="{{route('login')}}">
-                            {{csrf_field()}}
+                            <input type="hidden" name="_token" value="{{ csrf_token() }}">
                             <input type="hidden" name="g-recaptcha-response">
                             <div class="row">
                                 <div class="form-group col-md-12">
@@ -36,13 +36,13 @@
                                     <label for="password">{{__('messages.password')}}</label>
                                     <input id="password" name="password" dir="ltr" class="form-control" type="password">
                                 </div>
-                                <div class="form-group col-md-12 col-xs-12">
-                                    <div class="checkbox pull-right mt-15">
-                                        <label for="remember">
-                                            <input id="remember" name="remember" type="checkbox">
-                                            {{__('messages.remember_me')}} </label>
-                                    </div>
-                                </div>
+{{--                                <div class="form-group col-md-12 col-xs-12">--}}
+{{--                                    <div class="checkbox pull-right mt-15">--}}
+{{--                                        <label for="remember">--}}
+{{--                                            <input id="remember" name="remember" type="checkbox">--}}
+{{--                                            {{__('messages.remember_me')}} </label>--}}
+{{--                                    </div>--}}
+{{--                                </div>div--}}
                                 <div class=" col-md-6 col-md-offset-3">
                                     <button type="submit"
                                             class="btn btn-colored  btn-theme-colored p-10 mt-15 btn-block">
@@ -65,9 +65,11 @@
             </div>
         </section>
     </div>
+
 @endsection
 @section('footer_js')
-    <script src="https://www.google.com/recaptcha/api.js?render={{env('SITE_KEY')}}&hl=fa"></script>
+
+    <script src="https://www.google.com/recaptcha/api.js?render={{env('SITE_KEY')}}&hl={{App()->getLocale()=="fa"?'fa':'en'}}"></script>
     <script>
         grecaptcha.ready(function () {
             grecaptcha.execute("{{env('SITE_KEY')}}", {action: 'contact'}).then(function (token) {
