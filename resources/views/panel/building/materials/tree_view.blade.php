@@ -3,6 +3,9 @@
 
     </div>
 <div class="province-tree card card-body border-left-info border-left-2 " >
+    <form action="{{route('building_excel_report')}}" method="post">
+        {{csrf_field()}}
+        <button type="submit" class="btn btn-outline-warning"> Excel <i class="icon-file-excel"></i></button>
     <ul class="mb-0 p-0">
         @foreach($provinces as $province)
             <li class="li-tree ">
@@ -23,6 +26,7 @@
             </li>
         @endforeach
     </ul>
+    </form>
 </div>
 </div>
 

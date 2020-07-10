@@ -13,9 +13,11 @@ use App\building_type;
 use App\building_type_itme;
 use App\building_user;
 use App\city;
+use App\Exports\InvoicesExport;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Maatwebsite\Excel\Facades\Excel;
 
 class building extends Controller
 {
@@ -53,7 +55,7 @@ class building extends Controller
         $this->validate($request, [
             'id' => 'required',
         ]);
-        $cities = city::where('parent',$request['id'])->get();
+        $cities = city::where('parent', $request['id'])->get();
         return view('panel.building.materials.city_select_option', compact('cities'));
 
     }
@@ -211,15 +213,15 @@ class building extends Controller
 
     public function edit_project_items($project_id, Request $request)
     {
-            $this->validate($request, [
-                'project_id' => 'required|exists:building_projects,id',
-            ]);
+        $this->validate($request, [
+            'project_id' => 'required|exists:building_projects,id',
+        ]);
         if ($project_id != $request['project_id']) {
             $errors[] = "undefined";
             return back_error($request, $errors);
         }
         $percent = 0;
-        if ($request['percent']){
+        if ($request['percent']) {
             foreach ($request['percent'] as $item_percent) {
                 if ($item_percent > 100 or $item_percent < 0) {
                     $errors[] = trans('errors.percent_more_than_100') . " - " . $item_percent;
@@ -241,13 +243,14 @@ class building extends Controller
             $errors[] = trans('errors.percent_more_than_100') . " - " . $percent;
             return back_error($request, $errors);
         }
-        if ($request['item_id']){
-        foreach ($request['item_id'] as $old_item_id) {
-            $old_building_item = building_item::where('building_id', $project_id)->find($old_item_id);
-            $old_building_item['title'] = $request['title'][$old_item_id];
-            $old_building_item['percent'] = $request['percent'][$old_item_id];
-            $old_building_item->save();
-        }}
+        if ($request['item_id']) {
+            foreach ($request['item_id'] as $old_item_id) {
+                $old_building_item = building_item::where('building_id', $project_id)->find($old_item_id);
+                $old_building_item['title'] = $request['title'][$old_item_id];
+                $old_building_item['percent'] = $request['percent'][$old_item_id];
+                $old_building_item->save();
+            }
+        }
         if (isset($request['new_item_percent']) and count($request['new_item_percent']) > 0) {
             foreach ($request['new_item_percent'] as $key => $new_item_percent) {
                 $new_building_item = new building_item();
@@ -308,15 +311,15 @@ class building extends Controller
         $building_ticket->item_id = $item_id;
         $building_ticket->save();
 
-        $building_ticket_note = $this->set_ticket_note($request['description'],$building_ticket['id']);
-        $this->set_ticket_history($currentUser['id'],$now_time,$building_ticket['id'],$building_ticket_note['id']);
+        $building_ticket_note = $this->set_ticket_note($request['description'], $building_ticket['id']);
+        $this->set_ticket_history($currentUser['id'], $now_time, $building_ticket['id'], $building_ticket_note['id']);
 
         if (isset($request['doc_id'])) {
             foreach ($request['doc_id'] as $doc_id) {
-                $this->set_ticket_file($building_ticket_note['id'],$doc_id);
+                $this->set_ticket_file($building_ticket_note['id'], $doc_id);
             }
         }
-        $this->set_ticket_user($building_ticket['id'],$currentUser['id']);
+        $this->set_ticket_user($building_ticket['id'], $currentUser['id']);
 
 
         return redirect()->route('building_project', ['project_id' => $project_id]);
@@ -340,13 +343,13 @@ class building extends Controller
 
         $building_ticket = building_ticket::find($ticket_id);
 
-        $building_ticket_note = $this->set_ticket_note($request['description'],$building_ticket['id']);
+        $building_ticket_note = $this->set_ticket_note($request['description'], $building_ticket['id']);
 
 
-        $this->set_ticket_history($currentUser['id'],$now_time,$building_ticket['id'],$building_ticket_note['id']);
+        $this->set_ticket_history($currentUser['id'], $now_time, $building_ticket['id'], $building_ticket_note['id']);
         if (!empty($request['doc_id'])) {
             foreach ($request['doc_id'] as $doc_id) {
-                $this->set_ticket_file($building_ticket_note['id'],$doc_id);
+                $this->set_ticket_file($building_ticket_note['id'], $doc_id);
             }
         }
 
@@ -397,7 +400,7 @@ class building extends Controller
             return back_error($request, $errors);
         }
         $ticket = building_ticket::find($ticket_id);
-        if ($ticket['closed']){
+        if ($ticket['closed']) {
             $ticket->actual_percent = null;
             $ticket->closed = null;
             $ticket->save();
@@ -408,8 +411,7 @@ class building extends Controller
             $building_ticket_history->building_ticket_id = $ticket['id'];
             $building_ticket_history->history_type = 7; //7= re open
             $building_ticket_history->save();
-        }
-        else {
+        } else {
             if ($ticket['ticket_type'] == 0) {
                 $this->validate($request, [
                     'actual_percent' => 'required|numeric|min:0|max:100',
@@ -448,7 +450,7 @@ class building extends Controller
         $this->validate($request, [
             'file' => 'required|file|max:10240',
         ]);
-        $doc_id = private_file_saver($request['file'],'buildings','z','z');
+        $doc_id = private_file_saver($request['file'], 'buildings', 'z', 'z');
         return $doc_id;
     }
 
@@ -459,15 +461,14 @@ class building extends Controller
             'id' => 'required',
         ]);
 
-        $building_user = building_user::where('user_id',Auth::id())->where('building_id',$request['id'])->first();
-        if (!$building_user){
+        $building_user = building_user::where('user_id', Auth::id())->where('building_id', $request['id'])->first();
+        if (!$building_user) {
             $building_user = new building_user();
             $building_user->user_id = Auth::id();
             $building_user->building_id = $request['id'];
             $building_user->follow = true;
-        }
-        else{
-            $building_user->follow = ($building_user->follow? false:true);
+        } else {
+            $building_user->follow = ($building_user->follow ? false : true);
         }
         $building_user->save();
 
@@ -501,14 +502,71 @@ class building extends Controller
         return back();
     }
 
-    private function set_ticket_note($description,$building_ticket_id){
+    public function excel_report(Request $request)
+    {
+        $output = [];
+
+        $all_building = building_project::whereIn('city_id_3', $request['city'])->pluck('id')->toArray();
+        $building_items = building_item::whereIn('building_id', $all_building)->distinct('title')
+            ->pluck('title')->toArray();
+        $parent_city = building_project::whereIn('city_id_3', $request['city'])->distinct('city_id_2')
+            ->pluck('city_id_2')->toArray();
+        foreach ($parent_city as $parent) {
+            $this_buildings = building_project::whereIn('city_id_3', $request['city'])
+                ->where('city_id_2', $parent)
+                ->orderBy('city_id_3')
+                ->with('building_items')
+                ->get();
+            $city = city::find($parent);
+
+            foreach ($this_buildings as $building){
+                $total_percent = 0;
+                $this_items=[];
+                $this_building_items = building_item::where('building_id',$building['id'])->get();
+
+                foreach ($this_building_items as $building_item){
+                    $this_progress = building_ticket::where('ticket_type', '0')
+                        ->where('building_id', $building['id'])
+                        ->whereNotNull('closed')
+                        ->where('item_id',$building_item['id'])
+                        ->sum('actual_percent');
+                    if (isset($this_items[$building_item['title']])){
+                        $this_items[$building_item['title']] += $this_progress;
+                    }
+                    else{
+                        $this_items[$building_item['title']] = $this_progress;
+                    }
+                    $total_percent += ($this_progress * $building_item['percent'] / 100);
+                }
+                $output[$city['name']][$building['id']]=[
+                    'name' => $building->title,
+                    'address' => $city['name']." / ". $building->address,
+                    'percent' => $total_percent,
+                    'description' => $building['description'],
+                ];
+                array_push($output[$city['name']][$building['id']],$this_items);
+            }
+        }
+
+        $export = new InvoicesExport([
+            'titles' => $building_items,
+            'data' => $output
+        ]);
+
+        return Excel::download($export, 'invoices.xlsx');
+    }
+
+    private function set_ticket_note($description, $building_ticket_id)
+    {
         $building_ticket_note = new building_ticket_note();
         $building_ticket_note->description = $description;
         $building_ticket_note->building_ticket_id = $building_ticket_id;
         $building_ticket_note->save();
         return $building_ticket_note;
     }
-    private function set_ticket_history($user_id,$time,$building_ticket_id,$building_ticket_note_id){
+
+    private function set_ticket_history($user_id, $time, $building_ticket_id, $building_ticket_note_id)
+    {
         $building_ticket_history = new building_ticket_history();
         $building_ticket_history->user_id = $user_id;
         $building_ticket_history->time = $time;
@@ -517,14 +575,18 @@ class building extends Controller
         $building_ticket_history->save();
         return $building_ticket_history;
     }
-    private function set_ticket_file($building_ticket_note_id,$doc_id){
+
+    private function set_ticket_file($building_ticket_note_id, $doc_id)
+    {
         $building_ticket_file = new building_ticket_file();
         $building_ticket_file->building_ticket_note_id = $building_ticket_note_id;
         $building_ticket_file->doc_id = $doc_id;
         $building_ticket_file->save();
         return $building_ticket_file;
     }
-    private function set_ticket_user($ticket_id,$user_id){
+
+    private function set_ticket_user($ticket_id, $user_id)
+    {
         $building_ticket_user = new building_ticket_user();
         $building_ticket_user->ticket_id = $ticket_id;
         $building_ticket_user->user_id = $user_id;

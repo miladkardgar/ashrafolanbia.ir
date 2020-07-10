@@ -22,7 +22,7 @@ class api extends Controller
 
     public function main_page()
     {
-        $posts = get_posts(null,['last_post'],[],6)->map(function ($post){
+        $posts = get_posts(null,['last_post'],[],15)->map(function ($post){
             return [
                 'id'=>$post->id,
                 'slug'=>$post->slug,
@@ -162,23 +162,24 @@ class api extends Controller
                 ['status', '=', 'paid'],
                 ['user_id', '=', Auth::id()],
             ])->get();
-        $user->login_token = Str::random(60);
-        $user->Save();
         $userInfo = User::with('people')->find($user['id']);
         $userInfo =[
             'name' =>$userInfo['people']['name']." ".$userInfo['people']['family'],
             'phone' =>$userInfo['phone'],
             'email' =>$userInfo['email'],
-            'profile_link' => route('app_profile')."?lt=".$userInfo->login_token,
         ];
 
         return response()->json(['userInfo'=>$userInfo,'paid_history'=>$paid_history,'unpaid'=>$unpaid,'active_periods'=>$active_periods] );
     }
 
-    public function set_periodic(Request $request)
+    public function login_link()
     {
-        $posts = get_posts(null,[],['last_post'],10);
-        return response()->json(['data'=>$posts]);
+        $user = Auth::guard('api')->user();
+        $user->login_token = Str::random(60);
+        $user->Save();
+
+        return response()->json(['link'=>route('app_profile')."?lt=".$user->login_token] );
     }
+
 
 }

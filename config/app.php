@@ -174,6 +174,7 @@ return [
         Laratrust\LaratrustServiceProvider::class,
         Nestable\NestableServiceProvider::class,
         Intervention\Image\ImageServiceProvider::class,
+        Maatwebsite\Excel\ExcelServiceProvider::class,
         /*
          * Package Service Providers...
          *
@@ -246,6 +247,7 @@ return [
         'Nestable' => Nestable\Facades\NestableService::class,
         'Gateway' => Larabookir\Gateway\Gateway::class,
         'DbView' => Flynsarmy\DbBladeCompiler\Facades\DbView::class,
+        'Excel' => Maatwebsite\Excel\Facades\Excel::class,
 
     ],
 
