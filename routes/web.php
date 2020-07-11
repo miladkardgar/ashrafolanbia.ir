@@ -24,6 +24,9 @@ Route::group(
 
     Route::get('/clear-cache', function () {
         Artisan::call('cache:clear');
+        sleep(3);
+        Artisan::call('config:clear');
+        sleep(3);
         return "Cache is cleared";
     });
 
