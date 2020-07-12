@@ -30,6 +30,7 @@ class CreateUsersTable extends Migration
             $table->dateTime('loh')->nullable();//daryafte lohe taghdir
             $table->integer('last_modifier')->nullable()->unsigned();
             $table->string('password');
+            $table->string('password_reset_code');
             $table->string('api_token')->unique()->nullable()->default(null);
             $table->string('login_token')->unique()->nullable()->default(null);
             $table->rememberToken();

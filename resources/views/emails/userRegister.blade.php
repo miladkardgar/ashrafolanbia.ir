@@ -1,10 +1,9 @@
 @component('mail::message')
-# Introduction
-{{$user['email']}} welcome
-@component('mail::button', ['url' => ''])
-Button Text
+
+{{$user['email']}} خوش آمدید
+@component('mail::button', ['url' => url('/')])
+موسسه خیریه اشرف الانبیا(ص)
 @endcomponent
 
-Thanks,<br>
 {{ config('app.name') }}
 @endcomponent

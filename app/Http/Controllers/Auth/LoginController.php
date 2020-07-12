@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\User;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Support\Facades\Request;
 
 class LoginController extends Controller
 {
@@ -59,6 +61,7 @@ class LoginController extends Controller
 
         return $fieldType;
     }
+
     public function username()
     {
 //        $login = request()->input('login');
@@ -75,5 +78,7 @@ class LoginController extends Controller
         // Return the results of the method we are overriding that we aliased.
         return $this->laravelRedirectPath();
     }
+
+
 
 }

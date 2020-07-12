@@ -121,6 +121,11 @@ class global_view extends Controller
         return view('global.materials.login_page');
     }
 
+    public function password_reset()
+    {
+        return view('global.materials.password_reset');
+    }
+
     public function profile_app()
     {
 

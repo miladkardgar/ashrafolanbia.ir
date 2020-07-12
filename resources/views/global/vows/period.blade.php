@@ -126,7 +126,7 @@
                                             <label for="period">{{__('messages.period')}}</label>
                                             <select name="period" id="period" class="form-control">
                                                 <option value="">{{__('messages.please_select')}}</option>
-                                                <option value="0">{{__('messages.daily')}}</option>
+{{--                                                <option value="0">{{__('messages.daily')}}</option>--}}
                                                 <option value="1">{{__('messages.monthly')}}</option>
                                                 <option value="3">{{__('messages.every_3_months')}}</option>
                                                 <option value="6">{{__('messages.every_6_months')}}</option>

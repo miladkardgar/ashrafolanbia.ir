@@ -544,10 +544,14 @@ Route::group(
     Route::post('login', 'Auth\LoginController@login')->name('login');
     Route::post('logout', 'Auth\LoginController@logout')->name('logout');
     Route::get('login', 'globals\global_view@login_page')->name('global_login_page');
-    Route::get('auth/reset', 'globals\global_view@reset_password')->name('global_reset_password');
-    Route::post('auth/reset', 'globals\global_controller@reset_password')->name('global_password_reset');
+//    Route::get('auth/reset', 'globals\global_view@reset_password')->name('global_reset_password');
+//    Route::post('auth/reset', 'globals\global_controller@reset_password')->name('global_password_reset');
 
     Route::get('/register', 'globals\global_view@register_page')->name('global_register_page');
+    Route::get('/password_reset', 'globals\global_view@password_reset')->name('password_reset_request');
+    Route::post('/password_reset', 'Auth\ForgotPasswordController@password_reset')->name('password_reset_request');
+    Route::post('/password_reset_code', 'Auth\ForgotPasswordController@password_reset_code')->name('password_reset_code');
+    Route::post('/password_change', 'Auth\ForgotPasswordController@password_change')->name('password_change');
 
 //Route::get('register', 'Auth\RegisterController@showRegistrationForm')->name('register');
 //Route::post('register', 'Auth\RegisterController@register');

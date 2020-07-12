@@ -9,6 +9,7 @@ use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 use WebDevEtc\BlogEtc\Captcha\CaptchaAbstract;
 use WebDevEtc\BlogEtc\Events\CommentAdded;
@@ -55,8 +56,8 @@ class api extends Controller
         if (!$blog_post){
             return response()->json(['result'=>'fail','message'=>'post not found']);
         }
-
-        return response()->json(['result'=>'success','message'=>'','post'=>$blog_post,'comment'=> $blog_post->comments()
+        $base_url = URL::asset('public/images/'.config('blogetc.blog_upload_dir'))."/";
+        return response()->json(['result'=>'success','message'=>'','base_url'=>$base_url,'post'=>$blog_post,'comment'=> $blog_post->comments()
             ->with("user")
             ->get()]);
     }

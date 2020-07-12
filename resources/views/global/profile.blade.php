@@ -131,6 +131,7 @@
                                                 <th class="text-center">{{__('messages.amount')}}</th>
                                                 <th class="text-center">{{__('messages.start_date')}}</th>
                                                 <th class="text-center">{{__('messages.period')}}</th>
+                                                <th class="text-center">{{__('messages.next_payment')}}</th>
                                                 <th class="text-center">{{__('messages.description')}}</th>
                                                 <th class="text-center">{{__('messages.status')}}</th>
                                                 <th class="text-center"></th>
@@ -149,7 +150,8 @@
                                                 <tr>
                                                     <td class="text-center">{{$period['amount']}}</td>
                                                     <td class="text-center">{{miladi_to_shamsi_date($period['start_date'])}}</td>
-                                                    <td class="text-center">{{$period['period']}}</td>
+                                                    <td class="text-center">{{__("words.monthly_".$period['period'])}}</td>
+                                                    <td class="text-center">{{miladi_to_shamsi_date($period['next_date'])}}</td>
                                                     <td class="text-center">{{$period['description']}}</td>
                                                     <td class="text-center">
                                                         <span class="label {{$color}}">{{__("messages.".$period['status'])}}</span>
