@@ -22,13 +22,20 @@
                             @endif
                         </p>
                         @if(isset($code_sent))
-                        <form name="login-form" class="clearfix" method="POST" action="{{route('password_reset_code')}}">
+                        <form name="login-form" class="clearfix" method="POST" action="{{route('password_change')}}">
                             <input type="hidden" name="_token" value="{{ csrf_token() }}">
                             <input type="hidden" name="g-recaptcha-response">
+                            <input type="hidden" name="name" value="{{$login}}">
                             <div class="row">
                                 <div class="form-group col-md-12">
                                     <label for="code">{{__('messages.confirmation_code')}}</label>
                                     <input id="code" name="code" dir="ltr" class="form-control" type="text">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-md-12">
+                                    <label for="code">{{__('messages.password')}}</label>
+                                    <input id="code" name="password" dir="ltr" class="form-control" type="password">
                                 </div>
                             </div>
                             <div class="row">

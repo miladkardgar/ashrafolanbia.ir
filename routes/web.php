@@ -549,16 +549,16 @@ Route::group(
 
     Route::get('/register', 'globals\global_view@register_page')->name('global_register_page');
     Route::get('/password_reset', 'globals\global_view@password_reset')->name('password_reset_request');
-    Route::post('/password_reset', 'Auth\ForgotPasswordController@password_reset')->name('password_reset_request');
-    Route::post('/password_reset_code', 'Auth\ForgotPasswordController@password_reset_code')->name('password_reset_code');
-    Route::post('/password_change', 'Auth\ForgotPasswordController@password_change')->name('password_change');
-
+    Route::group(['middleware' => 'throttle:3,3'], function () {
+        Route::post('/password_reset', 'Auth\ForgotPasswordController@password_reset')->name('password_reset_request');
+        Route::post('/password_change', 'Auth\ForgotPasswordController@password_change')->name('password_change');
+    });
 //Route::get('register', 'Auth\RegisterController@showRegistrationForm')->name('register');
 //Route::post('register', 'Auth\RegisterController@register');
 
 // Password Reset Routes...
-    Route::get('password/reset', 'Auth\ForgotPasswordController@showLinkRequestForm');
-    Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail');
+//    Route::get('password/reset', 'Auth\ForgotPasswordController@showLinkRequestForm');
+//    Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail');
     Route::get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm');
     Route::post('password/reset', 'Auth\ResetPasswordController@reset');
 
