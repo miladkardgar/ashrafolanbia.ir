@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\panel;
 
+use App\ApplicationSetting;
 use App\bank;
 use App\blog;
 use App\blog_categories;
@@ -1206,6 +1207,25 @@ class panel_view extends Controller
             }
 
         }
+    }
+
+    public function mobile_app_index()
+    {
+        $notice = ApplicationSetting::where('key',"main_page_notification")->first();
+        $notification = json_decode($notice['value']);
+
+        $links = ApplicationSetting::where('key','main_page_links')->get()->map(function ($link){
+            $data = json_decode($link['value']);
+            $image = \App\media::find($data->image);
+
+            return[
+                'id'=>$link->id,
+                'title'=>$data->title,
+                'link'=>$data->link,
+                'image'=>$image['url'],
+            ];
+        });
+        return view('panel.app.index',compact('notification','links'));
     }
 
     public function test()

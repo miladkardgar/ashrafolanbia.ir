@@ -447,7 +447,7 @@ if (!isset($active_sidbare)) {
                         style="display:{{in_array("mobile-app", $active_sidbare) ? 'block' : 'none' }}">
 
                         <li class="nav-item">
-                            <a href="{{route('contact.index')}}"
+                            <a href="{{route('mobile_app_index')}}"
                                class="nav-link {{in_array("mobile-app-manage", $active_sidbare) ? 'active' : '' }}">{{trans('messages.mobile-app-manage')}}</a>
                         </li>
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\app;
 
+use App\ApplicationSetting;
 use App\charity_period;
 use App\charity_periods_transaction;
 use App\Http\Controllers\Controller;
@@ -23,6 +24,8 @@ class api extends Controller
 
     public function main_page()
     {
+
+
         $posts = get_posts(null,['last_post'],[],15)->map(function ($post){
             return [
                 'id'=>$post->id,
@@ -32,17 +35,24 @@ class api extends Controller
             ];
         });
 
-        $payment_titles = [
-            [
-                'id'=>'1',
-                'title'=>'کمک ماهانه',
-                'img'=>'https://ashrafolanbia.ir/public/images/12144781741590231634.jpg',
-                'link'=>'/sadf/asdf/2'
-            ]
-        ];
+        $payment_titles = ApplicationSetting::where('key','main_page_links')->get()->map(function ($link){
+            $data = json_decode($link['value']);
+            $image = \App\media::find($data->image);
+            return[
+                'id'=>$link->id,
+                'title'=>$data->title,
+                'link'=>$data->link,
+                'image'=>URL::asset('/').$image['url'],
+            ];
+        });
+
+
+        $notice = ApplicationSetting::where('key',"main_page_notification")->first();
+        $notice_data = json_decode($notice['value']);
+
         $notification = [
-            'text'=>'این یک اطلاعیه است',
-            'href'=>'link'
+            'text'=>$notice_data->text,
+            'href'=>isset($notice_data->link)?$notice_data->link:"",
         ];
 
 

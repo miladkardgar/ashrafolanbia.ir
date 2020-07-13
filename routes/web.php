@@ -269,6 +269,13 @@ Route::group(
             Route::post('charity/sForm/update', 'panel\supportFormController@sform_file_update')->name('sform_file_update');
 
         });
+        Route::prefix('mobile_app')->group(function () {
+            Route::get('manage', 'panel\panel_view@mobile_app_index')->name('mobile_app_index');
+            Route::post('save_notification', 'panel\mobile_app_controller@save_notification')->name('mobile.save_notification');
+            Route::post('save_payment_title', 'panel\mobile_app_controller@save_payment_title')->name('mobile.save_payment_title');
+            Route::post('delete_payment_title\{id}', 'panel\mobile_app_controller@delete_payment_title')->name('mobile.delete_payment_title');
+
+        });
 
 
         Route::prefix('ajax')->group(function () {
