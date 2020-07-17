@@ -75,7 +75,6 @@ class global_view extends Controller
         return view('global.faq', compact('faqs'));
     }
 
-
     public function post_page($blogPostSlug, Request $request)
     {
         $blog_post = BlogEtcPost::where("slug", $blogPostSlug)
@@ -139,6 +138,7 @@ class global_view extends Controller
         }
         return redirect(route('global_profile'));
     }
+
     public function profile_page()
     {
         Artisan::call("cache:clear");
@@ -166,7 +166,6 @@ class global_view extends Controller
         $userInfo = User::with('addresses', 'people', 'profile_image')->find(Auth::id());
         return view('global.profile', compact('periods', 'unpaidPeriod', 'userInfo','paidPeriod'));
     }
-
 
     public function global_profile_completion()
     {
@@ -780,5 +779,41 @@ class global_view extends Controller
     {
         $list = BlogEtcPost::all();
         return response()->json($list);
+    }
+
+    public function t_profile(){
+
+        if (isset($_GET['lt'])){
+            $user = User::where('login_token',$_GET['lt'])->first();
+            if ($user){
+                $user['login_token']='';
+                $user->save();
+                Auth::loginUsingId($user['id']);
+            }
+        }
+        $period = charity_period::where('user_id', Auth::id())->first();
+
+        $unpaidPeriod = charity_periods_transaction::where(
+            [
+                ['status', '=', 'unpaid'],
+                ['user_id', '=', Auth::id()],
+            ])->get();
+        $unpaidPeriodCount = charity_periods_transaction::where(
+            [
+                ['status', '=', 'unpaid'],
+                ['user_id', '=', Auth::id()],
+            ])->count();
+        $paidPeriodCount = charity_periods_transaction::where(
+            [
+                ['status', '=', 'paid'],
+                ['user_id', '=', Auth::id()],
+            ])->count();
+        $paidPeriodAmount = charity_periods_transaction::where(
+            [
+                ['status', '=', 'paid'],
+                ['user_id', '=', Auth::id()],
+            ])->sum('amount');
+
+        return view('global.t-profile.index',compact('period','unpaidPeriod','unpaidPeriodCount','paidPeriodAmount','paidPeriodCount'));
     }
 }

@@ -1,0 +1,320 @@
+
+@media (min-width: 1200px) {
+    .mrn-container {
+        max-width: 1230px;
+    }
+}
+
+@media (max-width: 1200px) {
+    .mrn-container {
+        max-width: 1180px;
+    }
+}
+
+@media (max-width: 768px) {
+    .mrn-container {
+        max-width: 920px;
+    }
+}
+
+@media (max-width: 576px) {
+    .mrn-container {
+        max-width: 540px;
+    }
+}
+
+@media (max-width: 768px){
+    .mrn-account .mrn-account-navigation {
+        width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .mrn-account .mrn-account-content {
+        width: 100% !important;
+    }
+}
+
+
+
+.mrn-main-page-content{
+    background-color: #f8f9fa;
+    padding-top: 40px;
+    padding-bottom: 105px;
+}
+
+.mrn-container {
+    width: 100%;
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.mrn-entry-content::after {
+    display: block;
+    clear: both;
+    content: "";
+}
+
+.mrn-account-navigation {
+    float: right;
+    width: 27%;
+    background-color: #fff;
+    border: 1px solid #e5e5e5;
+    overflow: hidden;
+}
+
+.mrn-account .mrn-account-content {
+    background-color: #fff;
+    border: 1px solid #e5e5e5;
+    border-radius: 4px;
+    padding: 20px;
+    width: 72%;
+    float: left;
+}
+
+.mrn-user-info-account-header {
+    background: #00ccff;
+    border-radius: 695px/195px;
+    position: relative;
+    top: -30px;
+    width: 140%;
+    overflow: hidden;
+    margin-right: -20%;
+    margin-bottom: -27px;
+    padding-top: 65px;
+    text-align: center;
+    padding-bottom: 17px;
+}
+.mrn-user-info-account-header img.avatar {
+    border-radius: 50%;
+    border: 4px solid #fff;
+    box-shadow: 0 6px 20px rgba(168, 172, 185, .3);
+}
+
+.mrn-user-info-name ,  .mrn-user-info-name strong {
+    margin-top: 10px;
+    color: #fff;
+}
+
+.mrn-account .mrn-account-navigation ul {
+    list-style: none;
+    margin: 0 0 30px;
+    border-radius: 4px;
+    padding: 20px 30px;
+}
+
+.mrn-account .mrn-account-navigation ul li {
+    margin-left: 15px;
+    margin-right: 0 !important;
+    padding: 10px 0;
+    border-bottom: 1px solid #e5e5e5;
+}
+.mrn-account .mrn-account-navigation ul li:last-child {
+    margin-right: 0;
+    border-bottom: 0 solid #e5e5e5;
+}
+
+.mrn-account .mrn-account-navigation ul li {
+    display: -webkit-inline-box;
+    display: -ms-inline-flexbox;
+    display: flex;
+    font-size: 15px;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    margin-right: 15px;
+    line-height: 24px;
+}
+
+
+li.mrn-account-navigation-link.is-active {
+    font-weight: 600;
+}
+
+.mrn-notices-wrapper {
+    width: 100%;
+}
+
+.mrn-status-user-widget {
+    overflow: hidden;
+}
+
+.mrn-notifications-box {
+    background: #f8f8f8;
+    padding: 10px 20px;
+    border: 1px solid #e5e5e5;
+    border-radius: 4px;
+    margin-bottom: 2em;
+}
+
+.mrn-notifications-box-green {
+    background: #e5ffe7;
+    padding: 10px 20px;
+    border: 1px solid #81b281;
+    border-radius: 4px;
+    margin-bottom: 2em;
+}
+
+.mrn-status-user-widget ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    margin-bottom: 30px;
+    float: right;
+    width: 100%;
+}
+
+.mrn-status-user-widget ul li {
+    float: right;
+    width: 25%;
+    padding: 0 15px 0 0;
+}
+.mrn-status-user-widget ul li.w-50{
+    width: 50% !important;
+}
+@media (max-width: 500px){
+    .mrn-status-user-widget ul li {
+        width: calc((100% / 1) - 10px);
+        padding: 0;
+        margin: 5px;
+    }
+    .mrn-status-user-widget ul li.w-50{
+        width: calc((100%) - 10px) !important;
+        padding: 0;
+        margin: 5px;
+    }
+}
+
+
+@media (min-width: 501px) and (max-width: 1200px) {
+    .mrn-status-user-widget ul li {
+        width: calc((100% / 2) - 10px);
+        padding: 0;
+        margin: 5px;
+    }
+    .mrn-status-user-widget ul li.w-50{
+        width: calc((100%) - 10px) !important;
+        padding: 0;
+        margin: 5px;
+    }
+}
+
+
+.mrn-status-user-widget ul li:first-child {
+    padding-right: 0;
+}
+
+.mrn-status-user-widget ul li.all_bills .key_wrapper {
+    background: #f8f8f8;
+}
+
+.mrn-status-user-widget ul li .key_wrapper {
+    height: 75px;
+    float: right;
+    width: 100%;
+    color: #666;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    padding: 0 15px;
+}
+
+.mrn-status-user-widget ul li .key_wrapper span.icon {
+    float: right;
+    font-size: 28px;
+    margin-top: 7px;
+    background: rgba(0, 0, 0, .06);
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    line-height: 64px;
+    text-align: center;
+}
+
+.mrn-status-user-widget ul li .key_wrapper span.wc-amount {
+    display: block;
+    padding: 17px 0 0;
+    text-align: center;
+    font-weight: 700;
+    font-size: 14px;
+}
+
+.fal, .far {
+    font-family: "Font Awesome 5 Pro";
+}
+
+.fal {
+    font-weight: 300;
+}
+
+.mrn-status-user-widget ul li .key_wrapper span.mrn-amount {
+    display: block;
+    padding: 17px 0 0;
+    text-align: center;
+    font-weight: 700;
+    font-size: 14px;
+}
+
+.mrn-status-user-widget ul li .key_wrapper span.title {
+    text-align: center;
+    display: block;
+    padding: 3px 0 0;
+    font-size: 12px;
+    line-height: 20px;
+}
+
+
+
+h4.notifications {
+    font-size: 18px;
+    margin-bottom: 0;
+}
+
+.notifications .fal {
+    font-size: 25px;
+    margin-left: 5px;
+}
+
+.notifications-box ul.list-unstyled {
+    list-style: none;
+    margin-bottom: 0;
+}
+
+.notifications-box ul.list-unstyled li {
+    padding: 13px 0;
+    border-bottom: 1px solid #dedede;
+}
+
+.notifications-box ul.list-unstyled li:last-child {
+    border-bottom: 0 solid #dedede;
+}
+.mrn-account-navigation i.fa{
+    color: #00ccff;
+    margin-left: 1em;
+}
+
+.mrn-button{
+    color: #fff;
+    background-color: #00ccff;
+    border-radius: 4px;
+    -webkit-appearance: button;
+    cursor: pointer;
+
+    text-align: center;
+    border: 0;
+    padding: 10px 17px;
+    vertical-align: bottom;
+    text-shadow: none;
+    display: inline-block;
+    -webkit-transition: all .2s ease-in-out;
+    transition: all .2s ease-in-out;
+
+}
+
+
+
+

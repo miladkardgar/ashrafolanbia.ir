@@ -54,7 +54,7 @@
                                 <input type="text" id="link" name="link" class="form-control">
                             </div>
                             <div class="col-md-4">
-                                <label for="image" class="label label-default">تصویر*</label>
+                                <label for="image" class="label label-default">تصویر(نزدیک به مربع)*</label>
                                 <input type="file" id="image" name="image" class="form-control">
                             </div>
 

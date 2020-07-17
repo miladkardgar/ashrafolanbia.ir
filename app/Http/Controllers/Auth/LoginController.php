@@ -9,8 +9,6 @@ use Illuminate\Support\Facades\Request;
 
 class LoginController extends Controller
 {
-
-
     /*
     |--------------------------------------------------------------------------
     | Login Controller
@@ -78,7 +76,5 @@ class LoginController extends Controller
         // Return the results of the method we are overriding that we aliased.
         return $this->laravelRedirectPath();
     }
-
-
 
 }

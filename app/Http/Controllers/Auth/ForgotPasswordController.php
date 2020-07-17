@@ -57,20 +57,27 @@ class ForgotPasswordController extends Controller
     {
         $login = request()->input('name');
 
-        $fieldType = $this->findUsername("name@domain.com");
+        $fieldType = $this->findUsername($login);
 
         $user = User::where($fieldType,$login)->first();
 
+        if ($user){
         $code = rand(11111,99999);
 
         $user->password_reset_code = $code;
+
         $user->save();
-
+        if ($user->phone){
         sendSms($user->phone, $code);
-
+        }
+        if ($user->email){
         Mail::to($user->email)->send(new passwordResetCode($code));
-
+        }
         return view('global.materials.password_reset',['code_sent'=>true,'login'=>$login]);
+        }
+        else{
+            return back()->with('message', "کاربر پیدا نشد");
+        }
     }
 
     public function password_change(Request $request)

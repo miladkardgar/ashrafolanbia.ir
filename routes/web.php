@@ -556,7 +556,7 @@ Route::group(
 
     Route::get('/register', 'globals\global_view@register_page')->name('global_register_page');
     Route::get('/password_reset', 'globals\global_view@password_reset')->name('password_reset_request');
-    Route::group(['middleware' => 'throttle:3,3'], function () {
+    Route::group(['middleware' => 'throttle:30,3'], function () {
         Route::post('/password_reset', 'Auth\ForgotPasswordController@password_reset')->name('password_reset_request');
         Route::post('/password_change', 'Auth\ForgotPasswordController@password_change')->name('password_change');
     });
@@ -612,6 +612,15 @@ Route::group(
         Route::get('/edit_information', 'globals\global_view@edit_information')->name('global_profile_edit_information');
         Route::get('/involved/{id}', 'globals\global_view@involved_projects')->name('involved_project');
         Route::get('/involved', 'globals\global_view@involved_projects')->name('involved_projects_all');
+
+
+        //======================================
+        //======================================
+        Route::get('/t_profile', 'globals\global_view@t_profile')->name('t_profile');
+        //======================================
+        //======================================
+
+
         //======================================
         //-----------End Global View------------
         //======================================
