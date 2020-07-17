@@ -527,7 +527,7 @@ function miladi_to_shamsi_date($date = null, $be_array = null, $with_time = fals
         $date_jalali = gregorian_to_jalali($new_date_year, $new_date_month, $new_date_day);
         return $date_jalali;
     } else {
-        $date_jalali = gregorian_to_jalali($new_date_year, $new_date_month, $new_date_day, "-");
+        $date_jalali = gregorian_to_jalali($new_date_year, $new_date_month, $new_date_day, "/");
         return $time . "  " . $date_jalali;
 
     }

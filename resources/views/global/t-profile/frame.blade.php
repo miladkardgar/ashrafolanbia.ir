@@ -53,7 +53,7 @@
                                 </li>
                                 <li class="mrn-account-navigation-link">
                                     <i class="fa fa-sign-out"> </i>
-                                    <a href="https://iranaviator.com/my-account/customer-logout/?_wpnonce=4a1a1a26c3">خروج</a>
+                                    <a href="{{route('logout')}}">خروج</a>
                                 </li>
                             </ul>
                         </nav>
