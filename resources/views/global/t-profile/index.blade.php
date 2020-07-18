@@ -84,14 +84,6 @@
 
         <table class="table table-responsive">
             @foreach($unpaidPeriod as $unpaid)
-                <?php $color = "label-warning" ?>
-                <?php $text = "unpaid" ?>
-                <?php $btn_color = "success" ?>
-                @if($unpaid['status']=='paid')
-                    <?php $color = "label-success" ?>
-                    <?php $text = "paid" ?>
-                    <?php $btn_color = "warning" ?>
-                @endif
                 <tr>
                     <td class="text-center"><input type="checkbox"> </td>
                     <td class="text-center">مبلغ: {{number_format($unpaid['amount'])}}</td>

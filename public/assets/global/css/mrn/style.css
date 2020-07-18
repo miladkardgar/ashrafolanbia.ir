@@ -304,6 +304,8 @@ h4.notifications {
     -webkit-appearance: button;
     cursor: pointer;
 
+    margin-top: 1em;
+    margin-bottom: 2em;
     text-align: center;
     border: 0;
     padding: 10px 17px;
@@ -312,8 +314,46 @@ h4.notifications {
     display: inline-block;
     -webkit-transition: all .2s ease-in-out;
     transition: all .2s ease-in-out;
-
 }
+
+.mrn-button-alpha{
+    color: #051246;
+    background-color: #cfecff;
+    border: #00ccff;
+    border-radius: 4px;
+    -webkit-appearance: button;
+    cursor: pointer;
+
+    margin-top: 1em;
+    margin-bottom: 2em;
+    text-align: center;
+    border: 0;
+    padding: 10px 17px;
+    vertical-align: bottom;
+    text-shadow: none;
+    display: inline-block;
+    -webkit-transition: all .2s ease-in-out;
+    transition: all .2s ease-in-out;
+}
+
+.mrn-button-danger{
+    color: #fff;
+    background-color: #ff2e6c;
+    border-radius: 4px;
+    -webkit-appearance: button;
+    cursor: pointer;
+
+    text-align: center;
+    border: 0;
+    padding: 6px 12px;
+    vertical-align: bottom;
+    text-shadow: none;
+    display: inline-block;
+    -webkit-transition: all .2s ease-in-out;
+    transition: all .2s ease-in-out;
+}
+
+
 
 
 

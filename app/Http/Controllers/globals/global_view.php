@@ -816,4 +816,27 @@ class global_view extends Controller
 
         return view('global.t-profile.index',compact('period','unpaidPeriod','unpaidPeriodCount','paidPeriodAmount','paidPeriodCount'));
     }
+
+    public function t_payment_history(){
+
+        $history = charity_periods_transaction::where(
+            [
+                ['user_id', '=', Auth::id()],
+            ])->orderBy('payment_date',"DESC")->paginate(20);
+        return view('global.t-profile.pay_history',compact('history'));
+    }
+
+    public function t_addresses(){
+
+        $provinces = city::all();
+        $userInfo = User::with('addresses')->findOrFail(Auth::id());
+        return view('global.t-profile.addresses',compact('userInfo','provinces'));
+    }
+
+    public function t_edit_profile(){
+
+        $userInfo = User::with('addresses', 'people', 'profile_image')->find(Auth::id());
+
+        return view('global.t-profile.edit',compact('userInfo'));
+    }
 }

@@ -617,6 +617,9 @@ Route::group(
         //======================================
         //======================================
         Route::get('/t_profile', 'globals\global_view@t_profile')->name('t_profile');
+        Route::get('/t_pay_history', 'globals\global_view@t_payment_history')->name('t_payment_history');
+        Route::get('/t_addresses', 'globals\global_view@t_addresses')->name('t_addresses');
+        Route::get('/t_edit_profile', 'globals\global_view@t_edit_profile')->name('t_edit_profile');
         //======================================
         //======================================
 

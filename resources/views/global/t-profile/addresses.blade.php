@@ -1,11 +1,10 @@
-@extends('layouts.global.global_layout')
+@extends('global.t-profile.frame')
 @section('title',__('messages.my_profile'). " |")
+<?php $active_sidebar = ['addresses'] ?>
 
-@section('js')
-{{--    <script src="{{URL::asset('/public/assets/panel/global_assets/js/plugins/uploaders/dropzone.min.js')}}"></script>--}}
+@section('js2')
     <script src="{{ URL::asset('/public/assets/panel/global_assets/js/plugins/forms/validation/validate.min.js') }}"></script>
     <script src="{{ URL::asset('/public/assets/global/js/localization/messages_fa.js') }}"></script>
-{{--    <script src="{{ URL::asset('/node_modules/md.bootstrappersiandatetimepicker/src/jquery.md.bootstrap.datetimepicker.js') }}"></script>--}}
 
     <script src="{{ URL::asset('/node_modules/sweetalert2/dist/sweetalert2.all.min.js') }}"></script>
     <script src="{{asset('public/assets/global/js/leatflat/leaflet.js')}}"></script>
@@ -78,7 +77,7 @@
                                 $(form).find('.form-control').val('');
                                 setTimeout(function () {
                                     window.location.reload();
-                                },2000)
+                                }, 2000)
                             }
                             form_btn.prop('disabled', false).html(form_btn_old_msg);
                             $(form_result_div).html(data.message).fadeIn('slow');
@@ -171,119 +170,108 @@
         })
     </script>
 @stop
-@section('css')
-{{--    <link rel="stylesheet" href="{{ URL::asset('/public/vendor/laravel-filemanager/css/dropzone.min.css') }}">--}}
-{{--    <link href="{{ URL::asset('/node_modules/md.bootstrappersiandatetimepicker/src/jquery.md.bootstrap.datetimepicker.style.css') }}"--}}
-{{--          rel="stylesheet" type="text/css">--}}
+@section('css2')
     <link rel="stylesheet" href="{{asset('public/assets/global/js/leatflat/leaflet.css')}}"/>
     <style>
-        .border {
-            border: 2px solid #88e0a1 !important;
-        }
 
         #mapid {
             height: 280px;
         }
 
     </style>
-
 @stop
-@section('content')
 
-    <div class="main-content">
-        <section class="divider">
-            <div class="container pt-30">
-                {{@csrf_field()}}
+@section('mrn-content')
 
-                <div class="row">
-                    <div class="col-md-12">
-                        <label><i class="fa fa-angle-left"></i> {{__('messages.addresses')}}</label>
-                        <table class="table table-bordered border text-center" style="vertical-align: middle">
-                            <tbody>
-                            @forelse($userInfo['addresses'] as $tra)
-                                <tr>
-                                    <td colspan="1" class="col-md-1 success" style="vertical-align: middle">
-                                        <i class="fa fa-check-square-o fa-3x text-success align-middle text-center"></i>
-                                    </td>
-                                    <td class="align-middle" style="vertical-align: middle">
-                                        <i class="fa fa-map-pin fa-2x pull-right mr-20"></i>
-                                        <span class="pull-right btn  btn-sm align-middle mr-20">{{$tra['address']}}</span>
-                                        <button class="btn btn-default btn-sm pull-right btn-delete"
-                                                data-id="{{$tra['id']}}">{{__('messages.delete')}}</button>
-                                        <span class="pull-left btn  btn-sm align-middle ml-20 text-success">{{$tra["receiver"]}}</span><strong
-                                                class="pull-left btn  btn-sm">{{__('messages.receiver_name').": "}} </strong>
-                                    </td>
+    <div class="mrn-notifications-box">
+        <label><i class="fa fa-angle-left"></i> {{__('messages.addresses')}}</label>
+        <table class="table table-bordered border text-center" style="vertical-align: middle">
+            <tbody>
+            @forelse($userInfo['addresses'] as $tra)
+                <tr>
+                    <td colspan="1" class="col-md-1 info" style="vertical-align: middle">
+                        <i class="fa fa-map-marker fa-3x  align-middle text-center"></i>
+                    </td>
+                    <td class="align-middle" style="vertical-align: middle">
 
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="5">{{__('messages.no_any_address_submit')}}</td>
-                                </tr>
-                            @endforelse
-                            </tbody>
-                        </table>
+
+                        <span class="pull-right btn  btn-sm align-middle mr-20">{{$tra['address']}}</span>
+                        <strong class=" btn  btn-sm">{{__('messages.receiver_name').": "}} </strong>
+
+                        <span class=" btn  btn-sm align-middle ml-20 text-success">{{$tra["receiver"]}}</span>
+                        <button class="pull-left button mrn-button-danger"
+                                data-id="{{$tra['id']}}">{{__('messages.delete')}}</button>
+                    </td>
+
+                </tr>
+            @empty
+                <tr>
+                    <td colspan="5">{{__('messages.no_any_address_submit')}}</td>
+                </tr>
+            @endforelse
+            </tbody>
+        </table>
+    </div>
+
+    <div class="mrn-notifications-box">
+
+        <label><i class="fa fa-angle-left"></i> {{__('messages.add_new_address')}}</label>
+        <form action="{{route('store_order_add_address')}}" id="frm_add_address" method="post"
+              class="border">
+            <div class="row add-address ">
+                <div class="col-md-6 col-xs-12 form-group ">
+                    <div class="col-md-6 col-xs-12 form-group">
+                        <label for="province">{{__('messages.province')}}</label>
+                        <select name="province" required="required" id="province" class="form-control">
+                            <option value="">{{__('messages.please_select')}}</option>
+                            @foreach($provinces as $province)
+                                <option value="{{$province['id']}}">{{$province['name']}}</option>
+                            @endforeach
+                        </select>
                     </div>
-                    <div class="col-md-12 pt-30">
-                        <hr>
-                        <label><i class="fa fa-angle-left"></i> {{__('messages.add_new_address')}}</label>
-                        <form action="{{route('store_order_add_address')}}" id="frm_add_address" method="post"
-                              class="border">
-                            <div class="row add-address m-20">
-                                <div class="col-md-6 col-xs-12 form-group ">
-                                    <div class="col-md-6 col-xs-12 form-group">
-                                        <label for="province">{{__('messages.province')}}</label>
-                                        <select name="province" required="required" id="province" class="form-control">
-                                            <option value="">{{__('messages.please_select')}}</option>
-                                            @foreach($provinces as $province)
-                                                <option value="{{$province['id']}}">{{$province['name']}}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    <div class="col-md-6 col-xs-12 form-group">
-                                        <label for="cities">{{__('messages.city')}}</label>
-                                        <select name="cities" required="required" id="cities" class="form-control">
+                    <div class="col-md-6 col-xs-12 form-group">
+                        <label for="cities">{{__('messages.city')}}</label>
+                        <select name="cities" required="required" id="cities" class="form-control">
 
-                                        </select>
-                                    </div>
-                                    <div class="col-md-12 col-xs-12 form-group">
-                                        <label for="address">{{__('messages.address')}}</label>
-                                        <textarea name="address" id="address" class="form-control" required="required"
-                                                  cols="30" rows="4"></textarea>
-                                    </div>
-                                </div>
-                                <div class="col-md-6 col-xs-12 form-group">
-                                    <div class="col-md-6 col-xs-12">
-                                        <label for="receiver">{{__('messages.receiver_name')}}</label>
-                                        <input type="text" class="form-control" required="required" name="receiver">
-                                    </div>
-                                    <div class="col-md-6 col-xs-12">
-                                        <label for="zip_code">{{__('messages.zip_code')}}</label>
-                                        <input type="text" class="form-control" name="zip_code">
-                                    </div>
-                                    <div class="col-md-6 col-xs-12 form-group pt-10">
-                                        <label for="phone">{{__('messages.phone')}}</label>
-                                        <input type="text" class="form-control input-sm" dir="ltr" name="phone">
-                                    </div>
-                                    <div class="col-md-6 col-xs-12 form-group pt-10">
-                                        <label for="mobile">{{__('messages.mobile')}}</label>
-                                        <input type="text" class="form-control" dir="ltr" name="mobile">
-                                    </div>
-                                </div>
-                                <div class="col-md-12 col-xs-12 form-group">
-                                    <div id="mapid"></div>
-                                    <input type="hidden" name="lat" id="lat">
-                                    <input type="hidden" name="lon" id="lon">
-                                </div>
-                                <div class="col-md-12 col-xs-12 form-group">
-                                    <button type="submit"
-                                            class="btn btn-block btn-success">{{__('messages.submit')}}</button>
-                                </div>
-
-                            </div>
-                        </form>
+                        </select>
+                    </div>
+                    <div class="col-md-12 col-xs-12 form-group">
+                        <label for="address">{{__('messages.address')}}</label>
+                        <textarea name="address" id="address" class="form-control" required="required"
+                                  cols="30" rows="4"></textarea>
                     </div>
                 </div>
+                <div class="col-md-6 col-xs-12 form-group">
+                    <div class="col-md-6 col-xs-12">
+                        <label for="receiver">{{__('messages.receiver_name')}}</label>
+                        <input type="text" class="form-control" required="required" name="receiver">
+                    </div>
+                    <div class="col-md-6 col-xs-12">
+                        <label for="zip_code">{{__('messages.zip_code')}}</label>
+                        <input type="text" class="form-control" name="zip_code">
+                    </div>
+                    <div class="col-md-6 col-xs-12 form-group pt-10">
+                        <label for="phone">{{__('messages.phone')}}</label>
+                        <input type="text" class="form-control input-sm" dir="ltr" name="phone">
+                    </div>
+                    <div class="col-md-6 col-xs-12 form-group pt-10">
+                        <label for="mobile">{{__('messages.mobile')}}</label>
+                        <input type="text" class="form-control" dir="ltr" name="mobile">
+                    </div>
+                </div>
+                <div class="col-md-12 col-xs-12 form-group">
+                    <div id="mapid"></div>
+                    <input type="hidden" name="lat" id="lat">
+                    <input type="hidden" name="lon" id="lon">
+                </div>
+                <div class="col-md-12 col-xs-12 form-group">
+                    <button type="submit"
+                            class="button mrn-button">{{__('messages.submit')}}</button>
+                </div>
+
             </div>
-        </section>
+        </form>
+
     </div>
-@stop
+
+@endsection

@@ -3,10 +3,12 @@
 
 @section('css')
     <link href="{{ URL::asset('/public/assets/global/css/mrn/style.css') }}?i=2" rel="stylesheet" type="text/css">
-
+    @yield('css2')
 @endsection
 @section('content')
-    <?php $user = \Illuminate\Support\Facades\Auth::user()->people;  ?>
+    <?php $user = \Illuminate\Support\Facades\Auth::user();
+    $avatar = $user->profile_image->last()
+    ?>
     <div class="mrn-main-page-content" >
 
         <div class="mrn-content-inner mrn-container" role="main">
@@ -19,9 +21,9 @@
                             <div class="mrn-user-info-account-header">
 
                                 <img alt=""
-                                     src="/public/assets/global/images/unknown-avatar.png"
-                                     class="avatar avatar-80 photo" height="80" width="80">
-                                <div class="mrn-user-info-name">نیکوکار عزیز <strong>{{$user->name ." ".$user->family}} </strong>
+                                     src="{{$avatar ? "/".$avatar->url:"/public/assets/global/images/unknown-avatar.png"}}"
+                                     class="avatar avatar-80 photo" height="120" width="120">
+                                <div class="mrn-user-info-name">نیکوکار عزیز <strong>{{$user->people->name ." ".$user->people->family}} </strong>
                                     خوش آمدید!
                                 </div>
                             </div>
@@ -29,27 +31,27 @@
                             <ul>
                                 <li class="mrn-account-navigation-link {{in_array('dashboard',$active_sidebar)?"is-active":""}}">
                                     <i class="fa fa-dashboard"> </i>
-                                    <a href="https://iranaviator.com/my-account/"> پیشخوان </a>
+                                    <a href="{{route('t_profile')}}"> پیشخوان </a>
                                 </li>
-                                <li class="mrn-account-navigation-link {{in_array('payment-history',$active_sidebar)?"is-active":""}}">
+                                <li class="mrn-account-navigation-link {{in_array('payment_history',$active_sidebar)?"is-active":""}}">
                                     <i class="fa fa-history"> </i>
-                                    <a href="https://iranaviator.com/my-account/orders/">سوابق پرداخت</a>
+                                    <a href="{{route('t_payment_history')}}">سوابق پرداخت</a>
                                 </li>
                                 <li class="mrn-account-navigation-link {{in_array('orders',$active_sidebar)?"is-active":""}}">
                                     <i class="fa fa-shopping-basket"> </i>
-                                    <a href="https://iranaviator.com/my-account/purchased-products/">سفارش ها</a>
+                                    <a href="#">سفارش ها</a>
                                 </li>
                                 <li class="mrn-account-navigation-link {{in_array('addresses',$active_sidebar)?"is-active":""}}">
                                     <i class="fa fa-map"> </i>
-                                    <a href="https://iranaviator.com/my-account/mywishlist/">آدرس ها</a>
+                                    <a href="{{route('t_addresses')}}">آدرس ها</a>
                                 </li>
                                 <li class="mrn-account-navigation-link {{in_array('edit-periodic',$active_sidebar)?"is-active":""}}">
                                     <i class="fa fa-google-wallet"> </i>
-                                    <a href="https://iranaviator.com/my-account/downloads/">ویرایش کمک ماهانه</a>
+                                    <a href="#">ویرایش کمک ماهانه</a>
                                 </li>
-                                <li class="mrn-account-navigation-link {{in_array('edit-account',$active_sidebar)?"is-active":""}}">
+                                <li class="mrn-account-navigation-link {{in_array('edit_profile',$active_sidebar)?"is-active":""}}">
                                     <i class="fa fa-user"> </i>
-                                    <a href="https://iranaviator.com/my-account/edit-address/">ویرایش حساب کاربری</a>
+                                    <a href="{{route('t_edit_profile')}}">ویرایش حساب کاربری</a>
                                 </li>
                                 <li class="mrn-account-navigation-link">
                                     <i class="fa fa-sign-out"> </i>
@@ -73,4 +75,7 @@
         </div>
 
     </div>
+@endsection
+@section('js')
+    @yield('js2')
 @endsection
