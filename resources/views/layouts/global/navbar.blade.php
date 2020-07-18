@@ -1,7 +1,7 @@
 <!-- Header -->
 <style>
     .menuzord-menu > li {
-        padding: 14px 0 !important;
+        padding: 4px 0 !important;
     }
 
     #banner a {
