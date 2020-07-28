@@ -248,7 +248,7 @@
                     <div class="form-group">
                         <label for="form_username">{{__('messages.username')}}
                         </label>
-                        <input id="form_username" name="username" class="form-control " {{$userInfo['name'] ? "readonly" :""}}
+                        <input id="form_username" name="username" class="form-control "
                         type="text" placeholder="{{__('messages.username')}}"
                                value="{{$userInfo['name']}}">
                     </div>
@@ -257,7 +257,7 @@
                     <div class="form-group">
                         <label for="form_email">{{__('messages.email')}}
                         </label>
-                        <input id="form_email" name="email" class="form-control email" {{$userInfo['email'] ? "readonly" :""}}
+                        <input id="form_email" name="email" class="form-control email"
                         type="email" placeholder="{{__('messages.enter_email')}}"
                                value="{{$userInfo['email']}}">
                     </div>
@@ -265,8 +265,8 @@
                 <div class="col-xs-12 col-md-6">
                     <div class="form-group">
                         <label for="form_phone">{{__('messages.phone')}}</label>
-                        <input id="form_phone" name="phone" class="form-control" type="number" {{$userInfo['number'] ? "readonly" :""}}
-                        placeholder="02122113344"
+                        <input id="form_phone" name="phone" class="form-control" type="number"
+                        placeholder=""
                                maxlength="11"
                                value="{{$userInfo['people']['phone']}}">
                     </div>
@@ -275,8 +275,8 @@
                     <div class="form-group">
                         <label for="form_mobile">{{__('messages.mobile')}}</label>
                         <input id="form_mobile" name="mobile" class="form-control" type="number"
-                               placeholder="09123456789" maxlength="11"
-                               value="{{$userInfo['phone']}}" readonly="readonly">
+                               placeholder="" maxlength="11"
+                               value="{{$userInfo['phone']}}" >
                     </div>
                 </div>
                 <div class="col-xs-12 col-md-6">

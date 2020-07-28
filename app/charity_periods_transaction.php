@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Scopes\nonGroupPayment;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -10,6 +11,12 @@ class charity_periods_transaction extends Model
     //
     use SoftDeletes;
     protected $guarded=[];
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::addGlobalScope(new nonGroupPayment());
+    }
 
     public function period()
     {

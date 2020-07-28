@@ -11,6 +11,8 @@ use App\Rules\RecaptchaV3;
 use App\users_address;
 use App\users_address_extra_info;
 use Carbon\Carbon;
+use function GuzzleHttp\Psr7\str;
+use Illuminate\Support\Facades\Artisan;
 use Validator;
 use App\charity_period;
 use App\charity_periods_transaction;
@@ -33,7 +35,6 @@ class global_controller extends Controller
         $this->validate($request, [
             'phone_email' => 'required|unique:users,phone|unique:users,email',
             'password' => 'required|confirmed|min:6',
-            'g-recaptcha-response' => ['required', new RecaptchaV3()],
         ]);
         $email = null;
         $phone = null;
@@ -238,29 +239,88 @@ class global_controller extends Controller
         }
     }
 
+//    public function add_charity_period__OLD(Request $request)
+//    {
+//        if (!is_null($request['amount'])) {
+//            $request['amount'] = str_replace(',', '', $request['amount']);
+//        }
+//        $this->validate($request,
+//            [
+//                'amount' => 'required|min:10000|max:1000000000|numeric',
+//                'start_date' => 'required',
+//                'period' => 'required',
+//            ]);
+//        $info = charity_period::create(
+//            [
+//                'user_id' => Auth::id(),
+//                'amount' => $request['amount'],
+//                'start_date' => shamsi_to_miladi($request['start_date']),
+//                'next_date' => shamsi_to_miladi($request['start_date']),
+//                'period' => $request['period'],
+//                'description' => $request['description'],
+//            ];
+//        );
+//
+//        if (strtotime(shamsi_to_miladi($request['start_date'])) <= time()) {
+//            charity_periods_transaction::create(
+//                [
+//                    'user_id' => Auth::id(),
+//                    'period_id' => $info['id'],
+//                    'payment_date' => $info['next_date'],
+//                    'amount' => $info['amount'],
+//                    'description' => "پرداخت دوره ای شماره " . $info['id'],
+//                    'status' => "unpaid",
+//                ]
+//            );
+//            charity_period::where('id', $info['id'])->update(
+//                [
+//                    'next_date' => date('Y-m-d', strtotime("+" . $info['period'] . " month", time()))
+//                ]
+//            );
+//        }
+//
+//
+//        $message = trans("messages.period_created");
+//        return back_normal($request, ['message' => $message, "code" => 200]);
+//    }
+
+
     public function add_charity_period(Request $request)
     {
+
         if (!is_null($request['amount'])) {
             $request['amount'] = str_replace(',', '', $request['amount']);
         }
+        $availableTypes = array_keys(config('charity.routine_types'));
         $this->validate($request,
             [
                 'amount' => 'required|min:10000|max:1000000000|numeric',
-                'start_date' => 'required',
-                'period' => 'required',
+                'day' => 'required|min:1|max:29',
+                'month' => 'required|min:1|max:12',
+                'type' => 'required|in:'.implode(',', $availableTypes),
             ]);
+
+        charity_period::where('user_id',Auth::user()['id'])->delete();
+        $day = latin_num($request['day']);
+        $month = latin_num($request['month']);
+        $year = latin_num(jdate("Y"));
+        $targetTimestamp = jmktime(2,0,0,$month,$day,$year);
+        if ((time()-166400)>$targetTimestamp){
+            $targetTimestamp = jmktime(2,0,0,$month,$day,$year+1);
+        }
+        $date = date("Y-m-d H:i:s",$targetTimestamp);
+
         $info = charity_period::create(
             [
                 'user_id' => Auth::id(),
                 'amount' => $request['amount'],
-                'start_date' => shamsi_to_miladi($request['start_date']),
-                'next_date' => shamsi_to_miladi($request['start_date']),
-                'period' => $request['period'],
-                'description' => $request['description'],
+                'start_date' => $date,
+                'next_date' => $date,
+                'period' => $request['type'],
+                'description' => " ",
             ]
         );
-
-        if (strtotime(shamsi_to_miladi($request['start_date'])) <= time()) {
+        if (strtotime($info['next_date']) <= time()) {
             charity_periods_transaction::create(
                 [
                     'user_id' => Auth::id(),
@@ -271,38 +331,27 @@ class global_controller extends Controller
                     'status' => "unpaid",
                 ]
             );
-            charity_period::where('id', $info['id'])->update(
-                [
-                    'next_date' => date('Y-m-d', strtotime("+" . $info['period'] . " month", time()))
-                ]
-            );
-        }
-
+            $update = updateNextRoutine($info['id']);
+        };
 
         $message = trans("messages.period_created");
-        return back_normal($request, ['message' => $message, "code" => 200]);
+        return back_normal($request,  $message);
     }
 
     public function profile_period_delete(Request $request)
     {
-        if ($charity = charity_period::find($request['id'])) {
-            if ($charity['user_id'] == Auth::id()) {
-                $status = 'active';
-                if ($charity['status'] == "active") {
-                    $status = 'inactive';
-                }
-                $charity->status = $status;
-                $charity->save();
-                $message = trans("messages.period_res", ['item' => __('messages.' . $status)]);
-                return back_normal($request, ['message' => $message, "code" => 200]);
-            } else {
-                $message[] = trans("messages.period_not_found");
-                return back_error($request, $message);
+        try {
+            if (!charity_period::where('user_id', Auth::id())->exists()){
+                return back_normal($request, ['message' => "تعهد پرداخت شما فعال نیست.", "code" => 400]);
             }
-        } else {
+            charity_period::where('user_id', Auth::id())->delete();
+            return back_normal($request, ['message' => "تعهد پرداخت غیرفعال شد", "code" => 200]);
+        }
+        catch (\Throwable $exception){
             $message[] = trans("messages.period_not_found");
             return back_error($request, $message);
         }
+
     }
 
     public function profile_period_check()
@@ -462,10 +511,21 @@ class global_controller extends Controller
         }
         if ($request['email']) {
             $user = User::find(Auth::id());
-            if (!$user->email) {
-                $user->email = $request['email'];
-                $user->save();
+            if ($user->email != $request['email']) {
+                $user->email_verified_at = null;
             }
+            $user->email = $request['email'];
+            $user->save();
+
+        }
+        if ($request['phone']) {
+            $user = User::find(Auth::id());
+            if ($user->phone != $request['phone']) {
+                $user->phone_verified_at = null;
+            }
+            $user->phone = $request['phone'];
+            $user->save();
+
         }
         if ($request['username']) {
             $user = User::find(Auth::id());
@@ -484,10 +544,14 @@ class global_controller extends Controller
                 $person->name = $request['name'];
                 $person->family = $request['family'];
                 $person->national_code = $request['national_code'];
-                $person->phone = $request['phone'];
+                if ($request['phone']) {
+                    $person->phone = $request['phone'];
+                }
                 $person->gender = $request['gender'];
                 $person->birth_date = $request['birthday'];
-                $person->email = $request['email'];
+                if ($request['email']) {
+                    $person->email = $request['email'];
+                }
                 $person->save();
                 $message = __('messages.item_updated', ['item' => trans('messages.information')]);
             } else {

@@ -41,12 +41,7 @@ class CreateNextDateIfInactive extends Command
 
         $charity = charity_period::where('status',"!=","active")->get();
         foreach ($charity as $item) {
-            if (!$item['next_date'] or $item['next_date']<= date("Y-m-d")){
-            $Day = date("d",strtotime($item['start_date']));
-                $nextMonthStrTime = strtotime(date("Y-m-d")." +".$item['period'] ." months");
-                $nextDate =  strtotime(date("Y-m",$nextMonthStrTime)."-01 +".$Day." days");
-            charity_period::where('id',$item['id'])->update(['next_date'=>date("Y-m-d",$nextDate)]);
-            }
+            updateNextRoutine($item['id']);
         }
         return true;
 

@@ -40,36 +40,27 @@ class CreateCharityPeriod extends Command
      */
     public function handle()
     {
-        Log::notice("Charity period maker Run At".date("Y-m-d H:i:s"));
+        Log::notice("Charity period maker Run At" . date("Y-m-d H:i:s"));
 
-        $charity = charity_period::where('status','active')->where("next_date","<=",date("Y-m-d"))->get();
+        $charity = charity_period::where('status', 'active')->where("next_date", "<=", date("Y-m-d"))->get();
         foreach ($charity as $item) {
-            $newNextDate = $item['next_date'];
-            for ($i=1 ; $i<=$item['period'];$i++){
-                $monthDays = jdate('t',strtotime($newNextDate));
-                $nextTimeStrTime = strtotime($newNextDate." +". latin_num($monthDays) ." days");
-                $newNextDate =  date("Y-m-d",$nextTimeStrTime);
-            }
-                $exists = charity_periods_transaction::where('period_id',$item['id'])
-                    ->where('payment_date',$item['next_date'])->exists();
 
-                if (!$exists){
-                    charity_periods_transaction::create(
-                        [
-                            'user_id' => $item['user_id'],
-                            'period_id' => $item['id'],
-                            'payment_date' => $item['next_date'],
-                            'amount' => $item['amount'],
-                            'description' => "پرداخت دوره ای شماره " . $item['id'],
-                            'status' => "unpaid",
-                        ]
-                    );
-                    charity_period::where('id', $item['id'])->update(
-                        [
-                            'next_date' => $newNextDate,
-                        ]
-                    );
-                }
+            $exists = charity_periods_transaction::where('period_id', $item['id'])
+                ->where('payment_date', $item['next_date'])->exists();
+
+            if (!$exists) {
+                charity_periods_transaction::create(
+                    [
+                        'user_id' => $item['user_id'],
+                        'period_id' => $item['id'],
+                        'payment_date' => $item['next_date'],
+                        'amount' => $item['amount'],
+                        'description' => "پرداخت دوره ای شماره " . $item['id'],
+                        'status' => "unpaid",
+                    ]
+                );
+                updateNextRoutine($item['id']);
+            }
         }
         return true;
     }

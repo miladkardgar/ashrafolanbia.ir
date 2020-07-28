@@ -31,7 +31,7 @@
                             <ul>
                                 <li class="mrn-account-navigation-link {{in_array('dashboard',$active_sidebar)?"is-active":""}}">
                                     <i class="fa fa-dashboard"> </i>
-                                    <a href="{{route('t_profile')}}"> پیشخوان </a>
+                                    <a href="{{route('global_profile')}}"> پیشخوان </a>
                                 </li>
                                 <li class="mrn-account-navigation-link {{in_array('payment_history',$active_sidebar)?"is-active":""}}">
                                     <i class="fa fa-history"> </i>
@@ -45,13 +45,13 @@
                                     <i class="fa fa-map"> </i>
                                     <a href="{{route('t_addresses')}}">آدرس ها</a>
                                 </li>
-                                <li class="mrn-account-navigation-link {{in_array('edit-periodic',$active_sidebar)?"is-active":""}}">
+                                <li class="mrn-account-navigation-link {{in_array('vow',$active_sidebar)?"is-active":""}}">
                                     <i class="fa fa-google-wallet"> </i>
-                                    <a href="#">ویرایش کمک ماهانه</a>
+                                    <a href="{{route('t_routine_vow')}}">ویرایش کمک ماهانه</a>
                                 </li>
                                 <li class="mrn-account-navigation-link {{in_array('edit_profile',$active_sidebar)?"is-active":""}}">
                                     <i class="fa fa-user"> </i>
-                                    <a href="{{route('t_edit_profile')}}">ویرایش حساب کاربری</a>
+                                    <a href="{{route('global_profile_completion')}}">ویرایش حساب کاربری</a>
                                 </li>
                                 <li class="mrn-account-navigation-link">
                                     <i class="fa fa-sign-out"> </i>
@@ -62,6 +62,7 @@
 
 
                         <div class="mrn-account-content">
+                            <div class="mrn-notices-wrapper"></div>
 
                             @yield('mrn-content')
 
@@ -77,5 +78,23 @@
     </div>
 @endsection
 @section('js')
+    <script >
+        $(document).ready(function () {
+            $(document).on("keyup", '.amount', function (event) {
+                $(this).val(function (index, value) {
+                    return value
+                        .replace(/\D/g, "")
+                        .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                });
+            });
+        });
+        function selectAllPayment(source) {
+            let checkboxes = document.getElementsByClassName('payment');
+            for(var i=0, n=checkboxes.length;i<n;i++) {
+                checkboxes[i].checked = source.checked;
+            }
+        }
+    </script>
+
     @yield('js2')
 @endsection

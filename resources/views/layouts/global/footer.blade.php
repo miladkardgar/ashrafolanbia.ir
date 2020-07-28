@@ -187,4 +187,7 @@
         </div>
     </div>
 </footer>
-<a class="scrollToTop" href="#"><i class="fa fa-angle-up"></i></a>
+<a class="scrollToTop" href="#">
+    <img src="{{asset('public/images/side-logo.png')}}" alt="" class="">
+{{--    <i class="fa fa-angle-up"></i>--}}
+</a>

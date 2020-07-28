@@ -1,5 +1,6 @@
 <?php
 
+use App\charity_period;
 use App\gateway;
 use App\store_category;
 use Illuminate\Http\Request;
@@ -528,7 +529,8 @@ function miladi_to_shamsi_date($date = null, $be_array = null, $with_time = fals
         return $date_jalali;
     } else {
         $date_jalali = gregorian_to_jalali($new_date_year, $new_date_month, $new_date_day, "/");
-        return $time . "  " . $date_jalali;
+        $shrink = explode('/',$date_jalali);
+        return $time . "  " . $shrink[0].'/'.sprintf("%02d", $shrink[1]).'/'.sprintf("%02d", $shrink[2]);
 
     }
 
@@ -658,7 +660,7 @@ function get_inventory_size_max_time($pro_id)
 
 function get_blog_categories()
 {
-    $categories = \WebDevEtc\BlogEtc\Models\BlogEtcCategory::where('lang',app()->getLocale())->get();
+    $categories = \WebDevEtc\BlogEtc\Models\BlogEtcCategory::where('lang', app()->getLocale())->get();
     return $categories;
 }
 
@@ -693,7 +695,7 @@ function get_posts($limit = null, $main_page = [], $categories = [], $paginate =
     $posts_query->where("lang", app()->getLocale());
     $posts_query->orderBy("posted_at", "desc");
     $posts_query->with('categories');
-    $posts_query->where('lang',App()->getLocale());
+    $posts_query->where('lang', App()->getLocale());
     if (!empty($categories)) {
         $posts_query->take($categories);
     }
@@ -701,10 +703,9 @@ function get_posts($limit = null, $main_page = [], $categories = [], $paginate =
         $posts_query->take($limit);
     }
     if ($paginate) {
-        $posts =$posts_query->paginate($paginate);
-    }
-    else {
-        $posts= $posts_query->get();
+        $posts = $posts_query->paginate($paginate);
+    } else {
+        $posts = $posts_query->get();
     }
     return $posts;
 }
@@ -842,16 +843,17 @@ function notification_messages($module, $key, $variables = [])
     foreach ($variables as $name => $variable) {
         $message['text'] = preg_replace("/({( )*" . $name . "( )*})/", $variable, $message['text']);
     }
-    $variables = explode(',',$message['variables']);
+    $variables = explode(',', $message['variables']);
     foreach ($variables as $variable) {
         $message['text'] = preg_replace("/({( )*" . $variable . "( )*})/", "", $message['text']);
     }
 
-    $message['text']=strip_tags($message['text']);
+    $message['text'] = strip_tags($message['text']);
     return $message;
 }
 
-function get_all_locals(){
+function get_all_locals()
+{
     $locales = array_merge([config('app.locale')],
         \Barryvdh\TranslationManager\Models\Translation::groupBy('locale')->pluck('locale')->toArray());
 
@@ -859,13 +861,14 @@ function get_all_locals(){
     return $locales;
 }
 
-function sendSms ($mobile,$body,$farsi=true) {
+function sendSms($mobile, $body, $farsi = true)
+{
     $mobile = trim($mobile);
-    if (strlen($mobile) >= 10 and strlen($mobile)<=14){
-        $mobile = "0".substr($mobile,strlen($mobile)-10,10);
+    if (strlen($mobile) >= 10 and strlen($mobile) <= 14) {
+        $mobile = "0" . substr($mobile, strlen($mobile) - 10, 10);
     }
     $regex = "/(09)\d{9}\s{1}P/";
-    if(preg_match($regex,$mobile." P")) {
+    if (preg_match($regex, $mobile . " P")) {
         $wsdl = "http://sms1000.ir/webservice/sms.asmx?wsdl";
         $client = new nusoap_client($wsdl, 'wsdl');
         $client->soap_defencoding = 'UTF-8';
@@ -887,4 +890,41 @@ function sendSms ($mobile,$body,$farsi=true) {
 
     $sms->SendSMS($mobile, $body);*/
 }
+
+function updateNextRoutine($routineId)
+{
+    try {
+        $routine = charity_period::find($routineId);
+        $routine_type = config('charity.routine_types')[$routine['period']];
+        $newDate = $routine['next_date'];
+        $fixDay = latin_num(jdate("d", strtotime($newDate)));
+        if ($fixDay>29){
+            $fixDay = 29;
+        }
+        if ($routine_type['years'] > 0) {
+            $fixMonth = latin_num(jdate("m", strtotime($newDate)));
+            $fixYear = latin_num(jdate("Y", strtotime($newDate)))+$routine_type['years'];
+            $sDate = jdate($fixYear."-" . $fixMonth . "-".$fixDay." H:i:s", strtotime($newDate));
+            $newDate = shamsi_to_miladi($sDate);
+        }
+        if ($routine_type['months'] > 0) {
+            $fixMonth = (latin_num(jdate("m", strtotime($newDate)))+$routine_type['months'])%12;
+            $fixYear = latin_num(jdate("Y", strtotime($newDate)))+intval((latin_num(jdate("m", strtotime($newDate)))+$routine_type['months'])/12);
+
+            $sDate = jdate($fixYear."-" . $fixMonth . "-".$fixDay." H:i:s", strtotime($newDate));
+            $newDate = shamsi_to_miladi($sDate);
+        }
+        if ($routine_type['days'] > 0) {
+            $newDate = date("Y-m-d H:i:s", strtotime("+" . $routine_type['days'] . " days", strtotime($newDate)));
+        }
+    $routine->next_date = $newDate;
+    $routine->save();
+
+        return true;
+    } catch (Throwable $e) {
+        return false;
+    }
+}
+
+
 

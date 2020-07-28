@@ -32,14 +32,13 @@
 
                     }, error: function (response) {
                         console.log(response)
-                        var errors = response.responseJSON.errors;
-                        $.each(errors, function (index, value) {
+                        // var errors = response.responseJSON.errors;
+                        // $.each(errors, function (index, value) {
                             PNotify.error({
                                 delay: 3000,
-                                title: '',
-                                text: value,
+                                text: 'خطا در انجام عملیات، لطفا درگاه دیگری انتخاب کنید.',
                             });
-                        });
+                        // });
                         submit.removeAttr("disabled");
                         submit.html("{{__('messages.pay')}}")
                     }
@@ -68,6 +67,8 @@
                                     <div class="col-md-8 col-xs-12 pt-20 text-center">
                                         <h4>{{$charityIn['description']}}</h4>
                                     </div>
+
+
                                     <div class="col-md-4 col-xs-12 pt-20">
                                         <strong>{{__('messages.name')}}</strong>
                                     </div>
@@ -88,6 +89,13 @@
                                     <div class="col-md-8 col-xs-12 pt-20 text-center">
                                         <h4>{{jdate("Y-m-d",strtotime($charityIn['payment_date']))}}</h4>
                                     </div>
+                                    <?php  $count_ids = count(explode(',',str_replace(['[',']'],'',$charityIn['group_ids']))); ?>
+                                    @if($count_ids >1)
+                                        <div class="col-md-12 col-xs-12 pt-20 text-center">
+                                            <h4>پرداخت {{$count_ids}} مورد کمک ماهانه </h4>
+                                        </div>
+
+                                    @endif
                                 </div>
                             </div>
                             <div class="col-xs-12 col-md-5">

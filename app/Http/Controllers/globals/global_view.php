@@ -27,6 +27,7 @@ use App\gateway_transaction;
 use App\media;
 use App\order;
 use App\orders_item;
+use App\Scopes\nonGroupPayment;
 use App\setting_transportation;
 use App\setting_transportation_cost;
 use App\store_product;
@@ -409,7 +410,8 @@ class global_view extends Controller
 
     public function vow_cart(Request $request)
     {
-        $charityIn = charity_periods_transaction::with('period')->findOrFail($request['id']);
+        $charityIn = charity_periods_transaction::with('period')
+            ->withoutGlobalScope(nonGroupPayment::class)->findOrFail($request['id']);
         $user = User::with('people')->find($charityIn['user_id']);
         $name = $user['people']['name']." ".$user['people']['family'];
         $gateways = gateway::with('bank')->get();
@@ -493,12 +495,12 @@ class global_view extends Controller
         if (in_array($type, $vow)) {
             $info = charity_transaction::find($id);
         } elseif ($request['type'] == "charity_period") {
-            $info = charity_periods_transaction::findOrFail($id);
+            $info = charity_periods_transaction::withoutGlobalScope(nonGroupPayment::class)->findOrFail($id);
             $info->gateway_id = $request['gateway_id'];
             $info->save();
-            $info = charity_periods_transaction::findOrFail($id);
+//            $info = charity_periods_transaction::findOrFail($id);
             if ($info['user_id']) {
-                if ($info['user_id'] != Auth::id() || $info['status'] != "unpaid") {
+                if ($info['status'] != "unpaid") {
                     $con = false;
                 }
             }
@@ -632,13 +634,28 @@ class global_view extends Controller
 
                 $messages['des'] = $charity['title']['title'];
             } elseif ($data->module == "charity_period") {
-                $charity = charity_periods_transaction::findOrFail($data->module_id);
+                $charity = charity_periods_transaction::withoutGlobalScope(nonGroupPayment::class)->findOrFail($data->module_id);
                 $charity->status = 'paid';
                 $charity->trans_id = $data->id;
                 $charity->pay_date = date("Y-m-d H:i:s", time());
                 $messages['des'] = __('messages.charity_period');
                 $user = User::find($charity['user_id']);
                 $charity->save();
+
+                if ($charity->group_pay){
+                    $groupIds = json_decode($charity->group_ids);
+                    foreach ($groupIds as $groupId){
+                        $groupItem = charity_periods_transaction::find($groupId);
+                        if ($groupItem){
+                            $groupItem->status = 'paid';
+                            $groupItem->trans_id = $data->id;
+                            $groupItem->pay_date = date("Y-m-d H:i:s", time());
+                            $groupItem->gateway_id = $charity->gateway_id;
+                            $groupItem->save();
+                        }
+                    }
+                }
+
                 $phone = $user['phone'];
                 $email = $user['email'];
 
@@ -793,11 +810,11 @@ class global_view extends Controller
         }
         $period = charity_period::where('user_id', Auth::id())->first();
 
-        $unpaidPeriod = charity_periods_transaction::where(
+        $history = charity_periods_transaction::where(
             [
                 ['status', '=', 'unpaid'],
                 ['user_id', '=', Auth::id()],
-            ])->get();
+            ])->orderBy('payment_date','DESC')->paginate(50);
         $unpaidPeriodCount = charity_periods_transaction::where(
             [
                 ['status', '=', 'unpaid'],
@@ -814,7 +831,7 @@ class global_view extends Controller
                 ['user_id', '=', Auth::id()],
             ])->sum('amount');
 
-        return view('global.t-profile.index',compact('period','unpaidPeriod','unpaidPeriodCount','paidPeriodAmount','paidPeriodCount'));
+        return view('global.t-profile.index',compact('period','history','unpaidPeriodCount','paidPeriodAmount','paidPeriodCount'));
     }
 
     public function t_payment_history(){
@@ -822,6 +839,7 @@ class global_view extends Controller
         $history = charity_periods_transaction::where(
             [
                 ['user_id', '=', Auth::id()],
+                ['status', '=', 'paid'],
             ])->orderBy('payment_date',"DESC")->paginate(20);
         return view('global.t-profile.pay_history',compact('history'));
     }
@@ -838,5 +856,42 @@ class global_view extends Controller
         $userInfo = User::with('addresses', 'people', 'profile_image')->find(Auth::id());
 
         return view('global.t-profile.edit',compact('userInfo'));
+    }
+
+    public function t_routine_vow(){
+        $routine = charity_period::where('user_id',Auth::id())->first();
+        return view('global.t-profile.vow',compact('routine'));
+    }
+
+    public function t_routine_payment(Request $request){
+        $group_id=[];
+        $total_amount =0;
+        $this_routine=null;
+        if ($request['payment'] and is_array($request['payment'])){
+        foreach ($request['payment'] as $payment_id){
+            $this_routine = charity_periods_transaction::whereNull('pay_date')->find($payment_id);
+            if ($this_routine){
+                $group_id[]=$this_routine['id'];
+                $total_amount+= $this_routine['amount'];
+            }
+        }
+        }
+        if ($total_amount>0){
+            $new_pay = charity_periods_transaction::create(
+                [
+                    'user_id' => Auth::id(),
+                    'period_id' => $this_routine['period_id'],
+                    'payment_date' => date("Y-m-d H:i:s"),
+                    'amount' => $total_amount,
+                    'description' => "پرداخت کمک دوره ای",
+                    'status' => "unpaid",
+                    'group_ids' => json_encode($group_id),
+                    'group_pay' => 1,
+                ]
+                );
+            return redirect(route('vow_cart',['id'=>$new_pay['id']]));
+        }
+        return back();
+
     }
 }

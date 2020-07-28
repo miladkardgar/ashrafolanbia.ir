@@ -47,15 +47,15 @@
                             submit.removeAttr("disabled");
                             submit.html("{{__('messages.pay')}}")
                         }
-                    }, error: function (response) {
-                        var errors = response.responseJSON.errors;
-                        $.each(errors, function (index, value) {
+                    }, fail: function (response) {
+                        // var errors = response.responseJSON.errors;
+                        // $.each(errors, function (index, value) {
+
                             PNotify.error({
                                 delay: 3000,
-                                title: '',
-                                text: value,
+                                text: 'عملیات با خطا مواجه شد، لطفا درگاه دیگری را انتخاب کنید.',
                             });
-                        });
+                        // });
                         submit.removeAttr("disabled");
                         submit.html("{{__('messages.pay')}}")
                     }

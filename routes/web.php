@@ -592,10 +592,8 @@ Route::group(
 
     Route::prefix('user')->middleware(['auth'])->group(function () {
 
-        Route::get('/profile', 'globals\global_view@profile_page')->name('global_profile');
         Route::get('/caravan', 'globals\global_view@caravan_page')->name('global_caravan');
         Route::post('/caravan_print', 'globals\global_view@caravan_print')->name('global_caravan_print');
-        Route::get('/change_password', 'globals\global_view@change_password')->name('global_profile_change_password');
 
         Route::get('/sms/verify', 'globals\global_view@send_sms')->name('global_profile_send_sms');
         Route::post('/sms/verify', 'globals\global_controller@verify_mobile')->name('global_profile_verify_mobile');
@@ -604,10 +602,6 @@ Route::group(
         Route::post('/email/verify', 'globals\global_controller@verify_email')->name('global_profile_verify_email');
 
         Route::get('/', 'globals\global_view@index')->name('main');
-        Route::get('/profile/completion', 'globals\global_view@global_profile_completion')->name('global_profile_completion');
-        Route::get('/profile/addresses', 'globals\global_view@addresses')->name('global_profile_addresses');
-        Route::post('/profile/completion', 'globals\global_controller@global_profile_completion_upload_image')->name('global_profile_completion_upload_image');
-        Route::post('/profile/completion/submit', 'globals\global_controller@global_profile_completion_submit')->name('global_profile_completion_submit');
 
         Route::get('/edit_information', 'globals\global_view@edit_information')->name('global_profile_edit_information');
         Route::get('/involved/{id}', 'globals\global_view@involved_projects')->name('involved_project');
@@ -616,10 +610,20 @@ Route::group(
 
         //======================================
         //======================================
-        Route::get('/t_profile', 'globals\global_view@t_profile')->name('t_profile');
+//        Route::get('/profile/completion', 'globals\global_view@global_profile_completion')->name('global_profile_completion');
+        Route::get('/profile/addresses', 'globals\global_view@t_addresses')->name('global_profile_addresses');
+        Route::post('/profile/completion', 'globals\global_controller@global_profile_completion_upload_image')->name('global_profile_completion_upload_image');
+        Route::post('/profile/completion/submit', 'globals\global_controller@global_profile_completion_submit')->name('global_profile_completion_submit');
+        Route::get('/profile', 'globals\global_view@t_profile')->name('global_profile');
+//        Route::get('/t_profile', 'globals\global_view@t_profile')->name('t_profile');
         Route::get('/t_pay_history', 'globals\global_view@t_payment_history')->name('t_payment_history');
-        Route::get('/t_addresses', 'globals\global_view@t_addresses')->name('t_addresses');
-        Route::get('/t_edit_profile', 'globals\global_view@t_edit_profile')->name('t_edit_profile');
+        Route::get('/addresses', 'globals\global_view@t_addresses')->name('t_addresses');
+        Route::get('/edit_profile', 'globals\global_view@t_edit_profile')->name('global_profile_completion');
+        Route::get('/change_password', 'globals\global_view@t_edit_profile')->name('global_profile_change_password');
+
+        //        Route::get('/t_edit_profile', 'globals\global_view@t_edit_profile')->name('t_edit_profile');
+        Route::get('/routine_vow', 'globals\global_view@t_routine_vow')->name('t_routine_vow');
+        Route::post('/routine_payment', 'globals\global_view@t_routine_payment')->name('t_routine_payment');
         //======================================
         //======================================
 
@@ -627,6 +631,9 @@ Route::group(
         //======================================
         //-----------End Global View------------
         //======================================
+    });
+    Route::middleware('auth')->group(function () {
+    Route::get('vow/periodic', 'globals\global_view@t_profile')->name('vow_periodic');
     });
 
 
@@ -655,9 +662,6 @@ Route::group(
 //charity view
     Route::get('vow/donate', 'globals\global_view@vow_donate')->name('vow_donate');
 
-    Route::middleware('global_auth')->group(function () {
-        Route::get('vow/periodic', 'globals\global_view@vow_period')->name('vow_periodic');
-    });
 
     Route::post('vow/periodic/add', 'globals\global_controller@add_charity_period')->name('add_charity_period');
     Route::get('vow/{id}', 'globals\global_view@vow_view')->name('vows');

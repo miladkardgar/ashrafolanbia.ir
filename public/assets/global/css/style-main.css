@@ -757,24 +757,25 @@ section > .container-fluid {
 }
 /* -------- Scroll To Top ---------- */
 .scrollToTop {
-  background: rgba(0, 0, 0, 0.1);
+  /*background: rgba(0, 0, 0, 0.1);*/
   bottom: 15px;
   display: none;
-  height: 50px;
+  height: 80px;
   padding: 2px;
   position: fixed;
   right: 15px;
   text-align: center;
   text-decoration: none;
-  width: 50px;
+  width: 80px;
   z-index: 99999;
 }
 .scrollToTop i {
   color: #fff;
   font-size: 42px;
 }
+
 .scrollToTop:hover {
-  background: rgba(0, 0, 0, 0.6);
+  /*background: rgba(0, 0, 0, 0.6);*/
   text-decoration: none;
 }
 /*
@@ -1102,7 +1103,7 @@ section > .container-fluid {
 /* -------- Menuzord ---------- */
 .menuzord-menu > li > a {
   color: #333333;
-  font-size: 13px;
+  font-size: 1em;
   font-weight: 600;
 }
 .menuzord .menuzord-menu > li.active > a i,

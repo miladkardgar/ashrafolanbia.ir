@@ -199,7 +199,7 @@
                         <strong class=" btn  btn-sm">{{__('messages.receiver_name').": "}} </strong>
 
                         <span class=" btn  btn-sm align-middle ml-20 text-success">{{$tra["receiver"]}}</span>
-                        <button class="pull-left button mrn-button-danger"
+                        <button class="pull-left button mrn-button-danger mrn-button-sm"
                                 data-id="{{$tra['id']}}">{{__('messages.delete')}}</button>
                     </td>
 

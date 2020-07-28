@@ -26,6 +26,8 @@ class CreateCharityPeriodsTransactionsTable extends Migration
             $table->string('review')->default('waiting');
             $table->dateTime('review_datetime')->nullable();
             $table->integer('review_user_id')->nullable();
+            $table->string('group_ids')->nullable();
+            $table->boolean('group_pay')->default(0);
             $table->softDeletes();
             $table->timestamps();
         });
