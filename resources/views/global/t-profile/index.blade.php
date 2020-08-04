@@ -59,7 +59,7 @@
                         <span>{{__("words.monthly_".$period['period'])}}</span>
                     </span>
                     <h3>نوبت بعدی پرداخت:
-                    <span class="text-black-50">{{miladi_to_shamsi_date($period['next_date'])}}</span>
+                    <span class="text-black-50">{{jdate('l',strtotime($period['next_date']))}} | {{miladi_to_shamsi_date($period['next_date']) }} </span>
                     </h3>
                     <p>شما میتوانید مبلغ و دوره زمانی تعهد خود را از <a href="{{route('t_routine_vow')}}"><span
                                     style="color: #0000ff;">اینجا</span> </a> ویرایش کنید.</p>

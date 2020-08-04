@@ -27,8 +27,8 @@
                             <input type="hidden" name="g-recaptcha-response">
                             <div class="row">
                                 <div class="form-group col-md-12">
-                                    <label for="name">{{__('messages.email_or_mobile')}}</label>
-                                    <input id="name" name="name" dir="ltr" class="form-control" type="text">
+                                    <label for="name">{{__('messages.mobile')}}</label>
+                                    <input id="name" name="name" dir="ltr" class="form-control" type="tel">
                                 </div>
                             </div>
                             <div class="row">

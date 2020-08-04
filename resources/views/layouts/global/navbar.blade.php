@@ -25,7 +25,7 @@
             <div class="row">
                 <div class="col-xs-12 col-sm-6 col-md-6">
                     <div class="widget no-border m-0">
-                        <a class="menuzord-brand pull-right sm-text-center xs-text-center xs-pull-center"
+                        <a class="menuzord-brand pull-right sm-text-center xs-text-center xs-pull-center mb-5"
                             href="/">
                             <img class="img img-responsive sm-text-center xs-text-center"
                                  src="{{ URL::asset('/public/assets/global/images/logo-wide@2x.png')}}?i=4" alt=""></a>
@@ -86,22 +86,6 @@
                     <div class="widget no-border clearfix m-0 mt-5">
                         <div class='search-form-outer'>
 
-                            <form method='get' action='{{route("blogetc.search")}}'
-                                  id="mailchimp-subscription-form-footer" class="col-lg-offset-5 newsletter-form">
-                                <div class="input-group">
-                                    <input type="text" value="{{\Request::get("s")}}" name="s"
-                                           placeholder="{{__('messages.search')}}"
-                                           class="form-control input-sm font-16" data-height="45px"
-                                           id="mce-EMAIL-footer" style="height: 45px;">
-                                    <span class="input-group-btn">
-                  <button data-height="45px" class="btn btn-colored bg-theme-colored-darker2 btn-xs m-0 font-14"
-                          type="submit">
-                      <i class="fa fa-search text-white-f6"></i></button>
-                </span>
-                                </div>
-                            </form>
-
-
                         </div>
                     </div>
                 </div>
@@ -114,6 +98,8 @@
                 <nav id="menuzord" class="menuzord default bg-theme-colored-darker4">
 
                     <a href="#menu" class="hidden-sm hidden-md hidden-lg mmenu-btn" style="display: inline;"><em></em><em></em><em></em></a>
+                    <a href="#" data-target="#searchModal" data-toggle="modal" class="mmenu-btn " style="font-size: 1.5rem ;display: inline;"><i class="fa fa-search text-white-f6"></i></a>
+
 
                     <div class="pt-10 hidden-sm hidden-md hidden-lg small">
 
@@ -167,6 +153,7 @@
 
             @foreach($menu as $item)
                 <li><a class="" href="{{$item['url']}}">{{$item['name']}}</a>
+                <br>
                     @if($item->subMenu()->exists())
                         @include('layouts.global.nested_menu',['sub_menu'=>$item->subMenu->sortBy('order')])
                     @endif

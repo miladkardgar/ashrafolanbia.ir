@@ -99,7 +99,6 @@
 
 .mrn-account .mrn-account-navigation ul {
     list-style: none;
-    margin: 0 0 30px;
     border-radius: 4px;
     padding: 20px 30px;
 }
@@ -153,6 +152,22 @@ li.mrn-account-navigation-link.is-active {
     background: #e5ffe7;
     padding: 10px 20px;
     border: 1px solid #81b281;
+    border-radius: 4px;
+    margin-bottom: 2em;
+}
+
+.mrn-notifications-box-danger {
+    background: #ffc4ce59;
+    padding: 10px 20px;
+    border: 1px solid #b21417;
+    border-radius: 4px;
+    margin-bottom: 2em;
+}
+
+.mrn-notifications-box-warning {
+    background: rgb(222 145 79 / 14%);
+    padding: 10px 20px;
+    border: 1px solid #ff8e23;
     border-radius: 4px;
     margin-bottom: 2em;
 }
@@ -331,6 +346,24 @@ h4.notifications {
     -webkit-transition: all .2s ease-in-out;
     transition: all .2s ease-in-out;
 }
+.mrn-button-success {
+    color: #fff;
+    background-color: #41d41f;
+    border-radius: 4px;
+    -webkit-appearance: button;
+    cursor: pointer;
+
+    margin-top: 1em;
+    margin-bottom: 2em;
+    text-align: center;
+    border: 0;
+    padding: 10px 17px;
+    vertical-align: bottom;
+    text-shadow: none;
+    display: inline-block;
+    -webkit-transition: all .2s ease-in-out;
+    transition: all .2s ease-in-out;
+}
 
 .mrn-button-alpha {
     color: #051246;
@@ -454,4 +487,11 @@ h4.notifications {
 .mrn-vow-transactions-items li div:first-child {
     float: right;
     max-width: 80%;
+}
+.side-logo-center{
+    margin-bottom: 10px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: auto;
 }

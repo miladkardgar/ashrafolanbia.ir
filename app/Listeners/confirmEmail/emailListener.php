@@ -1,14 +1,15 @@
 <?php
 
-namespace App\Listeners\payment;
+namespace App\Listeners\confirmEmail;
 
-use App\Events\payToCharityMoney;
+use App\Events\confirmEmail;
 use App\Mail\payment_confirmation;
+use App\Mail\userRegisterMail;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Mail;
 
-class mailListener
+class emailListener
 {
     /**
      * Create the event listener.
@@ -23,16 +24,16 @@ class mailListener
     /**
      * Handle the event.
      *
-     * @param  payToCharityMoney  $event
+     * @param  confirmEmail  $event
      * @return void
      */
-    public function handle(payToCharityMoney $event)
+    public function handle(confirmEmail $event)
     {
         try{
-            Mail::to($event->mailData['address'])->send(new payment_confirmation($event->mailData['messages']));
+            Mail::to($event->mailData['address'])->send(new \App\Mail\confirmEmail($event->mailData['code']));
         }catch (\Throwable $e){
-            return false;
 
         }
+
     }
 }

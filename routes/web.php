@@ -548,15 +548,17 @@ Route::group(
 
     Auth::routes();
 // Authentication Routes...
-    Route::post('login', 'Auth\LoginController@login')->name('login');
     Route::post('logout', 'Auth\LoginController@logout')->name('logout');
     Route::get('login', 'globals\global_view@login_page')->name('global_login_page');
+    Route::get('register', 'globals\global_view@register_page')->name('global_register_page');
+
 //    Route::get('auth/reset', 'globals\global_view@reset_password')->name('global_reset_password');
 //    Route::post('auth/reset', 'globals\global_controller@reset_password')->name('global_password_reset');
 
-    Route::get('/register', 'globals\global_view@register_page')->name('global_register_page');
     Route::get('/password_reset', 'globals\global_view@password_reset')->name('password_reset_request');
-    Route::group(['middleware' => 'throttle:30,3'], function () {
+    Route::group(['middleware' => 'throttle:10,3'], function () {
+        Route::post('login', 'Auth\LoginController@login')->name('login');
+        Route::post('/register', 'globals\global_controller@register_form_store')->name('global_register_form_store');
         Route::post('/password_reset', 'Auth\ForgotPasswordController@password_reset')->name('password_reset_request');
         Route::post('/password_change', 'Auth\ForgotPasswordController@password_change')->name('password_change');
     });
@@ -575,11 +577,10 @@ Route::group(
 
 
     Route::prefix('ajax')->group(function () {
-        Route::get('/register', 'globals\global_view@register_form')->name('global_register_form');
-        Route::post('/register', 'globals\global_controller@register_form_store')->name('global_register_form_store');
+//        Route::get('/register', 'globals\global_view@register_form')->name('global_register_form');
         Route::get('/', 'globals\global_view@index')->name('index');
 
-        Route::get('/login', 'globals\global_view@login_form')->name('global_login_form');
+//        Route::get('/login', 'globals\global_view@login_form')->name('global_login_form');
         Route::get('/home', 'HomeController@index')->name('home');
 
 
@@ -591,49 +592,45 @@ Route::group(
     });
 
     Route::prefix('user')->middleware(['auth'])->group(function () {
+        Route::prefix('user')->middleware(['ack.phone'])->group(function () {
 
-        Route::get('/caravan', 'globals\global_view@caravan_page')->name('global_caravan');
-        Route::post('/caravan_print', 'globals\global_view@caravan_print')->name('global_caravan_print');
+            Route::get('/caravan', 'globals\global_view@caravan_page')->name('global_caravan');
+            Route::post('/caravan_print', 'globals\global_view@caravan_print')->name('global_caravan_print');
 
-        Route::get('/sms/verify', 'globals\global_view@send_sms')->name('global_profile_send_sms');
-        Route::post('/sms/verify', 'globals\global_controller@verify_mobile')->name('global_profile_verify_mobile');
+            Route::group(['middleware' => 'throttle:5,3'], function () {
+                Route::get('/email/verify', 'globals\global_view@send_email')->name('global_profile_send_email');
+                Route::post('/email/verify', 'globals\global_controller@verify_email')->name('global_profile_verify_email');
+            });
+            Route::get('/', 'globals\global_view@index')->name('main');
 
-        Route::get('/email/verify', 'globals\global_view@send_email')->name('global_profile_send_email');
-        Route::post('/email/verify', 'globals\global_controller@verify_email')->name('global_profile_verify_email');
-
-        Route::get('/', 'globals\global_view@index')->name('main');
-
-        Route::get('/edit_information', 'globals\global_view@edit_information')->name('global_profile_edit_information');
-        Route::get('/involved/{id}', 'globals\global_view@involved_projects')->name('involved_project');
-        Route::get('/involved', 'globals\global_view@involved_projects')->name('involved_projects_all');
+            Route::get('/edit_information', 'globals\global_view@edit_information')->name('global_profile_edit_information');
+            Route::get('/involved/{id}', 'globals\global_view@involved_projects')->name('involved_project');
+            Route::get('/involved', 'globals\global_view@involved_projects')->name('involved_projects_all');
 
 
-        //======================================
-        //======================================
-//        Route::get('/profile/completion', 'globals\global_view@global_profile_completion')->name('global_profile_completion');
-        Route::get('/profile/addresses', 'globals\global_view@t_addresses')->name('global_profile_addresses');
+            //======================================
+            //======================================
+            Route::get('/profile/addresses', 'globals\global_view@t_addresses')->name('global_profile_addresses');
+
+            Route::get('/profile', 'globals\global_view@t_profile')->name('global_profile');
+            Route::get('/t_pay_history', 'globals\global_view@t_payment_history')->name('t_payment_history');
+            Route::get('/addresses', 'globals\global_view@t_addresses')->name('t_addresses');
+            Route::get('/change_password', 'globals\global_view@t_edit_profile')->name('global_profile_change_password');
+
+            Route::get('/routine_vow', 'globals\global_view@t_routine_vow')->name('t_routine_vow');
+            Route::post('/routine_payment', 'globals\global_view@t_routine_payment')->name('t_routine_payment');
+
+        });
+        Route::group(['middleware' => 'throttle:10,3'], function () {
+            Route::get('/sms/verify', 'globals\global_view@send_sms')->name('global_profile_send_sms');
+            Route::post('/sms/verify', 'globals\global_controller@verify_mobile')->name('global_profile_verify_mobile');
+        });
         Route::post('/profile/completion', 'globals\global_controller@global_profile_completion_upload_image')->name('global_profile_completion_upload_image');
         Route::post('/profile/completion/submit', 'globals\global_controller@global_profile_completion_submit')->name('global_profile_completion_submit');
-        Route::get('/profile', 'globals\global_view@t_profile')->name('global_profile');
-//        Route::get('/t_profile', 'globals\global_view@t_profile')->name('t_profile');
-        Route::get('/t_pay_history', 'globals\global_view@t_payment_history')->name('t_payment_history');
-        Route::get('/addresses', 'globals\global_view@t_addresses')->name('t_addresses');
         Route::get('/edit_profile', 'globals\global_view@t_edit_profile')->name('global_profile_completion');
-        Route::get('/change_password', 'globals\global_view@t_edit_profile')->name('global_profile_change_password');
-
-        //        Route::get('/t_edit_profile', 'globals\global_view@t_edit_profile')->name('t_edit_profile');
-        Route::get('/routine_vow', 'globals\global_view@t_routine_vow')->name('t_routine_vow');
-        Route::post('/routine_payment', 'globals\global_view@t_routine_payment')->name('t_routine_payment');
-        //======================================
-        //======================================
-
-
-        //======================================
-        //-----------End Global View------------
-        //======================================
     });
-    Route::middleware('auth')->group(function () {
-    Route::get('vow/periodic', 'globals\global_view@t_profile')->name('vow_periodic');
+    Route::middleware(['auth', 'ack.phone'])->group(function () {
+        Route::get('vow/periodic', 'globals\global_view@t_profile')->name('vow_periodic');
     });
 
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\globals;
 
 use App\champion_transaction;
 use App\charity_champion;
+use App\charity_payment_patern;
 use App\Events\userRegister;
 use App\Events\userRegisterEvent;
 use App\person;
@@ -33,26 +34,18 @@ class global_controller extends Controller
     public function register_form_store(Request $request)
     {
         $this->validate($request, [
-            'phone_email' => 'required|unique:users,phone|unique:users,email',
+            'mobile' => 'required',
             'password' => 'required|confirmed|min:6',
         ]);
-        $email = null;
-        $phone = null;
-        $is_email = filter_var($request->phone_email, FILTER_VALIDATE_EMAIL);
-        if ($is_email) {
-            $this->validate($request, [
-                'phone_email' => 'required|unique:users,email',
-            ]);
-            $email = $request->phone_email;
-        } else {
-            $this->validate($request, [
-                'phone_email' => 'required|numeric|regex:/(09)[0-9]{9}/'
-            ]);
-            $phone = $request->phone_email;
+        $this->validate($request, [
+            'mobile' => 'required|numeric|regex:/(09)[0-9]{9}/'
+        ]);
+        $exists = User::where('phone')->whereNotNull('phone_verified_at')->exists();
+        if ($exists){
+            return back_error($request,['شماره تکراری'=>'این شماره قبلا ثبت شده است.']);
         }
         $user = User::create([
-            'email' => $email,
-            'phone' => $phone,
+            'phone' => $request->mobile,
             'disabled' => 1,
             'password' => bcrypt($request->password),
         ]);
@@ -287,27 +280,42 @@ class global_controller extends Controller
 
     public function add_charity_period(Request $request)
     {
-
         if (!is_null($request['amount'])) {
             $request['amount'] = str_replace(',', '', $request['amount']);
         }
-        $availableTypes = array_keys(config('charity.routine_types'));
+        $availableTypes = config('charity.routine_types');
+        $pattern = charity_payment_patern::where('periodic','1')->first();
+
         $this->validate($request,
             [
-                'amount' => 'required|min:10000|max:1000000000|numeric',
-                'day' => 'required|min:1|max:29',
-                'month' => 'required|min:1|max:12',
-                'type' => 'required|in:'.implode(',', $availableTypes),
+                'amount' => 'required|min:'.$pattern['min'].'|max:'.$pattern['max'].'|numeric',
+                'type' => 'required|in:'.implode(',', array_keys($availableTypes)),
             ]);
 
-        charity_period::where('user_id',Auth::user()['id'])->delete();
-        $day = latin_num($request['day']);
-        $month = latin_num($request['month']);
+        $vow_type =$availableTypes[$request['type']];
+        $month = latin_num(jdate('m'));
         $year = latin_num(jdate("Y"));
-        $targetTimestamp = jmktime(2,0,0,$month,$day,$year);
-        if ((time()-166400)>$targetTimestamp){
-            $targetTimestamp = jmktime(2,0,0,$month,$day,$year+1);
+
+        if (in_array($vow_type['week_day'],[0,1,2,3,4,5,6])){
+
+            $day = latin_num(jdate('d'));
+            $targetTimestamp = jmktime(2,0,0,$month,$day,$year);
+            $current_week_day = latin_num(jdate('w',$targetTimestamp));
+            $day_dif = (7 + ($vow_type['week_day'] - $current_week_day)) % 7;
+            $targetTimestamp = jmktime(2,0,0,$month,$day+$day_dif,$year);
+
+        }else{
+            $this->validate($request,
+                [
+                    'day' => 'required|min:1|max:29',
+                ]);
+
+            $day = latin_num($request['day']);
+            $targetTimestamp = jmktime(2,0,0,$month,$day,$year);
+
         }
+        charity_period::where('user_id',Auth::user()['id'])->delete();
+
         $date = date("Y-m-d H:i:s",$targetTimestamp);
 
         $info = charity_period::create(
@@ -509,32 +517,35 @@ class global_controller extends Controller
                 $con = false;
             };
         }
+        $user = Auth::user();
+
         if ($request['email']) {
-            $user = User::find(Auth::id());
             if ($user->email != $request['email']) {
                 $user->email_verified_at = null;
+                $user->code_email = null;
             }
             $user->email = $request['email'];
             $user->save();
 
         }
-        if ($request['phone']) {
-            $user = User::find(Auth::id());
-            if ($user->phone != $request['phone']) {
+        if ($request['mobile']) {
+
+            if ($user->phone != $request['mobile']) {
                 $user->phone_verified_at = null;
+                $user->code_phone = null;
             }
-            $user->phone = $request['phone'];
+            $user->phone = $request['mobile'];
             $user->save();
 
         }
         if ($request['username']) {
-            $user = User::find(Auth::id());
             if (!$user->name) {
                 $this->validate($request, [
                     'username' => 'required|string|alpha_dash|max:255|unique:users,name|regex:/(^([a-zA-Z0-9]+)?$)/u',
                 ]);
                 $user->name = $request['username'];
                 $user->save();
+
             }
 
         }
@@ -579,15 +590,14 @@ class global_controller extends Controller
 
     public function verify_mobile(Request $request)
     {
-        if ($user = User::findOrFail(Auth::id())) {
-            $created = new Carbon($user->code_phone_send);
-            $now = Carbon::now();
-            $diff = $created->diff($now)->i;
-            if ($diff < 6) {
+        if (Auth::user()) {
+            $user = Auth::user();
+            if (time()-strtotime($user->code_phone_send) < 200) {
                 if ($user->code_phone == $request['code']) {
                     $user->phone_verified_at = date("Y-m-d H:i:s");
                     $user->save();
-                    return redirect(route('global_profile'))->with('message',__('messages.phone_verified'))  ;
+                    User::where('phone',$user->phone)->where('id','!=',$user->id)->update(['phone_verified_at'=>null]);
+                    return back_normal($request,'شماره شما با موفقیت تایید شد.');
                 } else {
                     return back_error($request, __('messages.code_invalid'));
                 }
@@ -601,15 +611,16 @@ class global_controller extends Controller
 
     public function verify_email(Request $request)
     {
-        if ($user = User::findOrFail(Auth::id())) {
-            $created = new Carbon($user->code_email_send);
-            $now = Carbon::now();
-            $diff = $created->diff($now)->i;
-            if ($diff < 6) {
+        if (Auth::user()) {
+            $user = Auth::user();
+            if (time()-strtotime($user->code_email_send) < 1800) {
+
                 if ($user->code_email == $request['code']) {
                     $user->email_verified_at = date("Y-m-d H:i:s");
                     $user->save();
-                    return back_normal($request, ['message' => __('messages.email_verified')]);
+                    User::where('email',$user->email)->where('id','!=',$user->id)->update(['email_verified_at'=>null]);
+
+                    return back_normal($request, __('messages.email_verified'));
                 } else {
                     return back_error($request, __('messages.code_invalid'));
                 }

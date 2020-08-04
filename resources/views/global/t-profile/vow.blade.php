@@ -3,17 +3,28 @@
 $type = -1;
 $active_type = -1;
 $same_type = false;
+$routine_types = config('charity.routine_types');
+$current_routine = null;
+
 if (isset($routine)){
     $type = $routine['period'];
     $active_type = $routine['period'];
 }
 if (isset($_GET['type'])){
     $type = $_GET['type'];
+
     if ($active_type == $type and isset($routine)){
         $same_type = true;
     }
 }
+if (isset($routine_types[$type])){
+    $current_routine = $routine_types[$type];
+}
+
 ?>
+
+
+
 @section('mrn-content')
     <div class="mrn-vow-container">
         <div class="mrn-vow-sidebar">
@@ -25,11 +36,9 @@ if (isset($_GET['type'])){
                 <span class="text-info text-sm-center">نوع تعهدی که میخواهید را انتخاب کنید.</span>
             @endif
             <ul>
-                <li class="mrn-card {{$type == 0 ? "mrn-card-active":""}}"><a href="{{route('t_routine_vow',['type'=>0])}}"><p> @if($active_type==0)<i class="fa fa-check-circle text-success"></i>  @endif  تعهد روزانه  </p></a></li>
-                <li class="mrn-card {{$type == 1 ? "mrn-card-active":""}}"><a href="{{route('t_routine_vow',['type'=>1])}}"><p> @if($active_type==1)<i class="fa fa-check-circle text-success"></i>  @endif  تعهد ماهیانه </p></a></li>
-                <li class="mrn-card {{$type == 2 ? "mrn-card-active":""}}"><a href="{{route('t_routine_vow',['type'=>2])}}"><p> @if($active_type==2)<i class="fa fa-check-circle text-success"></i>  @endif  تعهد سه ماهه </p></a></li>
-                <li class="mrn-card {{$type == 3 ? "mrn-card-active":""}}"><a href="{{route('t_routine_vow',['type'=>3])}}"><p> @if($active_type==3)<i class="fa fa-check-circle text-success"></i>  @endif  تعهد شش ماهه </p></a></li>
-                <li class="mrn-card {{$type == 4 ? "mrn-card-active":""}}"><a href="{{route('t_routine_vow',['type'=>4])}}"><p> @if($active_type==4)<i class="fa fa-check-circle text-success"></i>  @endif  تعهد سالیانه </p></a></li>
+                @foreach($routine_types as $key => $routine_type)
+                    <li class="mrn-card {{$type == $key ? "mrn-card-active":""}}"><a href="{{route('t_routine_vow',['type'=>$key])}}"><p> @if($active_type==$key)<i class="fa fa-check-circle text-success"></i>  @endif  {{$routine_type['title']}}  </p></a></li>
+                @endforeach
             </ul>
 
         </div>
@@ -41,7 +50,21 @@ if (isset($_GET['type'])){
                 @endif
             </div>
             <div style="clear: both"></div>
-            <hr>
+
+            <div class="mrn-notifications-box">
+                <ul class="list-unstyled">
+                    <li class="announce-read">
+                        <div class="notifications-content">
+                            <p>
+                                {!!  $pattern->description!!}
+                            </p>
+
+                        </div>
+                    </li>
+                </ul>
+
+            </div>
+
             @if($active_type == -1)
                 <div class="mrn-notifications-box-green">
 
@@ -58,7 +81,9 @@ if (isset($_GET['type'])){
                 </div>
 
             @endif
-            @if($routine)
+
+
+        @if($routine)
                 <div class="mrn-notifications-box">
                     <h2 class="notifications">تعهد فعلی</h2>
 
@@ -75,16 +100,30 @@ if (isset($_GET['type'])){
                         <span>{{__("words.monthly_".$routine['period'])}}</span>
                     </span>
                                 <h3>نوبت بعدی پرداخت:
-                                    <span class="text-black-50">{{miladi_to_shamsi_date($routine['next_date'])}}</span>
+                                    <span class="text-black-50">{{jdate('l',strtotime($routine['next_date']))}} | {{miladi_to_shamsi_date($routine['next_date'])}} </span>
                                 </h3>
                                 </div>
                         </li>
                     </ul>
                 </div>
-
-
             @endif
             @if($type > -1)
+            @if(array_key_exists($type,$routine_types))
+                    <div class="mrn-notifications-box-green">
+                        <h4 class="notifications"><i class="fa fa-bell-o"></i>  </h4>
+
+                        <ul class="list-unstyled">
+                            <li class="announce-read">
+                                <div class="notifications-content">
+                                    <p>
+                                        {{$routine_types[$type]['description']}}
+                                    </p>
+
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+            @endif
             <div class="mrn-notifications-box">
                 <h4 class="notifications"> انتخاب مبلغ (ریال)</h4>
                 <br>
@@ -98,41 +137,31 @@ if (isset($_GET['type'])){
                                    type="text" required="required" placeholder="مبلغ">
                         </div>
                     </div>
-                    <h4 class="notifications">تاریخ شروع </h4>
+                    @if($current_routine and !in_array($current_routine['week_day'],[0,1,2,3,4,5,6]))
 
+                    <h4 class="notifications">روز شروع </h4>
+                    @php
+                        if($same_type){
+                            $day = latin_num(jdate("d",strtotime($routine['start_date'])));
+                        }
+                        else{
+                            $day = latin_num(jdate("d",time()));
+                        }
+                    @endphp
                     <div class="row">
                         <br>
                         <div class="form-group col-md-6">
-                            <label for="month" class="">ماه:</label>
-                            <select name="month" id="month" class="form-control">
-                                <option value="" disabled selected class="">ماه</option>
-                                @php
-                                if($same_type){
-                                    $month = latin_num(jdate("m",strtotime($routine['start_date'])));
-                                    $day = latin_num(jdate("d",strtotime($routine['start_date'])));
-                                }
-                                else{
-                                    $month = latin_num(jdate("m",time()));
-                                    $day = latin_num(jdate("d",time()));
-                                }
-                                @endphp
-                                @for($m=1 ; $m<=12;$m++)
-                                    <option {{$month == $m ? "selected":""}} value="{{$m}}" class="">{{jdate("F",jmktime(1,1,1,$m,1,1390))}}</option>
-                                @endfor
-
-                            </select>
-                        </div>
-                        <div class="form-group col-md-6">
                             <label for="Day" class="">روز:</label>
                             <select name="day" id="Day" class="form-control">
-                                <option value="" disabled  class="">روز</option>
+                                <option value="" disabled  class="">روز ماه:</option>
                                 @for($d=1 ; $d<=29;$d++)
                                     <option {{$day == $d ? "selected":""}} value="{{$d}}" class="">{{$d}}</option>
                                 @endfor
                             </select>
                         </div>
                     </div>
-                    <div class="row">
+                    @endif
+                    <div align="" class="row">
                         <div class="form-group col-md-12">
 
                         <button class="button mrn-button" type="submit"

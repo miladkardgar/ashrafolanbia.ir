@@ -15,6 +15,13 @@ class mailListener
      */
     public function handle($event)
     {
-        Mail::to($event->user->email)->send(new userRegisterMail($event->user));
+        try{
+            if ($event->user->email){
+                Mail::to($event->user->email)->send(new userRegisterMail($event->user));
+            }
+        }catch (\Throwable $e){
+            return false;
+        }
+
     }
 }

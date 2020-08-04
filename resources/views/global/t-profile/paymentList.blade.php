@@ -18,6 +18,7 @@
                 <th class="text-center">مبلغ</th>
                 <th class="text-center">تاریخ</th>
                 <th class="text-center">تاریخ پرداخت</th>
+                <th class="text-center">بابت</th>
                 <th class="text-center"> </th>
             </tr>
     @foreach($history as $item)
@@ -35,7 +36,8 @@
                     {{miladi_to_shamsi_date($item['pay_date'])}}
                 @endif
             </td>
-            <td>
+            <td class="text-center"> ایتام و محرومین</td>
+            <td class="text-center">
                 @if(!$item['pay_date'])
                     <span class="text-info">پرداخت نشده</span>
                 @endif

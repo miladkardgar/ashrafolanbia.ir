@@ -142,23 +142,25 @@
                             text: data.message,
                             delay: 3000,
                         });
-                        setTimeout(function(){
+                        setTimeout(function () {
                             location.reload();
                         }, 3000);
                         $(form).find('.form-control').val('');
                         $(form_btn).html(form_btn_old_msg);
                         $(form_result_div).html(data.message).fadeIn('slow');
-                        setTimeout(function(){ $(form_result_div).fadeOut('slow') }, 3000);
-                    }, error:function (response){
+                        setTimeout(function () {
+                            $(form_result_div).fadeOut('slow')
+                        }, 3000);
+                    }, error: function (response) {
                         var errors = response.responseJSON.errors;
-                        $.each( errors, function( index, value ) {
+                        $.each(errors, function (index, value) {
                             PNotify.error({
                                 delay: 3000,
                                 title: index,
                                 text: value,
                             });
                         });
-                        setTimeout(function(){
+                        setTimeout(function () {
                             $('[type="submit"]').prop('disabled', false);
                         }, 2500);
                         $(form_btn).html(form_btn_old_msg);
@@ -172,12 +174,102 @@
 @stop
 @section('css2')
     <link rel="stylesheet" href="{{ URL::asset('/public/vendor/laravel-filemanager/css/dropzone.min.css') }}">
-    <link href="{{ URL::asset('/node_modules/md.bootstrappersiandatetimepicker/src/jquery.md.bootstrap.datetimepicker.style.css') }}" rel="stylesheet" type="text/css">
+    <link href="{{ URL::asset('/node_modules/md.bootstrappersiandatetimepicker/src/jquery.md.bootstrap.datetimepicker.style.css') }}"
+          rel="stylesheet" type="text/css">
 
 @stop
 
 @section('mrn-content')
+    @if(!$userInfo['phone_verified_at'])
+    <div class="mrn-notifications-box-danger">
+        <h4 class="notifications"><i class="fa fa-mobile-phone"></i> تایید شماره موبایل </h4>
+        <!-- new post form -->
+        <form method="GET" class="form" action="{{route('global_profile_send_sms')}}">
+            <div class="row">
+                <div class="form-group col-md-6 ">
+                    <input id="phone" name="mobile" value="{{$userInfo['phone']? $userInfo['phone'] :""}}"
+                           {{$userInfo['phone']? 'disabled' :""}} required="required" type="text" class="form-control "
+                           style="margin-top: 1em"
+                           placeholder="{{__('messages.mobile')}}">
 
+
+                </div>
+                <div class="form-group col-md-6 ">
+
+                    <button class="button mrn-button mt-1" type="submit"
+                    >{{__('ارسال کد تایید')}}</button>
+                </div>
+            </div>
+
+
+        </form>
+        @if($userInfo['code_phone_send'] and (time()-strtotime($userInfo['code_phone_send']))<120 )
+            <form method="Post" class="form" action="{{route('global_profile_verify_mobile')}}">
+                @csrf
+                <div class="row">
+                    <div class="form-group col-md-6 ">
+                        <input id="activation_code" required="required" type="text" class="form-control "
+                               style="margin-top: 1em" name="code"
+                               placeholder="{{__('کد فعال سازی')}}">
+
+                    </div>
+                    <div class="form-group col-md-6 ">
+
+                        <button class="button mrn-button-success mt-1" type="submit"
+                        >{{__('تایید')}}</button>
+                    </div>
+                </div>
+
+
+            </form>
+        @endif
+    </div>
+    @endif
+    @if(!$userInfo['email_verified_at'])
+    <div class="mrn-notifications-box-warning">
+        <h4 class="notifications"><i class="fa fa-mobile-phone"></i> تایید ایمیل </h4>
+        <!-- new post form -->
+        <form method="GET" class="form" action="{{route('global_profile_send_email')}}">
+            <div class="row">
+                <p class="">ایمیل شما تایید نشده است لطفا آن را تایید کنید.</p>
+                <div class="form-group col-md-6 ">
+                    <input id="phone" name="email" value="{{$userInfo['email']? $userInfo['email'] :""}}"
+                           {{$userInfo['email']? 'disabled' :""}} required="required" type="email" class="form-control "
+                           style="margin-top: 1em"
+                           placeholder="{{__('messages.email')}}">
+
+                </div>
+                <div class="form-group col-md-6 ">
+
+                    <button class="button mrn-button mt-1" type="submit"
+                    >{{__('تایید آدرس ایمیل')}}</button>
+                </div>
+            </div>
+
+
+        </form>
+        @if($userInfo['code_email_send'] and (time()-strtotime($userInfo['code_email_send']))<1800 )
+            <form method="Post" class="form" action="{{route('global_profile_verify_email')}}">
+                @csrf
+                <div class="row">
+                    <div class="form-group col-md-6 ">
+                        <input id="activation_code" required="required" type="text" class="form-control "
+                               style="margin-top: 1em" name="code"
+                               placeholder="{{__('کد فعال سازی')}}">
+
+                    </div>
+                    <div class="form-group col-md-6 ">
+
+                        <button class="button mrn-button-success mt-1" type="submit"
+                        >{{__('تایید')}}</button>
+                    </div>
+                </div>
+
+
+            </form>
+        @endif
+    </div>
+    @endif
     <div class="mrn-notifications-box">
         <h4 class="notifications"><i class="fa fa-key"></i> تغییر رمز عبور </h4>
         <form id="change_password_form" method="post" action="{{route('global_update_password')}}" class="clearfix">
@@ -188,22 +280,23 @@
                     <input id="old_password" name="old_password" class="form-control left"
                            type="password" required="required" placeholder="{{__('messages.now_password')}}">
                 </div>
-                </div>
-                <div class="row">
+            </div>
+            <div class="row">
 
                 <div class="form-group col-md-6">
                     <label for="password" class="pull-right">{{__('messages.new_password')}}</label>
-                    <input id="password"  required="required" name="password" class="form-control" type="password" placeholder="{{__('messages.new_password')}}">
+                    <input id="password" required="required" name="password" class="form-control" type="password"
+                           placeholder="{{__('messages.new_password')}}">
                 </div>
                 <div class="form-group col-md-6">
                     <label for="password_confirmation" class="pull-right">{{__('messages.repeat_new_password')}}</label>
                     <input id="password_confirmation" name="password_confirmation" class="form-control"
-                           type="password"  required="required" placeholder="{{__('messages.repeat_new_password')}}">
+                           type="password" required="required" placeholder="{{__('messages.repeat_new_password')}}">
                 </div>
             </div>
             <div class="">
                 <button class="button mrn-button" type="submit"
-                        >{{__('messages.change_password')}}</button>
+                >{{__('messages.change_password')}}</button>
             </div>
         </form>
 
@@ -249,34 +342,43 @@
                         <label for="form_username">{{__('messages.username')}}
                         </label>
                         <input id="form_username" name="username" class="form-control "
-                        type="text" placeholder="{{__('messages.username')}}"
+                               type="text" placeholder="{{__('messages.username')}}"
                                value="{{$userInfo['name']}}">
                     </div>
                 </div>
                 <div class="col-xs-12 col-md-6">
                     <div class="form-group">
                         <label for="form_email">{{__('messages.email')}}
+                            @if($userInfo['email_verified_at'])
+                                <span class="fa fa-check-circle-o" title="ایمیل تایید شده" style="color: #21bf26"></span>
+                            @endif
                         </label>
                         <input id="form_email" name="email" class="form-control email"
-                        type="email" placeholder="{{__('messages.enter_email')}}"
+                               type="email" placeholder="{{__('messages.enter_email')}}"
                                value="{{$userInfo['email']}}">
                     </div>
                 </div>
                 <div class="col-xs-12 col-md-6">
                     <div class="form-group">
-                        <label for="form_phone">{{__('messages.phone')}}</label>
+                        <label for="form_phone">{{__('messages.phone')}}
+
+                        </label>
                         <input id="form_phone" name="phone" class="form-control" type="number"
-                        placeholder=""
+                               placeholder=""
                                maxlength="11"
                                value="{{$userInfo['people']['phone']}}">
                     </div>
                 </div>
                 <div class="col-xs-12 col-md-6">
                     <div class="form-group">
-                        <label for="form_mobile">{{__('messages.mobile')}}</label>
+                        <label for="form_mobile">{{__('messages.mobile')}}
+                            @if($userInfo['phone_verified_at'])
+                            <span class="fa fa-check-circle-o" title="شماره تایید شده" style="color: #21bf26"></span>
+                            @endif
+                        </label>
                         <input id="form_mobile" name="mobile" class="form-control" type="number"
                                placeholder="" maxlength="11"
-                               value="{{$userInfo['phone']}}" >
+                               value="{{$userInfo['phone']}}">
                     </div>
                 </div>
                 <div class="col-xs-12 col-md-6">

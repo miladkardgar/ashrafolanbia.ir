@@ -108,19 +108,19 @@
                                     <div class="col-md-12 col-xs-12">
                                         <div class="form-group">
                                             <label>{{__('messages.name_op')}}</label>
-                                            <input type="text" class="form-control" name="name">
+                                            <input type="text" class="form-control" value="{{isset($user['name'])?$user['name']:""}}" name="name">
                                         </div>
                                     </div>
                                     <div class="col-md-12 col-xs-12">
                                         <div class="form-group">
                                             <label>{{__('messages.phone_op')}}</label>
-                                            <input type="number" class="form-control" name="phone">
+                                            <input type="number" class="form-control" value="{{isset($user['phone'])?$user['phone']:""}}" name="phone">
                                         </div>
                                     </div>
                                     <div class="col-md-12 col-xs-12">
                                         <div class="form-group">
                                             <label>{{__('messages.email_op')}}</label>
-                                            <input type="email" class="form-control" name="email">
+                                            <input type="email" class="form-control" {{isset($user['email'])?$user['email']:""}} name="email">
                                         </div>
                                     </div>
                                     <div class="col-md-12 col-xs-12">

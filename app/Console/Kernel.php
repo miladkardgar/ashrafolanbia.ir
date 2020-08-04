@@ -35,8 +35,8 @@ class Kernel extends ConsoleKernel
         $schedule->command('Create:NextDateIfNull')->hourly()->withoutOverlapping();
         $schedule->command('Create:NextDateIfInactive')->hourly()->withoutOverlapping();
         $schedule->command('Create:charityPeriod')->hourly()->withoutOverlapping();
-        $schedule->command('notify:periodCreation')->dailyAt('10:00')->withoutOverlapping();
-        $schedule->command('notify:periodLate')->dailyAt('10:00')->withoutOverlapping();
+        $schedule->command('notify:periodCreation')->dailyAt('11:00')->withoutOverlapping();
+        $schedule->command('notify:periodLate')->dailyAt('11:00')->withoutOverlapping();
 
 
     }

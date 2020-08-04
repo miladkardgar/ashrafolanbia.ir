@@ -16,8 +16,8 @@
                             <p class="text-gray">{{__('messages.register_page_description')}}</p>
                             <div class="row">
                                 <div class="form-group col-md-12">
-                                    <label for="phone_email">{{__('messages.email_or_mobile')}}</label>
-                                    <input id="phone_email" name="phone_email" class="form-control" type="text">
+                                    <label for="phone_email">{{__('messages.mobile')}}</label>
+                                    <input id="phone_email" name="mobile" class="form-control" type="tel">
                                 </div>
                             </div>
                             <div class="row">

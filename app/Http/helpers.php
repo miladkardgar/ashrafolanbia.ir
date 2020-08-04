@@ -112,6 +112,31 @@ function get_team($team_id = null)
     return $team;
 }
 
+function get_name($user_id)
+{
+    try {
+
+        $user = \App\User::with('people')->findOrFail($user_id);
+        if ($user->people) {
+            $name = $user->people->name . " " . $user->people->family;
+            return $name;
+        } else {
+            if ($user->phone) {
+                return $user->phone;
+            } elseif ($user->email) {
+                return $user->email;
+
+            } elseif ($user->name) {
+                return $user->name;
+            } else {
+                return '***';
+            }
+        }
+    }catch (Throwable $e){
+        return '***';
+    }
+}
+
 function image_saver($image_input, $folder = 'photos', $module = 'none', $custom_size = [], $image_name = null)
 {
 //    $request->validate([
@@ -529,8 +554,8 @@ function miladi_to_shamsi_date($date = null, $be_array = null, $with_time = fals
         return $date_jalali;
     } else {
         $date_jalali = gregorian_to_jalali($new_date_year, $new_date_month, $new_date_day, "/");
-        $shrink = explode('/',$date_jalali);
-        return $time . "  " . $shrink[0].'/'.sprintf("%02d", $shrink[1]).'/'.sprintf("%02d", $shrink[2]);
+        $shrink = explode('/', $date_jalali);
+        return $time . "  " . $shrink[0] . '/' . sprintf("%02d", $shrink[1]) . '/' . sprintf("%02d", $shrink[2]);
 
     }
 
@@ -897,28 +922,28 @@ function updateNextRoutine($routineId)
         $routine = charity_period::find($routineId);
         $routine_type = config('charity.routine_types')[$routine['period']];
         $newDate = $routine['next_date'];
-        $fixDay = latin_num(jdate("d", strtotime($newDate)));
-        if ($fixDay>29){
-            $fixDay = 29;
-        }
-        if ($routine_type['years'] > 0) {
-            $fixMonth = latin_num(jdate("m", strtotime($newDate)));
-            $fixYear = latin_num(jdate("Y", strtotime($newDate)))+$routine_type['years'];
-            $sDate = jdate($fixYear."-" . $fixMonth . "-".$fixDay." H:i:s", strtotime($newDate));
-            $newDate = shamsi_to_miladi($sDate);
-        }
-        if ($routine_type['months'] > 0) {
-            $fixMonth = (latin_num(jdate("m", strtotime($newDate)))+$routine_type['months'])%12;
-            $fixYear = latin_num(jdate("Y", strtotime($newDate)))+intval((latin_num(jdate("m", strtotime($newDate)))+$routine_type['months'])/12);
 
-            $sDate = jdate($fixYear."-" . $fixMonth . "-".$fixDay." H:i:s", strtotime($newDate));
-            $newDate = shamsi_to_miladi($sDate);
+        $day = latin_num(jdate("d", strtotime($newDate)));
+        $month = latin_num(jdate("m", strtotime($newDate)));
+        $year = latin_num(jdate("Y", strtotime($newDate)));
+
+        if (in_array($routine_type['week_day'], [0, 1, 2, 3, 4, 5, 6])) {
+
+            $targetTimestamp = jmktime(2, 0, 0, $month, $day, $year);
+            $current_week_day = latin_num(jdate('w', $targetTimestamp));
+            $day_dif = (7 + ($routine_type['week_day'] - $current_week_day)) % 7;
+            $targetTimestamp = jmktime(2, 0, 0, $month, $day + $day_dif + 7, $year);
+
+        } else {
+            if ($day > 29) {
+                $day = 29;
+            }
+            $targetTimestamp = jmktime(2, 0, 0, $month + $routine_type['months'], $day + $routine_type['days'], $year + $routine_type['years']);
         }
-        if ($routine_type['days'] > 0) {
-            $newDate = date("Y-m-d H:i:s", strtotime("+" . $routine_type['days'] . " days", strtotime($newDate)));
-        }
-    $routine->next_date = $newDate;
-    $routine->save();
+
+        $newDate = date("Y-m-d H:i:s", $targetTimestamp);
+        $routine->next_date = $newDate;
+        $routine->save();
 
         return true;
     } catch (Throwable $e) {

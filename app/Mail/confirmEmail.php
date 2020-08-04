@@ -7,10 +7,11 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class PasswordResetCode extends Mailable
+class confirmEmail extends Mailable
 {
     use Queueable, SerializesModels;
     public $code;
+
     /**
      * Create a new message instance.
      *
@@ -19,6 +20,7 @@ class PasswordResetCode extends Mailable
     public function __construct($code)
     {
         $this->code = $code;
+
     }
 
     /**

@@ -24,6 +24,7 @@ use App\Events\userRegisterEvent;
 use App\gallery_category;
 use App\gateway;
 use App\gateway_transaction;
+use App\Mail\confirmEmail;
 use App\media;
 use App\order;
 use App\orders_item;
@@ -200,9 +201,12 @@ class global_view extends Controller
         return view('global.profile.addresses', compact('userInfo', 'provinces'));
     }
 
-    public function send_sms()
+    public function send_sms(Request $request)
     {
         $user = User::findOrFail(Auth::id());
+        if ($request->mobile){
+            $user->phone = $request->mobile;
+        }
         $user->code_phone = random_int(12320, 98750);
         $user->code_phone_send = date("Y-m-d H:i:s");
         $user->save();
@@ -216,16 +220,25 @@ class global_view extends Controller
         return redirect(route('global_profile'));
     }
 
-    public function send_email()
+    public function send_email(Request $request)
     {
-        $user = User::findOrFail(Auth::id());
+        $user = Auth::user();
+        if ($request->email){
+            $user->email = $request->email;
+        }
+        if ($user->email){
+
         $user->code_email = random_int(12320, 98750);
         $user->code_email_send = date("Y-m-d H:i:s");
         $user->save();
 
-        // Email EVENT
-
-        return view('global.materials.email');
+        $mailData = [
+            'address'=> $user->email,
+            'code'=>$user->code_email,
+        ];
+        event(new \App\Events\confirmEmail($mailData));
+        }
+        return redirect(route('global_profile_change_password'));
     }
 
     public function edit_information()
@@ -348,7 +361,14 @@ class global_view extends Controller
         $charity = charity_payment_patern::with('fields')->find($request['id']);
         $titles = charity_payment_title::where('ch_pay_pattern_id',$id)->get();
         $gateways = gateway::with('bank')->where('online', 1)->get();
-        return view('global.vows.vow', compact('charity', 'gateways','titles'));
+        $user = null;
+        if (Auth::user()){
+            $user['name'] = Auth::user()->people['name'] ." ". Auth::user()->people['family'];
+            $user['phone'] = Auth::user()->phone;
+            $user['email'] = Auth::user()->email;
+        }
+
+        return view('global.vows.vow', compact('charity', 'gateways','titles','user'));
     }
 
     public function vow_payment(Request $request)
@@ -367,6 +387,11 @@ class global_view extends Controller
         $user_id = 0;
         if (Auth::id()) {
             $user_id = Auth::id();
+        }else{
+            $user = User::where('phone',$request['phone'])->first();
+            if ($user){
+                $user_id = $user['id'];
+            }
         }
         if (!is_null($patern)) {
             $trans = new charity_transaction();
@@ -424,7 +449,14 @@ class global_view extends Controller
         $title = charity_payment_title::where('ch_pay_pattern_id',2)->get();
         $patern = charity_payment_patern::find(2);
         $gateways = gateway::with('bank')->where('online', 1)->get();
-        return view('global.vows.donate', compact('title', 'patern', 'gateways'));
+        $user = null;
+        if (Auth::user()){
+            $user['name'] = get_name(Auth::user()->id);
+            $user['phone'] = Auth::user()->phone;
+            $user['email'] = Auth::user()->email;
+        }
+
+        return view('global.vows.donate', compact('title', 'patern', 'gateways','user'));
     }
 
     public function vow_period()
@@ -515,8 +547,11 @@ class global_view extends Controller
             $info->save();
             $info = order::find($id);
         }
+
         if (!is_null($info) && $con) {
+
             $gatewayInfo = gateway::findOrFail($info['gateway_id']);
+
             if ($gatewayInfo['function_name'] == "SamanGateway") {
                 try {
                     $gateway = \Gateway::make(new Saman());
@@ -841,7 +876,13 @@ class global_view extends Controller
                 ['user_id', '=', Auth::id()],
                 ['status', '=', 'paid'],
             ])->orderBy('payment_date',"DESC")->paginate(20);
-        return view('global.t-profile.pay_history',compact('history'));
+        $otherHistory = charity_transaction::where(
+            [
+                ['user_id', '=', Auth::id()],
+                ['status', '=', 'success'],
+            ]
+        )->with('patern','title')->get();
+        return view('global.t-profile.pay_history',compact('history','otherHistory'));
     }
 
     public function t_addresses(){
@@ -860,7 +901,8 @@ class global_view extends Controller
 
     public function t_routine_vow(){
         $routine = charity_period::where('user_id',Auth::id())->first();
-        return view('global.t-profile.vow',compact('routine'));
+        $pattern = charity_payment_patern::where('periodic','1')->first();
+        return view('global.t-profile.vow',compact('routine','pattern'));
     }
 
     public function t_routine_payment(Request $request){

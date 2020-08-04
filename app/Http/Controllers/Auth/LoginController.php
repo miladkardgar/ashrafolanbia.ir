@@ -54,7 +54,10 @@ class LoginController extends Controller
         else{
             $fieldType = 'name';
         }
-
+        $user = User::where($fieldType,$login)->first();
+        if ($user and $user->phone and $user->phone_verified_at){
+            $fieldType = 'phone';
+        }
         request()->merge([$fieldType => $login]);
 
         return $fieldType;

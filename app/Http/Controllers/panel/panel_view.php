@@ -29,6 +29,7 @@ use App\gallery_category;
 use App\gateway;
 use App\gateway_transaction;
 use App\Mail\payment_confirmation;
+use App\Mail\userRegisterMail;
 use App\notification_template;
 use App\order;
 use App\period;
@@ -53,6 +54,7 @@ use Illuminate\Support\Facades\Artisan;
 use function GuzzleHttp\Promise\queue;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -1230,6 +1232,6 @@ class panel_view extends Controller
 
     public function test()
     {
-        Artisan::call('view:clear');
+
     }
 }

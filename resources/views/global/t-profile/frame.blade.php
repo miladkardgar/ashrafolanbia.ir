@@ -23,7 +23,7 @@
                                 <img alt=""
                                      src="{{$avatar ? "/".$avatar->url:"/public/assets/global/images/unknown-avatar.png"}}"
                                      class="avatar avatar-80 photo" height="120" width="120">
-                                <div class="mrn-user-info-name">نیکوکار عزیز <strong>{{$user->people->name ." ".$user->people->family}} </strong>
+                                <div class="mrn-user-info-name">نیکوکار عزیز <strong>{{get_name($user->id)}} </strong>
                                     خوش آمدید!
                                 </div>
                             </div>
@@ -37,10 +37,11 @@
                                     <i class="fa fa-history"> </i>
                                     <a href="{{route('t_payment_history')}}">سوابق پرداخت</a>
                                 </li>
-                                <li class="mrn-account-navigation-link {{in_array('orders',$active_sidebar)?"is-active":""}}">
-                                    <i class="fa fa-shopping-basket"> </i>
-                                    <a href="#">سفارش ها</a>
+                                <li class="mrn-account-navigation-link ">
+                                    <i class="fa fa-money"> </i>
+                                    <a href="{{route('vow_donate')}}">پرداخت آنی</a>
                                 </li>
+
                                 <li class="mrn-account-navigation-link {{in_array('addresses',$active_sidebar)?"is-active":""}}">
                                     <i class="fa fa-map"> </i>
                                     <a href="{{route('t_addresses')}}">آدرس ها</a>
@@ -51,13 +52,14 @@
                                 </li>
                                 <li class="mrn-account-navigation-link {{in_array('edit_profile',$active_sidebar)?"is-active":""}}">
                                     <i class="fa fa-user"> </i>
-                                    <a href="{{route('global_profile_completion')}}">ویرایش حساب کاربری</a>
+                                    <a href="{{route('global_profile_completion')}}">مشخصات نیکوکار</a>
                                 </li>
                                 <li class="mrn-account-navigation-link">
                                     <i class="fa fa-sign-out"> </i>
                                     <a href="{{route('logout')}}">خروج</a>
                                 </li>
                             </ul>
+                            <img class="img img-responsive sm-text-center xs-text-center side-logo-center" src="https://ashrafolanbia.ir/public/assets/global/images/logo-wide@2x.png?i=4" alt="" >
                         </nav>
 
 

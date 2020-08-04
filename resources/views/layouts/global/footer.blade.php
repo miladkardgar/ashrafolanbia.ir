@@ -187,6 +187,34 @@
         </div>
     </div>
 </footer>
+<!-- Modal -->
+<div id="searchModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+
+            <div class="modal-body">
+                <form method='get' action='{{route("blogetc.search")}}'
+                      id="mailchimp-subscription-form-footer" class=" newsletter-form">
+                    <div class="input-group">
+                        <input type="text" value="{{\Request::get("s")}}" name="s"
+                               placeholder="{{__('messages.search')}}"
+                               class="form-control input-sm font-16" data-height="45px"
+                               id="mce-EMAIL-footer" style="height: 45px;">
+                        <span class="input-group-btn">
+                  <button data-height="45px" class="btn btn-colored bg-theme-colored-darker2 btn-xs m-0 font-14"
+                          type="submit">
+                      <i class="fa fa-search text-white-f6"></i></button>
+                </span>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+
+    </div>
+</div>
 <a class="scrollToTop" href="#">
     <img src="{{asset('public/images/side-logo.png')}}" alt="" class="">
 {{--    <i class="fa fa-angle-up"></i>--}}

@@ -68,7 +68,8 @@ class ForgotPasswordController extends Controller
 
         $user->save();
         if ($user->phone){
-        sendSms($user->phone, $code);
+            $text = 'کد بازیابی شما: ' . $code . " **موسسه خیریه اشرف الانبیاء (ص) ** ";
+        sendSms($user->phone, $text);
         }
         if ($user->email){
         Mail::to($user->email)->send(new passwordResetCode($code));
