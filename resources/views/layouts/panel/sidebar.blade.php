@@ -232,9 +232,9 @@ if (!isset($active_sidbare)) {
                                                 class="nav-link {{in_array("manage_orders", $active_sidbare) ? 'active' : '' }}">{{trans('messages.manage_orders')}}</a>
                         </li>
 
-                        <li class="nav-item"><a href="{{route('store_setting')}}"
-                                                class="nav-link {{in_array("store_setting", $active_sidbare) ? 'active' : '' }}">{{trans('messages.store_setting')}}</a>
-                        </li>
+{{--                        <li class="nav-item"><a href="{{route('store_setting')}}"--}}
+{{--                                                class="nav-link {{in_array("store_setting", $active_sidbare) ? 'active' : '' }}">{{trans('messages.store_setting')}}</a>--}}
+{{--                        </li>--}}
 
                     </ul>
                 </li>

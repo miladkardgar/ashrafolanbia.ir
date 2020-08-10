@@ -94,12 +94,13 @@
                             text: response.message,
                             delay: 5000,
                         });
-                        setTimeout(function(){
-                            // location.reload();
-                        }, 3000);
+
                         $(form).find('.form-control').val('');
                         $(form_result_div).html(response.message).fadeIn('slow');
                         setTimeout(function(){ $(form_result_div).fadeOut('slow') }, 3000);
+                        setTimeout(function(){
+                            location.href = '{{route('global_profile')}}'
+                        }, 3000);
                     },
                     error:function (response){
                         var errors = response.responseJSON.errors;
@@ -109,6 +110,8 @@
                                 title: index,
                                 text: value,
                             });
+
+
                         });
                         setTimeout(function(){
                             $('[type="submit"]').prop('disabled', false);

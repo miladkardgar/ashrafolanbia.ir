@@ -15,7 +15,51 @@
         background:url('') transparent no-repeat scroll center center;
     }
 </style>
+<?php $locals = get_all_locals(); ?>
 
+<div class="top-bar top-bar-color-light">
+    <div class="container">
+        <div class="row top-bar-row">
+            <div class="pt-10 pr-10 top-bar-half  "  >
+
+
+                @if(Auth::check())
+
+                    <a class="text-white"
+                       href="{{route('logout')}}">{{trans('messages.logout')}}</a>
+                    <span class="text-white">|</span>
+                @endif
+                @foreach($locals as $local)
+                    @if($local != App()->getLocale())
+
+                        <a class="text-white"
+                           href="/{{$local}}">{{trans("words.$local")}}</a>
+                    @endif
+                @endforeach
+
+
+            </div>
+            <div class="top-bar-half">
+                <a href="#" data-target="#searchModal" data-toggle="modal" class=" top-bar-btn " style="font-size: 1.25rem;padding: 0 14px ;"><i class="fa fa-search text-white-f6"></i></a>
+
+                @if(Auth::check())
+                    <a class="text-white top-bar-btn hidden-md hidden-lg pl-2 pr-2"
+                       href="{{route('global_profile')}}" > <span class="fa fa-user"> </span> &nbsp; {{trans('messages.account')}}  </a>
+
+                @else
+                    <a class="text-white top-bar-btn hidden-md hidden-lg"
+                       href="{{route('global_register_page')}}" > {{trans('messages.register')}}</a>
+                    <a class="text-white top-bar-btn hidden-md hidden-lg"
+                       href="{{route('global_login_page')}}" > {{trans('messages.login')}}</a>
+
+                @endif
+
+
+
+            </div>
+        </div>
+    </div>
+</div>
 <header id="header" class="header">
 
     <div class="header-top p-0 text-black bg-silver-light xs-text-center"
@@ -27,68 +71,29 @@
                     <div class="widget no-border m-0">
                         <a class="menuzord-brand pull-right sm-text-center xs-text-center xs-pull-center mb-5"
                             href="/">
-                            <img class="img img-responsive sm-text-center xs-text-center"
+                            <img class="img img-responsive sm-text-center xs-text-center" style="height: 5.5rem"
                                  src="{{ URL::asset('/public/assets/global/images/logo-wide@2x.png')}}?i=4" alt=""></a>
 
                     </div>
                 </div>
-                <?php $locals = get_all_locals(); ?>
-
                 <div class="col-xs-12 col-sm-6 col-md-6">
-                    <div class="widget no-border clearfix m-0 mt-5">
-                        <ul class="list-inline pull-right flip sm-pull-none sm-text-center mt-5 hidden-xs">
-                            @foreach($locals as $local)
-                                @if($local != App()->getLocale())
-                                    <li class="">
-                                        <a class="text-black "
-                                           href="/{{$local}}">{{trans("words.$local")}}</a>
-                                    </li>
-                                    <li class="text-black">|</li>
-                                @endif
-                            @endforeach
-                            @if (Auth::check())
-                                <li>
-                                    <a class="text-black"
-                                       href="{{route('global_profile')}}">{{trans('messages.account')}}</a>
-                                </li>
-                                <li class="text-black">|</li>
-                                <li>
-                                    <a class="text-black"
-                                       href="{{route('logout')}}">{{trans('messages.logout')}}</a>
-                                </li>
-                            @else
-                                <li class="">
-                                    <a class="text-black "
-                                       href="{{route('global_login_page')}}">{{trans('messages.login')}}</a>
-                                </li>
-                                <li class="text-black">|</li>
-                                <li class="">
-                                    <a class="text-black "
-                                       href="{{route('global_register_page')}}">{{trans('messages.register')}}</a>
-                                </li>
-                            @endif
-                            @if(session()->get('cart'))
-                                <li class="text-black">|</li>
-                                <li>
-                                    <a class="text-black"
-                                       href="{{route('store_cart')}}">{{__('messages.buy_basket')}}</a>
-                                </li>
-                            @endif
-                            @if(has_caravan())
-                                <li class="text-black">|</li>
-                                <li>
-                                    <a class="text-black"
-                                       href="{{route('global_caravan')}}">{{__('messages.caravan')}}</a>
-                                </li>
-                            @endif
-                        </ul>
-                    </div>
-                    <div class="widget no-border clearfix m-0 mt-5">
-                        <div class='search-form-outer'>
+                    <div class="widget no-border clearfix m-0 float-left  hidden-xs hidden-sm " style="text-align: left;padding-top: 2em">
+                        @if(Auth::check())
+                            <a class="btn btn-lg btn-theme-colored"
+                               href="{{route('global_profile')}}"><span class="fa fa-user"></span> {{trans('messages.account')}}  </a>
+                            <span class="text-white">|</span>
 
-                        </div>
+                        @else
+                            <a class="btn btn-theme-colored"
+                               href="{{route('global_login_page')}}"> {{trans('messages.login')}}</a>
+                            <span class="text-white">|</span>
+                            <a class="btn btn-warning"
+                               href="{{route('global_register_page')}}"><span class=" fa fa-user-plus"></span> {{trans('messages.register')}}</a>
+                        @endif
+
+
                     </div>
-                </div>
+
             </div>
         </div>
     </div>
@@ -98,33 +103,8 @@
                 <nav id="menuzord" class="menuzord default bg-theme-colored-darker4">
 
                     <a href="#menu" class="hidden-sm hidden-md hidden-lg mmenu-btn" style="display: inline;"><em></em><em></em><em></em></a>
-                    <a href="#" data-target="#searchModal" data-toggle="modal" class="mmenu-btn " style="font-size: 1.5rem ;display: inline;"><i class="fa fa-search text-white-f6"></i></a>
 
 
-                    <div class="pt-10 hidden-sm hidden-md hidden-lg small">
-
-
-                    @if(Auth::check())
-                            <a class="text-white"
-                               href="{{route('global_profile')}}">{{trans('messages.account')}}</a>
-                            <span class="text-white">|</span>
-                            <a class="text-white"
-                               href="{{route('logout')}}">{{trans('messages.logout')}}</a>
-                        @else
-                            <a class="text-white"
-                               href="{{route('global_login_page')}}">{{trans('messages.login')}}</a>
-                            <span class="text-white">|</span>
-                            <a class="text-white"
-                               href="{{route('global_register_page')}}">{{trans('messages.register')}}</a>
-                        @endif
-                        @foreach($locals as $local)
-                            @if($local != App()->getLocale())
-                                <span class="text-white">|</span>
-                                <a class="text-white"
-                                   href="/{{$local}}">{{trans("words.$local")}}</a>
-                            @endif
-                        @endforeach
-                    </div>
 
                     <ul class="menuzord-menu {{App()->getLocale()=="en"?'pull-left':'pull-right'}}">
                         @foreach($menu as $item)

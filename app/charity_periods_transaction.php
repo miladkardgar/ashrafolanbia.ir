@@ -20,7 +20,7 @@ class charity_periods_transaction extends Model
 
     public function period()
     {
-        return $this->hasOne('App\charity_period','id','period_id')->with('user');
+        return $this->hasOne('App\charity_period','id','period_id');
     }
 
     public function admin()

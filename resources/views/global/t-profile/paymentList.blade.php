@@ -15,21 +15,24 @@
         <table class="table table-responsive">
             <tr class="">
                 <th class="text-center"> </th>
-                <th class="text-center">مبلغ</th>
-                <th class="text-center">تاریخ</th>
+                <th class="text-center">موعد</th>
+                <th class="text-center">مبلغ (ریال)</th>
                 <th class="text-center">تاریخ پرداخت</th>
                 <th class="text-center">بابت</th>
-                <th class="text-center"> </th>
+                <th class="text-center">شرح</th>
+                <th class="text-center">وضعیت</th>
             </tr>
-    @foreach($history as $item)
+    @forelse($history as $item)
+
         <tr>
             <td class="text-center">
                 @if(!$item['pay_date'])
                     <input class="payment" name="payment[]" value="{{$item['id']}}" type="checkbox">
                 @endif
             </td>
-            <td class="text-center"> {{number_format($item['amount'])}}</td>
             <td class="text-center">{{miladi_to_shamsi_date($item['payment_date'])}}</td>
+            <td class="text-center"> {{number_format($item['amount'])}}</td>
+
             <td class="text-center">
                 @if($item['pay_date'])
 
@@ -37,13 +40,22 @@
                 @endif
             </td>
             <td class="text-center"> ایتام و محرومین</td>
+
+            <td class="text-center">{{$item->description}}</td>
             <td class="text-center">
                 @if(!$item['pay_date'])
-                    <span class="text-info">پرداخت نشده</span>
+                    <span class="text-danger">در انتظار پرداخت</span>
+                @else
+                    <span class="fa fa-check text-green"></span>
                 @endif
+
             </td>
         </tr>
-    @endforeach
+        @empty
+        <tr>
+            <td colspan="7" class="text-center">یافت نشد.</td>
+        </tr>
+    @endforelse
 
 </table>
 </form>

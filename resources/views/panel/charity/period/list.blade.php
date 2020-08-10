@@ -2,76 +2,11 @@
 @section('meta')
     <meta name="csrf-token" content="{{ csrf_token() }}">
 @endsection
+
 @section('js')
-    <script src="{{ URL::asset('/public/assets/panel/global_assets/js/plugins/tables/datatables/datatables.min.js') }}"></script>
     <script src="{{ URL::asset('/public/assets/panel/global_assets/js/plugins/forms/selects/select2.min.js') }}"></script>
     <script
-        src="{{ URL::asset('/public/assets/panel/global_assets/js/plugins/tables/datatables/extensions/buttons.min.js') }}"></script>
-    <script>
-        var DatatableBasic = function () {
-            var _componentDatatableBasic = function () {
-                if (!$().DataTable) {
-                    console.warn('Warning - datatables.min.js is not loaded.');
-                    return;
-                }
-                $('.datatable-basic').DataTable({
-                    autoWidth: false,
-                    columnDefs: [{
-                        orderable: false,
-                        width: 100,
-                        targets: [0]
-                    }],
-                    dom: 'Bfrtip',
-                    buttons: [
-                        {
-                            extend: 'csv',
-                            charset: 'utf-8',
-                            extension: '.xls',
-                            bom: true,
-                        }
-                    ],
-                    "order": [[ 0, "desc" ]],
-                    language: {
-                        search: '<span>{{__('messages.filter')}}:</span> _INPUT_',
-                        searchPlaceholder: '{{__('messages.search')}}...',
-                        lengthMenu: '<span>{{__('messages.show')}}:</span> _MENU_',
-                        paginate: {
-                            'first': '{{__('messages.first')}}',
-                            'last': '{{__('messages.last')}}',
-                            'next': $('html').attr('dir') == 'rtl' ? '&larr;' : '&rarr;',
-                            'previous': $('html').attr('dir') == 'rtl' ? '&rarr;' : '&larr;'
-                        }
-                    }
-                });
-                $('.sidebar-control').on('click', function () {
-                    table.columns.adjust().draw();
-                });
-            }
-            var _componentSelect2 = function () {
-                if (!$().select2) {
-                    console.warn('Warning - select2.min.js is not loaded.');
-                    return;
-                }
-                $('.dataTables_length select').select2({
-                    minimumResultsForSearch: Infinity,
-                    dropdownAutoWidth: true,
-                    width: 'auto'
-                });
-            };
-            return {
-                init: function () {
-                    _componentDatatableBasic();
-                    _componentSelect2();
-                }
-            }
-        }();
-        document.addEventListener('DOMContentLoaded', function () {
-            DatatableBasic.init();
-            $("body").addClass('sidebar-xs')
-        });
-
-
-    </script>
+            src="{{ URL::asset('/public/assets/panel/global_assets/js/plugins/tables/datatables/extensions/buttons.min.js') }}"></script>
 @endsection
 @section('css')
 
@@ -83,120 +18,134 @@
     <section>
         <div class="content">
             <section>
+                <!-- Search field -->
                 <div class="card">
-                    <div class="card-header">
-                        <h6 class="card-title text-black">{{__('messages.Charity')}}
-                            | {{__('messages.periodic_payment')}}</h6>
-                        <hr>
-                    </div>
                     <div class="card-body">
+                        <h5 class="mb-3">جستجو پیشرفته</h5>
 
-                        <table id="datatableList" class="table datatable-basic">
-                            <thead>
-                            <tr>
-                                <th></th>
-                                <th>{{__('messages.name')}}</th>
-                                <th>{{__('messages.username')}}</th>
-                                <th>{{__('messages.amount')}}</th>
-                                <th>{{__('messages.phone')}}</th>
-                                <th>{{__('messages.start_date')}}</th>
-                                <th>{{__('messages.next_payment_date')}}</th>
-                                <th>{{__('messages.description')}}</th>
-                                <th>{{__('messages.waiting_paid')}}</th>
-                                <th>{{__('messages.period')}}</th>
-                                <th>{{__('messages.status')}}</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            @php $i=1; @endphp
-                            @foreach($periods as $period)
-                                <tr>
-                                    <td>{{$i}}</td>
-                                    <td>{{$period['user']['people']['name']}} {{$period['user']['people']['family']}}
-                                        @if($period['status']=='active')
-                                            <span
-                                                class="badge badge-success">{{__('messages.'.$period['status'])}}</span>
-                                        @else
-                                            <span
-                                                class="badge badge-danger">{{__('messages.'.$period['status'])}}</span>
-                                        @endif
-                                    </td>
-                                    <td>{{$period['user']['name']}}</td>
-                                    <td>{{number_format($period['amount'])}}</td>
-                                    <td>{{$period['user']['phone'] }}</td>
-                                    <td>
-                                        @if(isset($period['start_date']))
-                                            {{jdate("Y-m-d",strtotime($period['start_date']))}}
-                                        @endif
-                                    </td>
-                                    <td>
-                                        @if(isset($period['next_date']))
-                                            {{jdate("Y-m-d",strtotime($period['next_date']))}}
-                                        @endif
-                                    </td>
-                                    <td>{{$period['description']}}</td>
-                                    @php
-                                        $unpaids = \App\charity_periods_transaction::where('period_id',$period['id'])->where('pay_date',null)->count();
-                                    @endphp
-                                    <td>{{$unpaids}}</td>
-                                    <td>{{$period['period']}} ماه </td>
-                                    <td>
-                                        <a data-toggle="tooltip" data-placement="top" title="{{__('messages.view')}}"
-                                           href="{{route('charity_periods_show',['user_id'=>$period['user_id'],'id'=>$period['id']])}}"
-                                           class="btn btn-outline-dark btn-sm"><i class="icon-eye"></i></a>
-                                        <a href="javascript:;"
-                                           class="btn btn-outline-danger btn-sm swal-alert "
-                                           data-ajax-link="{{route('charity_periods_delete',['id'=>$period['id']])}}"
-                                           data-method="post"
-                                           data-csrf="{{csrf_token()}}"
-                                           data-title="{{trans('messages.delete_item',['item'=>trans('messages.period')])}}"
-                                           data-text="{{trans('messages.delete_item_text',['item'=>trans('messages.period')])}}"
-                                           data-type="warning"
-                                           data-cancel="true"
-                                           data-toggle="tooltip" data-placement="top" title="{{__('messages.delete')}}"
-                                           data-confirm-text="{{trans('messages.delete')}}"
-                                           data-cancel-text="{{trans('messages.cancel')}}">
-                                            <i class="icon-bin top-0"></i></a>
-                                        @if($period['status']=='active')
-                                            <a href="javascript:;"
-                                               class="btn btn-outline-warning btn-sm swal-alert "
-                                               data-ajax-link="{{route('charity_periods_inactive',['id'=>$period['id']])}}"
-                                               data-method="post"
-                                               data-csrf="{{csrf_token()}}"
-                                               data-title="{{trans('messages.delete_item',['item'=>trans('messages.period')])}}"
-                                               data-text="{{trans('messages.delete_item_text',['item'=>trans('messages.period')])}}"
-                                               data-type="warning"
-                                               data-cancel="true"
-                                               data-toggle="tooltip" data-placement="top"
-                                               title="{{__('messages.inactivate')}}"
-                                               data-confirm-text="{{trans('messages.inactivate')}}"
-                                               data-cancel-text="{{trans('messages.cancel')}}">
-                                                <i class="icon-x top-0"></i></a>
-                                        @else
-                                            <a href="javascript:;"
-                                               class="btn btn-outline-success btn-sm swal-alert "
-                                               data-ajax-link="{{route('charity_periods_inactive',['id'=>$period['id']])}}"
-                                               data-method="post"
-                                               data-csrf="{{csrf_token()}}"
-                                               data-title="{{trans('messages.activate',['item'=>trans('messages.period')])}}"
-                                               data-text="{{trans('messages.activate',['item'=>trans('messages.period')])}}"
-                                               data-type="warning"
-                                               data-cancel="true"
-                                               data-toggle="tooltip" data-placement="top"
-                                               title="{{__('messages.activate')}}"
-                                               data-confirm-text="{{trans('messages.activate')}}"
-                                               data-cancel-text="{{trans('messages.cancel')}}">
-                                                <i class="icon-check top-0"></i></a>
-                                        @endif
-                                    </td>
-                                </tr>
-                                @php $i++; @endphp
-                            @endforeach
-                            </tbody>
-                        </table>
+                        <form action="#">
+                            <div class="input-group mb-3">
+                                <div class="form-group-feedback form-group-feedback-left">
+                                    <input type="text" id="t_search_q" class="form-control form-control-lg alpha-grey"
+                                           placeholder="ایمیل یا شماره موبایل">
+                                    <div class="form-control-feedback form-control-feedback-lg">
+                                        <i class="icon-search4 text-muted"></i>
+                                    </div>
+                                </div>
+
+                                <div class="input-group-append">
+                                    <button type="button" id="t_search" class="btn btn-primary btn-lg">جستجو</button>
+                                </div>
+                            </div>
+
+                            <div class="d-md-flex align-items-md-center flex-md-wrap text-center text-md-left">
+                                <ul class="list-inline list-inline-condensed mb-0">
+                                    <li class="list-inline-item ">
+                                        <a href="#" id="t_search_reset" class=" btn btn-link text-default "
+                                           >
+                                            <i class="icon-reset mr-2"></i>
+                                            حذف فیلتر ها
+                                        </a>
+                                    </li>
+                                    <li class="list-inline-item dropdown">
+                                        <a href="#" class="btn btn-link text-default dropdown-toggle"
+                                           data-toggle="dropdown">
+                                            <i class="icon-stack2 mr-2"></i>
+                                            مرتب سازی:
+                                        </a>
+
+                                        <div class="dropdown-menu">
+                                            <a href="#" data-param="sort"
+                                               data-value="date-a" class="dropdown-item t_filter">نزدیکترین تاریخ</a>
+                                            <a href="#" data-param="sort"
+                                               data-value="date-d" class="dropdown-item t_filter">دور ترین تاریخ</a>
+                                            <a href="#" data-param="sort"
+                                               data-value="count-a" class="dropdown-item t_filter">کمترین پرداخت
+                                                نشده</a>
+                                            <a href="#" data-param="sort"
+                                               data-value="count-d" class="dropdown-item t_filter">بیشترین پرداخت
+                                                نشده</a>
+                                            <a href="#" data-param="sort"
+                                               data-value="amount-a" class="dropdown-item t_filter">بیشترین مبلغ</a>
+                                            <a href="#" data-param="sort"
+                                               data-value="amount-d" class="dropdown-item t_filter">کمترین مبلغ</a>
+                                        </div>
+                                    </li>
+                                    <li class="list-inline-item dropdown">
+                                        <a href="#" class="btn btn-link text-default dropdown-toggle"
+                                           data-toggle="dropdown">
+                                            <i class="icon-warning mr-2"></i>
+                                            وضعیت:
+                                        </a>
+
+                                        <div class="dropdown-menu">
+                                            <a href="#" data-param="status" data-value=""
+                                               class="dropdown-item t_filter">همه</a>
+                                            <a href="#" data-param="status"
+                                               data-value="active" class="dropdown-item t_filter">فعال ها</a>
+                                            <a href="#" data-param="status"
+                                               data-value="inactive" class="dropdown-item t_filter">غیر فعال ها</a>
+                                        </div>
+                                    </li>
+
+                                </ul>
+
+                                <ul class="list-inline mb-0 ml-md-auto">
+                                    <li class="list-inline-item">
+                                        <a href="{{route('charity_period_list')."?excel=download"}}" class="btn btn-link text-default"><i
+                                                    class="icon-file-excel mr-2"></i> دریافت گزارش کامل</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <!-- /search field -->
+                <div class="card">
+
+                    <div class="card-body table-responsive">
+                        @include('panel.charity.period.table')
+                        {{$users->appends(request()->except('page'))->links()}}
+
                     </div>
                 </div>
             </section>
         </div>
     </section>
+@stop
+
+@section('footer_js')
+    <script>
+        $(document).on('click', '.t_filter', function () {
+            var url = new URL(window.location.href);
+
+            var search_params = url.searchParams;
+            let param = $(this).attr('data-param');
+            let value = $(this).attr('data-value');
+
+            search_params.set(param, value);
+            url.search = search_params.toString();
+            var new_url = url.toString();
+            window.location.replace(new_url);
+
+        });
+        $(document).on('click', '#t_search', function () {
+            var url = new URL(window.location.href);
+
+            var search_params = url.searchParams;
+            let param = 'q';
+            let value = document.getElementById('t_search_q').value;
+            search_params.set(param, value);
+            url.search = search_params.toString();
+            var new_url = url.toString();
+            window.location.replace(new_url);
+        });
+        $(document).on('click', '#t_search_reset', function () {
+            var url = new URL(window.location.href);
+            url.search = '';
+            var new_url = url.toString();
+            window.location.replace(new_url);
+        });
+
+    </script>
 @stop

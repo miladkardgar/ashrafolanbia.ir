@@ -18,7 +18,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'phone', 'password', 'disabled'
+        'name', 'email', 'phone', 'password', 'disabled','code_phone','code_phone_send'
     ];
 
     public $role;
@@ -87,5 +87,10 @@ class User extends Authenticatable
     public function profile_image()
     {
         return $this->hasMany('App\media', 'category_id', 'id')->where('module', '=', 'profile');
+    }
+
+    public function routine()
+    {
+        return $this->hasOne('App\charity_period','user_id');
     }
 }

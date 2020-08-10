@@ -1,182 +1,181 @@
 @extends('global.t-profile.frame')
-<?php $active_sidebar = ['vow'];
-$type = -1;
-$active_type = -1;
-$same_type = false;
-$routine_types = config('charity.routine_types');
-$current_routine = null;
-
-if (isset($routine)){
-    $type = $routine['period'];
-    $active_type = $routine['period'];
-}
-if (isset($_GET['type'])){
-    $type = $_GET['type'];
-
-    if ($active_type == $type and isset($routine)){
-        $same_type = true;
-    }
-}
-if (isset($routine_types[$type])){
-    $current_routine = $routine_types[$type];
-}
-
-?>
-
+<?php $active_sidebar = ['vow'];?>
 
 
 @section('mrn-content')
-    <div class="mrn-vow-container">
-        <div class="mrn-vow-sidebar">
-            @if($active_type>-1)
-                <h4 class="mrn-vow-sidebar-heading"><a href="##">تعهد فعال است</a></h4>
 
-            @else
-                <h4 class="mrn-vow-sidebar-heading"><a href="##">شما تعهد فعال ندارید</a></h4>
-                <span class="text-info text-sm-center">نوع تعهدی که میخواهید را انتخاب کنید.</span>
-            @endif
-            <ul>
-                @foreach($routine_types as $key => $routine_type)
-                    <li class="mrn-card {{$type == $key ? "mrn-card-active":""}}"><a href="{{route('t_routine_vow',['type'=>$key])}}"><p> @if($active_type==$key)<i class="fa fa-check-circle text-success"></i>  @endif  {{$routine_type['title']}}  </p></a></li>
-                @endforeach
-            </ul>
+    @if($routine)
+        <div class="mrn-notifications-box">
+            <h2 class="notifications"> تعهد فعال است </h2>
 
-        </div>
-        <div class="mrn-vow-content">
-            <div class="mrn-vow-content-heading">
-                @if($active_type>-1)
-                <button class="button mrn-button-danger pull-left btn-delete mrn-button-sm" type="button"
-                >غیر فعال کردن تعهد</button>
-                @endif
-            </div>
-            <div style="clear: both"></div>
-
-            <div class="mrn-notifications-box">
-                <ul class="list-unstyled">
-                    <li class="announce-read">
-                        <div class="notifications-content">
-                            <p>
-                                {!!  $pattern->description!!}
-                            </p>
-
-                        </div>
-                    </li>
-                </ul>
-
-            </div>
-
-            @if($active_type == -1)
-                <div class="mrn-notifications-box-green">
-
-                    <ul class="list-unstyled">
-                        <li class="announce-read">
-                            <div class="notifications-content">
-                                <p>
-                                    در حال حاظر شما تعهد فعالی ندارید، شما میتوانید با ثبت تعهد پرداخت مستمر ما را در برنامه ریزی برای کمک موثرتر به خانواده های نیازمند یاری کنید.
-                                </p>
-
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-
-            @endif
-
-
-        @if($routine)
-                <div class="mrn-notifications-box">
-                    <h2 class="notifications">تعهد فعلی</h2>
-
-                    <ul class="list-unstyled">
-                        <li class="announce-read">
-                            <div class="notifications-content">
+            <ul class="list-unstyled">
+                <li class="announce-read">
+                    <div class="notifications-content">
                     <span class="notif-date">
                         تاریخ شروع:
                         <span>{{miladi_to_shamsi_date($routine['start_date'])}}</span>
                     </span>
-                                <br>
-                                <span class="notif-date">
+                        <br>
+                        <span class="notif-date">
                         دوره:
                         <span>{{__("words.monthly_".$routine['period'])}}</span>
                     </span>
-                                <h3>نوبت بعدی پرداخت:
-                                    <span class="text-black-50">{{jdate('l',strtotime($routine['next_date']))}} | {{miladi_to_shamsi_date($routine['next_date'])}} </span>
-                                </h3>
-                                </div>
+                        <br>
+                        <span class="notif-date">
+                        مبلغ:
+                        </span>
+                        <span>{{number_format($routine['amount'])}}</span>
+                            <br>
+                        <span class="text-theme-colored">
+
+                        <a href="#routine-form-area" class="text-info">ویرایش <i class="fa fa-pencil"></i> </a>
+                    </span>
+                        <h3>نوبت بعدی پرداخت:
+                            <span class="text-black-50">{{jdate('l',strtotime($routine['next_date']))}}  {{miladi_to_shamsi_date($routine['next_date'])}} </span>
+                        </h3>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    @else
+
+        <div class="mrn-notifications-box">
+            <h2 class="notifications">شما تعهد فعال ندارید</h2>
+            <ul class="list-unstyled">
+                <li class="announce-read">
+                    <div class="notifications-content">
+                        <p>
+                            {!! $pattern->description !!}
+                        </p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    @endif
+    <div class="mrn-notifications-box" id="routine-form-area">
+        <h2 class="notifications">{{$routine ? "ویرایش تعهد":"ایجاد تعهد"}}</h2>
+        <h4>نوع تعهد را انتخاب کنید:</h4>
+
+        <form method="post" id="routine-form" action="{{route('add_charity_period')}}"
+              class="clearfix">
+        <div class="">
+            <div class="mrn-status-user-widget mt-2">
+                <ul class="radio-tabs">
+                    @foreach($routine_types as $key => $routine_type)
+                        <li class="all_bills ">
+                        <input type="radio"
+                               {{($routine and $routine['period']==$key) ?"checked":""}}
+                               id="radio-{{$key}}"
+                               data-notice="notice-{{$key}}"
+                               data-day="{{$routine_type['week_day']}}"
+                               class="radio-type"
+                               value="{{$key}}"
+                               name="type" />
+                        <label for="radio-{{$key}}">
+                            <h4 style="margin-top: 1.5em">
+                            @if($routine and $routine['period'] == $key)
+                            <i class="fa fa-star text-theme-colored"></i>
+                            @endif
+                            {{$routine_type['title']}}
+                            </h4>
+                        </label>
                         </li>
-                    </ul>
-                </div>
-            @endif
-            @if($type > -1)
-            @if(array_key_exists($type,$routine_types))
-                    <div class="mrn-notifications-box-green">
-                        <h4 class="notifications"><i class="fa fa-bell-o"></i>  </h4>
+
+
+
+                    @endforeach
+                </ul>
+            </div>
+        </div>
+        <div class="">
+            @foreach($routine_types as $key => $routine_type)
+                    <div class="mrn-notifications-box-green vow-notice" style=" {{($routine and $routine['period']==$key) ?"display: block":"display:none"}}" id="notice-{{$key}}">
+                        <h4 class="notifications"><i class="fa fa-bell-o"></i>  {{$routine_type['title']}} </h4>
 
                         <ul class="list-unstyled">
                             <li class="announce-read">
                                 <div class="notifications-content">
                                     <p>
-                                        {{$routine_types[$type]['description']}}
+                                        {{$routine_type['description']}}
                                     </p>
 
                                 </div>
                             </li>
                         </ul>
                     </div>
-            @endif
-            <div class="mrn-notifications-box">
-                <h4 class="notifications"> انتخاب مبلغ (ریال)</h4>
-                <br>
-                <form id="change_password_form" method="post" action="{{route('add_charity_period')}}" class="clearfix">
-                    @csrf
-                    <input type="hidden" name="type" value="{{$type}}" >
-                    <div class="row">
-                        <div class="form-group col-md-6 ">
-                            <input id="amount" name="amount" class="form-control amount left"
-                                    value="{{$same_type ? number_format($routine['amount']):""}}"
-                                   type="text" required="required" placeholder="مبلغ">
-                        </div>
-                    </div>
-                    @if($current_routine and !in_array($current_routine['week_day'],[0,1,2,3,4,5,6]))
+            @endforeach
 
-                    <h4 class="notifications">روز شروع </h4>
+                @csrf
+                <div class="row" >
+                    <div class="form-group col-md-6 ">
+                        <label for="amount" class="">مبلغ:</label>
+                        <input id="amount" name="amount" class="form-control amount left"
+                               value="{{$routine ? number_format($routine['amount']):number_format($pattern['min'])}}"
+                               type="text" required="required" placeholder="مبلغ">
+                    </div>
+                </div>
+
+
+                <div class="row" id="day-of-month" style=" {{($routine and ($routine_types[$routine['period']]['week_day']<7)) ?"display: none":"display: block"}}">
                     @php
-                        if($same_type){
-                            $day = latin_num(jdate("d",strtotime($routine['start_date'])));
-                        }
-                        else{
-                            $day = latin_num(jdate("d",time()));
-                        }
+                    if ($routine){
+                        $day = latin_num(jdate('d',strtotime($routine['start_date'])));
+                    }else{
+                        $day = latin_num(jdate("d",time()));
+                    }
+
                     @endphp
-                    <div class="row">
-                        <br>
-                        <div class="form-group col-md-6">
-                            <label for="Day" class="">روز:</label>
-                            <select name="day" id="Day" class="form-control">
-                                <option value="" disabled  class="">روز ماه:</option>
-                                @for($d=1 ; $d<=29;$d++)
-                                    <option {{$day == $d ? "selected":""}} value="{{$d}}" class="">{{$d}}</option>
-                                @endfor
-                            </select>
-                        </div>
+
+                    <div class="form-group col-md-6">
+                        <label for="Day" class="">روز:</label>
+                        <select name="day" id="Day" class="form-control">
+                            <option value="" disabled class="">روز ماه:</option>
+                            @for($d=1 ; $d<=29;$d++)
+                                <option {{$day == $d ? "selected":""}} value="{{$d}}"
+                                        class="">{{$d}}</option>
+                            @endfor
+                        </select>
                     </div>
-                    @endif
-                    <div align="" class="row">
-                        <div class="form-group col-md-12">
 
-                        <button class="button mrn-button" type="submit"
-                        >ثبت و ذخیره</button>
+                </div>
+
+                <div align="" class="row">
+                    <div class="form-group col-md-12">
+
+                        <button class="button mrn-button" name="submit-btn" type="submit"
+                        >ثبت و ذخیره
+                        </button>
 
 
                     </div>
-                    </div>
-                </form>
-
-            </div>
-            @endif
+                </div>
 
         </div>
+        </form>
+
     </div>
+
+    @if($routine)
+        <div class="mrn-notifications-box-danger">
+            <h4 class="notifications">غیر فعال کردن تعهد</h4>
+
+            <ul class="list-unstyled">
+                <li class="announce-read">
+                    <div class="notifications-content">
+                        <div class="row">
+                            <p class="">
+                                شما میتوانید تعهد خود را غیر فعال کنید و هر زمان که تمایل داشتید مجددا آن را فعال کنید.
+                            </p>
+                            <button class="button mrn-button-danger pull-left btn-delete mrn-button-sm" type="button"
+                            >غیر فعال کردن تعهد
+                            </button>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    @endif
+
 @endsection
 @section('js2')
     <script src="{{ URL::asset('/node_modules/sweetalert2/dist/sweetalert2.all.min.js') }}"></script>
@@ -184,14 +183,14 @@ if (isset($routine_types[$type])){
         $(document).ready(function () {
             $(document).on('click', '.btn-delete', function () {
                 Swal.fire({
-                    title: '{{__('messages.change_status')}}',
-                    text: "{{__('messages.are_you_sure')}}",
+                    title: 'غیر فعال کردن تعهد',
+                    text: "آیا از غیر فعال کردن تعهد اطمینان دارید؟",
                     type: 'warning',
                     showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: '{{__('messages.yes_i_sure')}}',
-                    cancelButtonText: '{{__('messages.cancel')}}'
+                    confirmButtonColor: '#ff2e3c',
+                    cancelButtonColor: '#00ccff',
+                    confirmButtonText: 'بله غیرفعال شود',
+                    cancelButtonText: 'خیر'
                 }).then((result) => {
                     if (result.value) {
                         $.ajax({
@@ -225,6 +224,45 @@ if (isset($routine_types[$type])){
                     }
                 })
             })
-        })
+            $(document).on('submit', '#routine-form', function (e) {
+                e.preventDefault();
+                Swal.fire({
+                    title: 'تغییر وضعیت تعهد',
+                    text: "آیا از ثبت اطلاعات اطمینان دارید؟",
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#00ccff',
+                    cancelButtonColor: '#ff2e3c',
+                    confirmButtonText: 'بله ذخیره شود',
+                    cancelButtonText: 'خیر'
+                }).then((result) => {
+                    if (result.value) {
+                        document.getElementById("routine-form").submit();
+
+                    }
+                })
+            })
+
+
+
+            var vow_types = document.getElementsByClassName('radio-type');
+
+            for (var i=0, len=vow_types.length; i<len; i++) {
+                vow_types[i].onclick = function() {
+                    let week_day = $(this).data('day');
+                    let notice_id = $(this).data('notice');
+                    $('.vow-notice').hide();
+                    $('#'+notice_id).show();
+                    if (week_day < 7){
+                        $('#day-of-month').hide();
+                    }
+                    else {
+                        $('#day-of-month').show();
+                    }
+                }
+            };
+
+
+        });
     </script>
 @stop

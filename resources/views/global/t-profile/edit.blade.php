@@ -350,7 +350,7 @@
                     <div class="form-group">
                         <label for="form_email">{{__('messages.email')}}
                             @if($userInfo['email_verified_at'])
-                                <span class="fa fa-check-circle-o" title="ایمیل تایید شده" style="color: #21bf26"></span>
+                                <span class="fa fa-check-circle-o" title="ایمیل تایید شده" style="color: #21bf26"> ایمیل تایید شده </span>
                             @endif
                         </label>
                         <input id="form_email" name="email" class="form-control email"
@@ -373,7 +373,7 @@
                     <div class="form-group">
                         <label for="form_mobile">{{__('messages.mobile')}}
                             @if($userInfo['phone_verified_at'])
-                            <span class="fa fa-check-circle-o" title="شماره تایید شده" style="color: #21bf26"></span>
+                            <span class="fa fa-check-circle-o" title="شماره تایید شده" style="color: #21bf26"> شماره تایید شده </span>
                             @endif
                         </label>
                         <input id="form_mobile" name="mobile" class="form-control" type="number"
@@ -408,6 +408,13 @@
                         </div>
                     </div>
                 </div>
+                <div class="col-xs-12 col-md-12">
+                    <div class="form-group">
+                        <label for="">{{__('messages.address')}}</label>
+                        <textarea name="address" id="Address" cols="30" rows="3" class="form-control">{{$userInfo['address']}}</textarea>
+
+                    </div>
+                </div>
             </div>
             <div class="form-group">
                 <button type="submit" class="button mrn-button"
@@ -421,7 +428,7 @@
 
 
     <div class="mrn-notifications-box">
-        <h4 class="notifications"><i class="fa fa-picture-o"></i> آواتار </h4>
+        <h4 class="notifications"><i class="fa fa-camera"></i> تصویر </h4>
         <div class="media text-center">
             @if($userInfo['profile_image']->last())
                 <?php

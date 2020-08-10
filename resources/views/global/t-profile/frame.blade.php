@@ -23,37 +23,44 @@
                                 <img alt=""
                                      src="{{$avatar ? "/".$avatar->url:"/public/assets/global/images/unknown-avatar.png"}}"
                                      class="avatar avatar-80 photo" height="120" width="120">
-                                <div class="mrn-user-info-name">نیکوکار عزیز <strong>{{get_name($user->id)}} </strong>
-                                    خوش آمدید!
+                                <div class="mrn-user-info-name">نیکوکار عزیز
+                                    <br>
+                                    <strong>{{get_name($user->id)}} </strong>
+                                    <br>
+                                    خوش آمدید.
+
                                 </div>
                             </div>
 
                             <ul>
                                 <li class="mrn-account-navigation-link {{in_array('dashboard',$active_sidebar)?"is-active":""}}">
-                                    <i class="fa fa-dashboard"> </i>
-                                    <a href="{{route('global_profile')}}"> پیشخوان </a>
+                                    <i class="fa fa-heart"> </i>
+                                    <a href="{{route('global_profile')}}"> پیشخوان نیکوکار </a>
                                 </li>
                                 <li class="mrn-account-navigation-link {{in_array('payment_history',$active_sidebar)?"is-active":""}}">
-                                    <i class="fa fa-history"> </i>
+                                    <i class="fa fa-bar-chart"> </i>
                                     <a href="{{route('t_payment_history')}}">سوابق پرداخت</a>
                                 </li>
-                                <li class="mrn-account-navigation-link ">
-                                    <i class="fa fa-money"> </i>
-                                    <a href="{{route('vow_donate')}}">پرداخت آنی</a>
+
+{{--                                <li class="mrn-account-navigation-link {{in_array('addresses',$active_sidebar)?"is-active":""}}">--}}
+{{--                                    <i class="fa fa-map"> </i>--}}
+{{--                                    <a href="{{route('t_addresses')}}">آدرس ها</a>--}}
+{{--                                </li>--}}
+                                <li class="mrn-account-navigation-link {{in_array('vow',$active_sidebar)?"is-active":""}}">
+                                    <i class="fa fa-calendar"> </i>
+                                    <a href="{{route('t_routine_vow')}}">موعد کمک ماهانه یا هفتگی</a>
                                 </li>
 
-                                <li class="mrn-account-navigation-link {{in_array('addresses',$active_sidebar)?"is-active":""}}">
-                                    <i class="fa fa-map"> </i>
-                                    <a href="{{route('t_addresses')}}">آدرس ها</a>
+                                <li class="mrn-account-navigation-link ">
+                                    <i class="fa fa-star"> </i>
+                                    <a href="{{route('vow_donate')}}">کمک موردی</a>
                                 </li>
-                                <li class="mrn-account-navigation-link {{in_array('vow',$active_sidebar)?"is-active":""}}">
-                                    <i class="fa fa-google-wallet"> </i>
-                                    <a href="{{route('t_routine_vow')}}">ویرایش کمک ماهانه</a>
-                                </li>
+
                                 <li class="mrn-account-navigation-link {{in_array('edit_profile',$active_sidebar)?"is-active":""}}">
                                     <i class="fa fa-user"> </i>
                                     <a href="{{route('global_profile_completion')}}">مشخصات نیکوکار</a>
                                 </li>
+
                                 <li class="mrn-account-navigation-link">
                                     <i class="fa fa-sign-out"> </i>
                                     <a href="{{route('logout')}}">خروج</a>

@@ -30,7 +30,8 @@ class smsListener
 
         if ($event->user->phone){
             $template = notification_template::where('key','new_register')->first();
-            $message = str_replace("{name}",$event->user->name,$template->text);
+            $message = str_replace("{code}",$event->user->code_phone,$template->text);
+            $message = str_replace("{name}",get_name($event->user->id),$message);
             sendSms($event->user->phone,$message);
         }
     }

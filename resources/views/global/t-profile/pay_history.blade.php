@@ -3,10 +3,13 @@
 @section('mrn-content')
     <div class="mrn-status-user-widget">
         <ul>
-            <li class="all_bills w-50">
-                <a class="key_wrapper" data-toggle="tab" href="#routine">
+            <li class="all_bills w-50 active">
+                <a class="key_wrapper " data-toggle="tab" href="#routine">
                     <span class="mrn-amount">
-                        کمک ماهانه
+                        <h4 class="text-info">
+                            مشاهده کمک ماهانه / هفتگی
+
+                        </h4>
                     </span>
                 </a>
             </li>
@@ -14,7 +17,10 @@
             <li class="all_bills w-50">
                 <a class="key_wrapper" data-toggle="tab" href="#others">
                     <span class="mrn-amount">
-                        سایر پرداخت ها
+                        <h4 class="text-info">
+                            مشاهده کمک موردی
+
+                        </h4>
                     </span>
                 </a>
             </li>
@@ -24,7 +30,7 @@
 
     <div class="mrn-notifications-box tab-content">
 
-        <h4 class="notifications"><i class="fa fa-clock-o"></i> سابقه پرداخت های شما</h4>
+        <h4 class="notifications"><i class="fa fa-bar-chart"></i> سوابق پرداخت های شما</h4>
         <div id="routine" class="tab-pane fade in active">
         @include('global.t-profile.paymentList')
         </div>

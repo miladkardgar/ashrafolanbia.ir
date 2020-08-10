@@ -47,6 +47,10 @@ class CreateCharityPeriod extends Command
 
             $exists = charity_periods_transaction::where('period_id', $item['id'])
                 ->where('payment_date', $item['next_date'])->exists();
+            $description= '';
+            if (array_key_exists($charity->period,config('charity.routine_types'))){
+                $description =  config('charity.routine_types')[$charity->period]['title'];
+            };
 
             if (!$exists) {
                 charity_periods_transaction::create(
@@ -55,7 +59,7 @@ class CreateCharityPeriod extends Command
                         'period_id' => $item['id'],
                         'payment_date' => $item['next_date'],
                         'amount' => $item['amount'],
-                        'description' => "پرداخت دوره ای شماره " . $item['id'],
+                        'description' => $item['id'] . " " .($description ? $description :"پرداخت دوره ای "),
                         'status' => "unpaid",
                     ]
                 );

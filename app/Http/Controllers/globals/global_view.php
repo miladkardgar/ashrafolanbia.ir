@@ -440,6 +440,7 @@ class global_view extends Controller
         $user = User::with('people')->find($charityIn['user_id']);
         $name = $user['people']['name']." ".$user['people']['family'];
         $gateways = gateway::with('bank')->get();
+
         return view('global.vows.cart', compact('charityIn', 'gateways','name'));
 
     }
@@ -665,7 +666,7 @@ class global_view extends Controller
                 $name = $charity->name;
                 $amount = $charity->amount;
                     $this_charity = charity_payment_title::find($charity->title_id);
-                $reason =($this_charity ? $this_charity['title']:" خیریه ");
+                $reason =($this_charity ? $this_charity['title']:" ایتام و محرومین ");
 
                 $messages['des'] = $charity['title']['title'];
             } elseif ($data->module == "charity_period") {
@@ -772,7 +773,7 @@ class global_view extends Controller
             $messages['share']=
                 "رسید پرداخت"." %0D%0A ".
                 " %0D%0A ".
-                "نام خیر:".$name." %0D%0A ".
+                "نام نیکوکار:".$name." %0D%0A ".
                 "مبلغ:".number_format($amount)." %0D%0A ".
                 "در تاریخ:".$date." %0D%0A ".
                 ($reason?"بابت:".$reason." %0D%0A ":"").
@@ -875,7 +876,7 @@ class global_view extends Controller
             [
                 ['user_id', '=', Auth::id()],
                 ['status', '=', 'paid'],
-            ])->orderBy('payment_date',"DESC")->paginate(20);
+            ])->orderBy('payment_date',"DESC")->with('period')->paginate(20);
         $otherHistory = charity_transaction::where(
             [
                 ['user_id', '=', Auth::id()],
@@ -900,9 +901,12 @@ class global_view extends Controller
     }
 
     public function t_routine_vow(){
+
+
         $routine = charity_period::where('user_id',Auth::id())->first();
+        $routine_types = config('charity.routine_types');
         $pattern = charity_payment_patern::where('periodic','1')->first();
-        return view('global.t-profile.vow',compact('routine','pattern'));
+        return view('global.t-profile.vow',compact('routine','pattern','routine_types'));
     }
 
     public function t_routine_payment(Request $request){
@@ -925,7 +929,7 @@ class global_view extends Controller
                     'period_id' => $this_routine['period_id'],
                     'payment_date' => date("Y-m-d H:i:s"),
                     'amount' => $total_amount,
-                    'description' => "پرداخت کمک دوره ای",
+                    'description' => "پرداخت کمک ماهانه / هفتگی",
                     'status' => "unpaid",
                     'group_ids' => json_encode($group_id),
                     'group_pay' => 1,

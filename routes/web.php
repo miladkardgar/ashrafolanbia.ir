@@ -592,7 +592,7 @@ Route::group(
     });
 
     Route::prefix('user')->middleware(['auth'])->group(function () {
-        Route::prefix('user')->middleware(['ack.phone'])->group(function () {
+        Route::middleware(['ack.phone'])->group(function () {
 
             Route::get('/caravan', 'globals\global_view@caravan_page')->name('global_caravan');
             Route::post('/caravan_print', 'globals\global_view@caravan_print')->name('global_caravan_print');

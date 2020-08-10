@@ -130,6 +130,7 @@
 
 li.mrn-account-navigation-link.is-active {
     font-weight: 600;
+    text-shadow: 0 0 3px #00ccff;
 }
 
 .mrn-notices-wrapper {
@@ -229,6 +230,37 @@ li.mrn-account-navigation-link.is-active {
     background: #f8f8f8;
 }
 
+.mrn-status-user-widget ul li.active .key_wrapper {
+    background: rgba(0, 204, 255, 0.27) !important;
+    border: 1px solid #3768b2;
+}
+
+
+.radio-tabs input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    z-index: 100;
+}
+
+.radio-tabs label {
+    height: 75px;
+    float: right;
+    width: 100%;
+    color: #666;
+    background-color: white;
+    border: 1px solid rgba(0, 0, 0, 0.82);
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    padding: 0 15px;
+}
+
+.radio-tabs input[type="radio"]:checked + label {
+    background: rgba(0, 204, 255, 0.27) !important;
+    border: 1px solid #3768b2;
+}
+
+
 .mrn-status-user-widget ul li .key_wrapper {
     height: 75px;
     float: right;
@@ -253,6 +285,7 @@ li.mrn-account-navigation-link.is-active {
     line-height: 64px;
     text-align: center;
 }
+
 .mrn-status-user-widget ul li .key_wrapper span.icon-number {
     float: right;
     font-size: 28px;
@@ -346,6 +379,7 @@ h4.notifications {
     -webkit-transition: all .2s ease-in-out;
     transition: all .2s ease-in-out;
 }
+
 .mrn-button-success {
     color: #fff;
     background-color: #41d41f;
@@ -403,11 +437,13 @@ h4.notifications {
     -webkit-transition: all .2s ease-in-out;
     transition: all .2s ease-in-out;
 }
+
 .mrn-button-sm {
     padding: 6px 12px !important;
-    margin-top: 0!important;
-    margin-bottom: 0!important;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
 }
+
 .mrn-vow-container {
     max-width: 100%;
     overflow: hidden;
@@ -415,7 +451,8 @@ h4.notifications {
     display: -webkit-box;
     display: flex;
 }
-.mrn-vow-sidebar{
+
+.mrn-vow-sidebar {
     width: 30%;
     float: right;
     background: #f2f2f2;
@@ -423,7 +460,7 @@ h4.notifications {
     padding-top: 20px;
 }
 
-.mrn-vow-content{
+.mrn-vow-content {
     width: 70%;
     float: right;
     min-height: 100px;
@@ -437,24 +474,24 @@ h4.notifications {
 .mrn-vow-sidebar ul {
     margin: 0 auto;
 }
-.mrn-vow-sidebar ul li.mrn-card
-{
+
+.mrn-vow-sidebar ul li.mrn-card {
     background: #fff;
     border-radius: 2px;
     text-align: center;
     position: relative;
     max-width: 100%;
-    box-shadow: 0 1px 3px rgba(0,0,0,.12), 0 1px 2px rgba(0,0,0,.24);
-    -webkit-transition: all .3s cubic-bezier(.25,.8,.25,1);
-    transition: all .3s cubic-bezier(.25,.8,.25,1);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, .12), 0 1px 2px rgba(0, 0, 0, .24);
+    -webkit-transition: all .3s cubic-bezier(.25, .8, .25, 1);
+    transition: all .3s cubic-bezier(.25, .8, .25, 1);
     cursor: pointer;
 }
 
-.mrn-vow-sidebar ul li.mrn-card-active
-{
-    background: #d1f5ff  !important;
+.mrn-vow-sidebar ul li.mrn-card-active {
+    background: #d1f5ff !important;
 
 }
+
 .mrn-vow-sidebar ul li {
     list-style: none;
     margin: 20px;
@@ -465,33 +502,71 @@ h4.notifications {
     display: inline-block;
     width: 100%;
 }
+
 .mrn-vow-sidebar ul li.mrn-card:hover {
-    box-shadow: 0 14px 28px rgba(0,0,0,.25), 0 10px 10px rgba(0,0,0,.22);
+    box-shadow: 0 14px 28px rgba(0, 0, 0, .25), 0 10px 10px rgba(0, 0, 0, .22);
 }
 
 .mrn-vow-content-heading {
     overflow: hidden;
 }
+
 .mrn-vow-content-h3 {
     float: right;
     margin: 0 0 15px;
     line-height: 1em;
 }
+
 .mrn-vow-transactions-items {
     margin: 0 auto;
 }
+
 .mrn-vow-transactions-items li {
     overflow: hidden;
     padding-bottom: 15px;
 }
+
 .mrn-vow-transactions-items li div:first-child {
     float: right;
     max-width: 80%;
 }
-.side-logo-center{
+
+.side-logo-center {
     margin-bottom: 10px;
     display: block;
     margin-left: auto;
     margin-right: auto;
     width: auto;
 }
+
+.heart-beat {
+    animation-name: heart-beat;
+    animation-duration: 1.5s;
+    animation-timing-function: linear;
+    animation-delay: 3s;
+    animation-iteration-count: infinite;
+}
+
+@keyframes heart-beat {
+    0% {
+        transform: scale(1);
+    }
+    10% {
+        transform: scale(1.25);
+    }
+    20% {
+        transform: scale(1);
+    }
+    30% {
+        transform: scale(1.25);
+    }
+    40% {
+        transform: scale(1);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+

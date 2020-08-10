@@ -40,15 +40,20 @@ class global_controller extends Controller
         $this->validate($request, [
             'mobile' => 'required|numeric|regex:/(09)[0-9]{9}/'
         ]);
-        $exists = User::where('phone')->whereNotNull('phone_verified_at')->exists();
+        $exists = User::where('phone',$request->mobile)->exists();
         if ($exists){
             return back_error($request,['شماره تکراری'=>'این شماره قبلا ثبت شده است.']);
         }
+
         $user = User::create([
             'phone' => $request->mobile,
+            'code_phone' => random_int(12320, 98750),
+            'code_phone_send' => date("Y-m-d H:i:s",time()+180),
             'disabled' => 1,
             'password' => bcrypt($request->password),
         ]);
+        Auth::loginUsingId($user->id);
+
         event(new userRegisterEvent($user));
         $message = trans("messages.user_created");
         return back_normal($request, $message);
@@ -328,14 +333,14 @@ class global_controller extends Controller
                 'description' => " ",
             ]
         );
-        if (strtotime($info['next_date']) <= time()) {
+        if (strtotime($info['next_date']) <= time() and !charity_periods_transaction::where('user_id',Auth::id())->where('payment_date',$info['next_date'])->exists()) {
             charity_periods_transaction::create(
                 [
                     'user_id' => Auth::id(),
                     'period_id' => $info['id'],
                     'payment_date' => $info['next_date'],
                     'amount' => $info['amount'],
-                    'description' => "پرداخت دوره ای شماره " . $info['id'],
+                    'description' => $availableTypes[$request['type']]['title']." " . $info['id'],
                     'status' => "unpaid",
                 ]
             );
@@ -518,6 +523,7 @@ class global_controller extends Controller
             };
         }
         $user = Auth::user();
+        $user->address = $request['address'];
 
         if ($request['email']) {
             if ($user->email != $request['email']) {

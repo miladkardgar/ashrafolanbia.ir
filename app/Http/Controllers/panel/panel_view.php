@@ -25,6 +25,7 @@ use App\charity_periods_transaction;
 use App\charity_transaction;
 use App\city;
 use App\Events\payToCharityMoney;
+use App\Exports\InvoicesExport_charity_routine;
 use App\gallery_category;
 use App\gateway;
 use App\gateway_transaction;
@@ -62,6 +63,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Laratrust\Models\LaratrustPermission;
 use Laratrust\Models\LaratrustRole;
+use Maatwebsite\Excel\Facades\Excel;
 use mysql_xdevapi\Collection;
 use phpDocumentor\Reflection\Types\Array_;
 use WebDevEtc\BlogEtc\Models\BlogEtcComment;
@@ -819,12 +821,140 @@ class panel_view extends Controller
     }
 
 
-    public function charity_period_list()
-    {
+    private function charity_period_list_data(Request $request,$paginate = 100){
+        $user_query = User::query();
+        $user_query->with('routine');
+        if ($request['q']){
+            $quesry = $request['q'];
+            $user_query->where(function ($q)use ($quesry){
+                $q->where('name','like','%'.$quesry.'%')
+                    ->orWhere('phone','like','%'.$quesry.'%')
+                    ->orWhere('email','like','%'.$quesry.'%');
+            });
+        }
+        if ($request['status']){
+            switch ($request['status']){
+                case 'active':
+                    $user_query->whereHas('routine');
+                    break;
+                case 'inactive':
+                    $user_query->whereDoesntHave('routine');
+                    break;
+            }
+        }
+        if ($request['sort']){
+            switch ($request['sort']) {
+                case 'date-a':
+                    $user_query->join('charity_periods_transactions', function ($join) {
+                        $join->on('charity_periods_transactions.user_id', '=', 'users.id')
+                            ->where('charity_periods_transactions.status', '=', 'paid');
+                    });
+                    $user_query->groupBy('users.id');
+                    $user_query->orderBy('pay_date', 'DESC');
+                    $user_query->select((['users.*', DB::raw('MAX(charity_periods_transactions.pay_date) as pay_date')]));
+                    break;
+                case 'date-d':
+                    $user_query->join('charity_periods_transactions', function ($join) {
+                        $join->on('charity_periods_transactions.user_id', '=', 'users.id')
+                            ->where('charity_periods_transactions.status', '=', 'paid');
+                    });
+                    $user_query->groupBy('users.id');
+                    $user_query->orderBy('pay_date', 'ASC');
+                    $user_query->select((['users.*', DB::raw('MAX(charity_periods_transactions.pay_date) as pay_date')]));
+                    break;
+                case 'count-a':
+                    $user_query->join('charity_periods_transactions', function ($join) {
+                        $join->on('charity_periods_transactions.user_id', '=', 'users.id')
+                            ->where('charity_periods_transactions.status', '=', 'unpaid');
+                    });
+                    $user_query->groupBy('users.id');
+                    $user_query->orderBy('count', 'ASC');
+                    $user_query->select((['users.*', DB::raw('COUNT(charity_periods_transactions.user_id) as count')]));
+                    break;
+                case 'count-d':
+                    $user_query->join('charity_periods_transactions', function ($join) {
+                        $join->on('charity_periods_transactions.user_id', '=', 'users.id')
+                            ->where('charity_periods_transactions.status', '=', 'unpaid');
+                    });
+                    $user_query->groupBy('users.id');
+                    $user_query->orderBy('count', 'DESC');
+                    $user_query->select((['users.*', DB::raw('COUNT(charity_periods_transactions.user_id) as count')]));
+                    break;
+                case 'amount-a':
+                    $user_query->join('charity_periods', function ($join) {
+                        $join->on('charity_periods.user_id', '=', 'users.id')
+                            ->where('charity_periods.status', '=', 'active');
+                    });
+                    $user_query->groupBy('users.id');
+                    $user_query->orderBy('amount', 'DESC');
+                    $user_query->select((['users.*', 'charity_periods.amount as amount']));
+                    break;
+                case 'amount-d':
+                    $user_query->join('charity_periods', function ($join) {
+                        $join->on('charity_periods.user_id', '=', 'users.id')
+                            ->where('charity_periods.status', '=', 'active');
+                    });
+                    $user_query->groupBy('users.id');
+                    $user_query->orderBy('amount', 'ASC');
+                    $user_query->select((['users.*', 'charity_periods.amount as amount']));
+                    break;
+            }
+        }
 
-        $periods = charity_period::with('user')->get();
-        return view('panel.charity.period.list', compact('periods'));
+        if ($paginate>0){
+            $users = $user_query->paginate($paginate);
+        }else{
+            $users = $user_query->get();
+        }
+
+
+        $users->transform(function ($user){
+            $response = [
+                'id'=>$user->id,
+                'name'=>get_name($user->id),
+                'phone'=>$user->phone,
+                'routine_status'=>$user->routine ? true : false,
+                'routine_type'=>"",
+                'routine_amount'=>"",
+                'unpaid'=>0,
+                'last_paid'=>"",
+            ];
+            if ($user->routine){
+                $response['routine_type']=\config('charity.routine_types.'.$user->routine->period.'.title');
+                $response['routine_amount']=$user->routine->amount;
+            }
+            $unpaid_count =charity_periods_transaction::where('status','unpaid')->where('user_id',$user->id)->count();
+            if ($unpaid_count > 0){
+                $response['unpaid']=$unpaid_count;
+            }
+            $last_paid = $response['last_paid']=charity_periods_transaction::where('status','paid')->where('user_id',$user->id)->orderBy('pay_date','DESC')->first();
+            if ($last_paid){
+                $response['last_paid']=jdate('Y/m/d',strtotime($last_paid->pay_date));
+            }
+
+            return $response;
+        });
+
+        return $users;
     }
+    public function charity_period_list(Request $request)
+    {
+        if ($request['excel']){
+            $users = $this->charity_period_list_data($request,0);
+
+            $export = new InvoicesExport_charity_routine([
+                'users' => $users,
+            ]);
+
+            return Excel::download($export, 'Report.xlsx');
+        }else{
+            $users = $this->charity_period_list_data($request,50);
+
+            return view('panel.charity.period.list', compact('users'));
+        }
+
+    }
+
 
     public function charity_period_status()
     {
@@ -1232,6 +1362,6 @@ class panel_view extends Controller
 
     public function test()
     {
-
+        Artisan::call('config:cache');
     }
 }
