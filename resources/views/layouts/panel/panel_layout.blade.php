@@ -88,7 +88,7 @@ if (!isset($active_sidbare)) {
     $active_sidbare = [];
 }
 ?>
-<body class="{{in_array("collapse", $active_sidbare) ? 'sidebar-xs' : '' }}">
+<body class="{{in_array("collapse", $active_sidbare) ? 'sidebar-xs' : '' }} sidebar-mobile-component ">
 @include('layouts.panel.navbar')
 
 @include('panel.materials.form_notification')

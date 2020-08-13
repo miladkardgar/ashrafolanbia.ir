@@ -120,14 +120,32 @@ $active_sidbare = ['user_manager', 'users_list']
         <div class="content">
             <div class="container-fluid">
                 <section>
-                    <a href="{{route('users_list')}}" class="btn btn-outline-dark m-2 py-2 px-3">
-                        < {{trans('messages.back')}}</a>
-                </section>
-                <section>
                     <div class="card">
-                        <div class="card-header bg-light">
-                            <h4 class="card-title">{{__('messages.users_list')}}</h4>
+                        <div class="card-header">
+                <h3>تغییر رمز عبور</h3>
                         </div>
+                        <div class="card-body">
+                            <div class="col-6">
+
+                            <form method="post" action="{{route('charity.changeUserPassword',$userInfo['id'])}}">
+                                {{csrf_field()}}
+                                <div class="form-group">
+                                    <input class="form-control" name="new_password">
+                                </div>
+                                <div class="form-group">
+                                    <button type="submit" class="btn  btn-lg btn-warning">
+                                        <i class="icon-rotate-ccw text-white"></i>
+                                        {{__('words.changePassword')}}
+                                    </button>
+                                </div>
+                            </form>
+
+                        </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+
                         <div class="card-body">
                             <div class="row ">
                                 <div class="col-3">

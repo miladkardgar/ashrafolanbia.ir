@@ -10,10 +10,12 @@ use App\charity_payment_patern;
 use App\charity_payment_title;
 use App\charity_period;
 use App\charity_periods_transaction;
+use App\charity_transaction;
 use App\gateway_transaction;
 use App\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
@@ -120,8 +122,50 @@ class charity extends Controller
             ])
             ->with('gateway')->get();
         $periodInfo = charity_period::find($request['id']);
+
+
+        $routine = charity_period::where('user_id', $request['user_id'])->first();
+        $unpaidHistory = charity_periods_transaction::where(
+            [
+                ['status', '=', 'unpaid'],
+                ['user_id', '=', $request['user_id']],
+            ])->orderBy('payment_date','DESC')->get();
+        $paidHistory = charity_periods_transaction::where(
+            [
+                ['status', '=', 'paid'],
+                ['user_id', '=', $request['user_id']],
+            ])->orderBy('payment_date','DESC')->get();
+        $otherPaidHistory = charity_transaction::where(
+            [
+                ['user_id', '=', $request['user_id']],
+                ['status', '=', 'success'],
+            ]
+        )->with('patern','title')->get();
+        $unpaidRoutineCount = charity_periods_transaction::where(
+            [
+                ['status', '=', 'unpaid'],
+                ['user_id', '=', $request['user_id']],
+            ])->count();
+        $paidRoutineCount = charity_periods_transaction::where(
+            [
+                ['status', '=', 'paid'],
+                ['user_id', '=', $request['user_id']],
+            ])->count();
+        $paidRoutineAmount = charity_periods_transaction::where(
+            [
+                ['status', '=', 'paid'],
+                ['user_id', '=', $request['user_id']],
+            ])->sum('amount');
+        $pattern = charity_payment_patern::where('periodic','1')->first();
+
         $userInfo = User::find($request['user_id']);
-        return view('panel.charity.period.show', compact('paymentList', 'userInfo', 'periodInfo'));
+        $last_paid = $response['last_paid']=charity_periods_transaction::where('status','paid')->where('user_id',$request['user_id'])->orderBy('pay_date','DESC')->first();
+
+        return view('panel.charity.period.show',
+            compact('paymentList', 'userInfo', 'periodInfo','last_paid',
+                'routine','unpaidHistory','paidHistory','otherPaidHistory','unpaidRoutineCount',
+                'paidRoutineCount','paidRoutineAmount','pattern')
+        );
     }
 
     public function charity_payment_approve(Request $request)
@@ -395,5 +439,107 @@ class charity extends Controller
         $reports = json_decode($reports, true);
         $reportRow = json_decode($reportRow, true);
         return view('panel.charity.reports.ajax', compact('reports', 'reportRow','sumRow','sumPort'));
+    }
+
+    public function remove_routine_transaction(Request $request)
+    {
+        if ($request['remove'] and is_array($request['remove'])){
+            foreach ($request['remove'] as $payment_id){
+                $this_routine = charity_periods_transaction::whereNull('pay_date')->find($payment_id);
+                if ($this_routine){
+                    $this_routine->delete();
+                }
+            }
+        }
+        return back_normal($request,'تراکنش از لیست کاربر حذف شد');
+    }
+
+    public function users_routine_delete(Request $request)
+    {
+        $this->validate($request, [
+            'user_id' => 'required',
+        ]);
+
+        try {
+            if (!charity_period::where('user_id', $request['user_id'])->exists()){
+                return back_normal($request, ['message' => "تعهد پرداخت کاربر فعال نیست.", "code" => 400]);
+            }
+            charity_period::where('user_id', $request['user_id'])->delete();
+            return back_normal($request, ['message' => "تعهد پرداخت غیرفعال شد", "code" => 200]);
+        }
+        catch (\Throwable $exception){
+            $message[] = trans("messages.period_not_found");
+            return back_error($request, $message);
+        }
+    }
+
+    public function users_routine_update(Request $request)
+    {
+
+        if (!is_null($request['amount'])) {
+            $request['amount'] = str_replace(',', '', $request['amount']);
+        }
+        $availableTypes = config('charity.routine_types');
+        $pattern = charity_payment_patern::where('periodic','1')->first();
+
+        $this->validate($request,
+            [
+                'user_id' => 'required',
+                'amount' => 'required|min:'.$pattern['min'].'|max:'.$pattern['max'].'|numeric',
+                'type' => 'required|in:'.implode(',', array_keys($availableTypes)),
+            ]);
+
+        $vow_type =$availableTypes[$request['type']];
+        $month = latin_num(jdate('m'));
+        $year = latin_num(jdate("Y"));
+
+        if (in_array($vow_type['week_day'],[0,1,2,3,4,5,6])){
+
+            $day = latin_num(jdate('d'));
+            $targetTimestamp = jmktime(2,0,0,$month,$day,$year);
+            $current_week_day = latin_num(jdate('w',$targetTimestamp));
+            $day_dif = (7 + ($vow_type['week_day'] - $current_week_day)) % 7;
+            $targetTimestamp = jmktime(2,0,0,$month,$day+$day_dif,$year);
+
+        }else{
+            $this->validate($request,
+                [
+                    'day' => 'required|min:1|max:29',
+                ]);
+
+            $day = latin_num($request['day']);
+            $targetTimestamp = jmktime(2,0,0,$month,$day,$year);
+
+        }
+        charity_period::where('user_id',$request['user_id'])->delete();
+
+        $date = date("Y-m-d H:i:s",$targetTimestamp);
+
+        $info = charity_period::create(
+            [
+                'user_id' => $request['user_id'],
+                'amount' => $request['amount'],
+                'start_date' => $date,
+                'next_date' => $date,
+                'period' => $request['type'],
+                'description' => " ",
+            ]
+        );
+        if (strtotime($info['next_date']) <= time() and !charity_periods_transaction::where('user_id',$request['user_id'])->where('payment_date',$info['next_date'])->exists()) {
+            charity_periods_transaction::create(
+                [
+                    'user_id' => $request['user_id'],
+                    'period_id' => $info['id'],
+                    'payment_date' => $info['next_date'],
+                    'amount' => $info['amount'],
+                    'description' => $availableTypes[$request['type']]['title']." " . $info['id'],
+                    'status' => "unpaid",
+                ]
+            );
+            $update = updateNextRoutine($info['id']);
+        };
+
+        $message = trans("messages.period_created");
+        return back_normal($request,  $message);
     }
 }
