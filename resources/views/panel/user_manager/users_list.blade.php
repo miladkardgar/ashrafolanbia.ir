@@ -172,6 +172,12 @@ $active_sidbare = ['user_manager', 'users_list']
                                                     <i class="fa fa-trash"></i>
                                                 </button>
                                                 @endpermission
+                                                @permission('manage_charity')
+                                                <a href="{{route('charity_periods_show',['user_id'=>$user['id'],'id'=>999999])}}" class="btn btn-success btn-sm">
+                                                    <i class="icon-heart6"></i>
+                                                </a>
+                                                @endpermission
+
                                             </div>
                                         </td>
                                     </tr>

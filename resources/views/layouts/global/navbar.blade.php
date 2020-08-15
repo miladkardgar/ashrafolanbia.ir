@@ -44,7 +44,7 @@
 
                 @if(Auth::check())
                     <a class="text-white top-bar-btn hidden-md hidden-lg pl-2 pr-2"
-                       href="{{route('global_profile')}}" > <span class="fa fa-user"> </span> &nbsp; {{trans('messages.account')}}  </a>
+                       href="{{route('global_profile')}}" > <span class="fa fa-heart"> </span> &nbsp; {{trans('messages.account')}}  </a>
 
                 @else
                     <a class="text-white top-bar-btn hidden-md hidden-lg"
@@ -80,7 +80,7 @@
                     <div class="widget no-border clearfix m-0 float-left  hidden-xs hidden-sm " style="text-align: left;padding-top: 2em">
                         @if(Auth::check())
                             <a class="btn btn-lg btn-theme-colored"
-                               href="{{route('global_profile')}}"><span class="fa fa-user"></span> {{trans('messages.account')}}  </a>
+                               href="{{route('global_profile')}}"><span class="fa fa-heart"></span> {{trans('messages.account')}}  </a>
                             <span class="text-white">|</span>
 
                         @else

@@ -412,6 +412,7 @@ class charity extends Controller
                         'module' => __('messages.' . $q['module']),
                         'type' => $q['charityInfo']['title']['title'],
                         'patern' => $q['charityInfo']['patern']['title'],
+                        'description' => $q['description'],
                     ];
                 }
             }elseif($request['type']="period"){
@@ -428,7 +429,8 @@ class charity extends Controller
                     'module' => __('messages.' . $q['module']),
                     'type' => $q['charityInfo']['title']['title'],
                     'patern' => $q['charityInfo']['patern']['title'],
-                    ];
+                    'description' => $q['description'],
+                ];
             }
         });
         $sumPort = $reportRow->groupBy('port')->map(function ($row) {

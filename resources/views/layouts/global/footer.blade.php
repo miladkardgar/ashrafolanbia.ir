@@ -25,7 +25,7 @@
                     <img class="mt-10 mb-20" alt=""
                          src="{{ URL::asset('/public/assets/global/images/logo-wide@2x.png')}}?i=4">
                     <p>
-                        {{trans('site_info.address')}}
+                        {!!  trans('site_info.address')!!}
                     </p>
                     <ul class="list-inline mt-5">
                         <li class="m-0 pl-10 pr-10"><i class="fa fa-phone text-theme-colored mr-5"></i> <a

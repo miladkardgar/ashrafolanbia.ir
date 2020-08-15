@@ -300,7 +300,7 @@ if (!isset($active_sidbare)) {
                 @permission('manage_charity')
                 <li class="nav-item nav-item-submenu {{in_array("charity", $active_sidbare) ? ' nav-item-open' : '' }}">
                     <a href="#" class=" nav-link"><i class="icon-umbrella"></i>
-                        <span>{{trans('messages.Charity')}}</span></a>
+                        <span>{{trans('messages.charity_titel')}}</span></a>
                     <ul class="nav nav-group-sub" data-submenu-title="{{trans('messages.Charity')}}"
                         style="display:{{in_array("charity", $active_sidbare) ? 'block' : 'none' }}">
                         @permission('charity_periodic')

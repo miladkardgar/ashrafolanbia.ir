@@ -73,11 +73,13 @@
                                name="type" />
                         <label for="radio-{{$key}}">
                             <h4 style="margin-top: 1.5em">
-                            @if($routine and $routine['period'] == $key)
-                            <i class="fa fa-star text-theme-colored"></i>
-                            @endif
+
                             {{$routine_type['title']}}
+                                @if($routine and $routine['period'] == $key)
+                                    <span class="text-info font-size-sm">(فعال)</span>
+                                @endif
                             </h4>
+
                         </label>
                         </li>
 

@@ -92,6 +92,7 @@
             <th>{{__('messages.type')}}</th>
             <th>{{__('messages.type')}}</th>
             <th>{{__('messages.type')}}</th>
+            <th>{{__('messages.description')}}</th>
         </tr>
         </thead>
         <tbody>
@@ -111,6 +112,7 @@
                     <td>{{$row['module']}}</td>
                     <td>{{$row['type']}}</td>
                     <td>{{$row['patern']}}</td>
+                    <td>{{$row['description']}}</td>
                 </tr>
             @endif
         @endforeach
