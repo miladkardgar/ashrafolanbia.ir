@@ -28,6 +28,7 @@ class smsListener
     {
         if (isset($event->smsData['phone'])){
             $message = "کد تایید:" . $event->smsData['code'];
+            $message .= "  موسسه خیریه اشرف الانبیا(ص)  ";
             sendSms($event->smsData['phone'],$message);
         }
     }

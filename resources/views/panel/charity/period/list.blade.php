@@ -19,6 +19,67 @@
         <div class="content">
             <section>
                 <!-- Search field -->
+                <div class="row text-center">
+                    <div class="col-sm-6 col-xl-3">
+                        <div class="card card-body bg-success-400 has-bg-image">
+                            <div class="media">
+                                <div class="media-body text-left">
+                                    <h3 class="mb-0">{{number_format($active_users)}}  </h3>
+                                    <span class="text-uppercase font-size-xs">نیکوکار عضو کمک ماهانه</span>
+                                </div>
+                                <div class="mr-3 align-self-center">
+                                    <i class="icon-users icon-3x opacity-75"></i>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-xl-3">
+
+                    <div class="card card-body bg-danger-400 has-bg-image">
+                            <div class="media">
+                                <div class="media-body text-left">
+                                    <h3 class="mb-0">{{number_format($inactive_users)}}  </h3>
+                                    <span class="text-uppercase font-size-xs">نیکوکار بدون کمک ماهانه</span>
+                                </div>
+                                <div class="mr-3 align-self-center">
+                                    <i class="icon-user-cancel icon-3x opacity-75"></i>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-xl-3">
+
+                    <div class="card card-body bg-info-400 has-bg-image">
+                            <div class="media">
+                                <div class="media-body text-left">
+                                    <h3 class="mb-0">{{number_format($paid_routine)}}  </h3>
+                                    <span class="text-uppercase font-size-xs"> تعهد پرداخت شده</span>
+                                </div>
+                                <div class="mr-3 align-self-center">
+                                    <i class="icon-checkmark-circle icon-3x opacity-75"></i>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-xl-3">
+
+                    <div class="card card-body bg-indigo-400 has-bg-image">
+                            <div class="media">
+                                <div class="media-body text-left">
+                                    <h3 class="mb-0">{{number_format($unpaid_routine)}}  </h3>
+                                    <span class="text-uppercase font-size-xs"> تعهد پرداخت نشده</span>
+                                </div>
+                                <div class="mr-3 align-self-center">
+                                    <i class="icon-hour-glass icon-3x opacity-75"></i>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="card">
                     <div class="card-body">
                         <h5 class="mb-3">جستجو پیشرفته</h5>

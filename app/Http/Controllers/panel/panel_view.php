@@ -949,8 +949,12 @@ class panel_view extends Controller
             return Excel::download($export, 'Report.xlsx');
         }else{
             $users = $this->charity_period_list_data($request,50);
-
-            return view('panel.charity.period.list', compact('users'));
+            $active_users = User::whereHas('routine')->count();
+            $inactive_users = User::whereDoesntHave('routine')->count();
+            $paid_routine = charity_periods_transaction::whereNotNull('pay_date')->count();
+            $unpaid_routine = charity_periods_transaction::whereNull('pay_date')->count();
+            return view('panel.charity.period.list', compact('users','active_users'
+            ,'inactive_users','paid_routine','unpaid_routine'));
         }
 
     }
@@ -1362,6 +1366,6 @@ class panel_view extends Controller
 
     public function test()
     {
-        Artisan::call('config:cache');
+//        Artisan::call('migrate');
     }
 }

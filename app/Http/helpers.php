@@ -139,24 +139,18 @@ function get_name($user_id)
 
 function image_saver($image_input, $folder = 'photos', $module = 'none', $custom_size = [], $image_name = null)
 {
-//    $request->validate([
-//        'image' => 'bail|required|image|mimes:jpeg,png,jpg,gif|max:8193|dimensions:min_width=75,min_height=75',
-//    ]);
     if (!file_exists('public/images')) {
         mkdir('public/images', 0755, true);
     }
     if (!file_exists('public/images/' . $folder)) {
         mkdir('public/images/' . $folder, 0755, true);
     }
-
-//    $image = $request->file('image');
     $image = $image_input;
     $destinationPath = 'public/images/' . $folder;
     if (empty($image_name)) {
         $image_name = mt_rand() . time() . '.' . $image->getClientOriginalExtension();
     } else {
         $image_name = pathinfo($image_name)['filename'] . '.' . $image->getClientOriginalExtension();
-
     }
 
     $size = ['100,100', '200,200', '400,400'];
@@ -196,8 +190,46 @@ function image_saver($image_input, $folder = 'photos', $module = 'none', $custom
         'type' => "image"
     ]);
     $media_id = $media_info->id;
-
     return $media_id;
+}
+
+function c_store_image($image_input,$CSP_id)
+{
+    $folder='photos';
+    if (!file_exists('public/images')) {
+        mkdir('public/images', 0755, true);
+    }
+    if (!file_exists('public/images/' . $folder)) {
+        mkdir('public/images/' . $folder, 0755, true);
+    }
+    $image = $image_input;
+    $destinationPath = 'public/images/' . $folder;
+    $image_name = mt_rand() . time() . '.' . $image->getClientOriginalExtension();
+
+    $size = ['small' => '200', 'medium' => '400'];
+    $images_url = [];
+
+    foreach ($size as $key => $value) {
+        if (!file_exists('public/images/' . $folder . "/" . $value)) {
+            mkdir('public/images/' . $folder . "/" . $value , 0755, true);
+        }
+        $img = Image::make($image->getRealPath());
+        $img->resize( null,$value, function ($constraint) {
+            $constraint->aspectRatio();
+        })->save('public/images/' . $folder . '/' . $value . '/' . $image_name);
+        $images_url[$key] = '/public/images/' . $folder . '/' . $value. '/'.$image_name;
+    }
+    $image->move($destinationPath, $image_name);
+
+    $is_main = \App\c_store_product_image::where('CSP_id',$CSP_id)->exists();
+    $media_info = new \App\c_store_product_image();
+    $media_info->CSP_id = $CSP_id;
+    $media_info->large = '/'.$destinationPath.'/'.$image_name;
+    $media_info->medium = $images_url['medium'];
+    $media_info->small = $images_url['small'];
+    $media_info->main_img = ($is_main ? 0:1);
+    $media_info->save();
+    return $media_info;
 }
 
 

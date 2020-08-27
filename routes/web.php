@@ -196,6 +196,17 @@ Route::group(
 
 
         });
+        Route::prefix('c_store')->group(function () {
+            Route::get('product_list', 'panel\CStoreController@product_list')->name('c_store.product_list');
+            Route::get('add_product', 'panel\CStoreController@add_product')->name('c_store.add_product');
+            Route::post('add_product', 'panel\CStoreController@store_product')->name('c_store.store_product');
+            Route::get('edit_product/{slug}', 'panel\CStoreController@edit_product')->name('c_store.edit_product');
+            Route::post('edit_product/{slug}', 'panel\CStoreController@update_product')->name('c_store.update_product');
+            Route::post('upload_product_images', 'panel\CStoreController@upload_product_image')->name('c_store.upload_product_image');
+            Route::delete('remove_product_image', 'panel\CStoreController@remove_product_image')->name('c_store.remove_product_image');
+            Route::post('set_main_product_image', 'panel\CStoreController@set_main_product_image')->name('c_store.set_main_product_image');
+
+        });
         Route::prefix('building')->group(function () {
             Route::get('dashboard', 'panel\panel_view@building_dashboard')->name('building_dashboard');
             Route::post('dashboard/excel_report', 'panel\building@excel_report')->name('building_excel_report');
@@ -636,27 +647,36 @@ Route::group(
         Route::get('vow/periodic', 'globals\global_view@t_profile')->name('vow_periodic');
     });
 
-
     Route::get('/post/{blogPostSlug}', 'globals\global_view@post_page')->name('post_page');
+
+
     Route::get('/store', 'globals\global_view@shop_page')->name('global_shop');
     Route::get('/store/detail/{pro_id}', 'globals\global_view@detail_product')->name('store_detail');
     Route::post('/add_to_cart', 'globals\global_controller@add_to_cart')->name('add_to_cart');
-
-
     Route::get('/order/cart', 'globals\global_view@store_cart')->name('store_cart');
-
-
     Route::get('/order/order', 'globals\global_view@store_order')->name('store_order')->middleware('global_auth');
     Route::post('/order/order/submit', 'globals\global_view@store_order_sub')->name('store_order_submit')->middleware('global_auth');
     Route::get('/order/information/', 'globals\global_view@store_order_information')->name('store_order_information')->middleware('global_auth');
     Route::get('/order/factor/', 'globals\global_view@store_order_factor')->name('store_order_factor')->middleware('global_auth');
-
     Route::post('/order/add/address', 'globals\global_controller@store_order_add_address')->name('store_order_add_address');
     Route::delete('/order/remove/address', 'globals\global_controller@store_order_remove_address')->name('store_order_delete_address');
-
     Route::get('/order/payment', 'globals\global_view@store_payment')->name('store_payment');
     Route::patch('/cart_update', 'globals\global_controller@cart_update')->name('cart_update');
     Route::delete('/cart_remove', 'globals\global_controller@cart_remove')->name('cart_remove');
+
+    Route::get('/c_store', 'globals\global_view@c_store')->name('global.c_store');
+    Route::get('/c_store/{slug}', 'globals\global_view@c_store_show')->name('global.c_store_show');
+    Route::get('/c_store/view/checkout', 'globals\global_view@c_store_checkout')->name('global.c_store_checkout');
+    Route::post('/c_store/card/add', 'globals\global_view@c_store_add_to_card')->name('global.c_store_add_to_card');
+    Route::post('/c_store/card/update', 'globals\global_view@c_store_update_card')->name('global.c_store_update_card');
+    Route::get('/c_store/card/remove/{id}', 'globals\global_view@c_store_remove_from_card')->name('global.c_store_remove_from_card');
+    Route::get('/c_store/card/completion/phone', 'globals\global_view@c_store_card_completion_phone')->name('global.c_store_card_completion_phone');
+    // throttle to a max of 5 attempts in 3 minutes:
+    Route::group(['middleware' => 'throttle:5,3'], function () {
+        Route::get('/c_store/card/completion/submit_phone', 'globals\global_view@c_store_card_completion_submit_phone')->name('global.c_store_card_completion_submit_phone');
+        Route::get('/c_store/card/completion/resend_code', 'globals\global_view@c_store_resend_code')->name('global.c_store_resend_code');
+    });
+    Route::post('/c_store/card/completion/submit_code', 'globals\global_view@c_store_card_completion_submit_code')->name('global.c_store_card_completion_submit_code');
 
 
 //charity view

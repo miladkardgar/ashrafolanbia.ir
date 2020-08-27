@@ -5,6 +5,8 @@ namespace App\Http\Controllers\globals;
 use App\blog;
 use App\blog_option;
 use App\blog_slider;
+use App\c_store_product;
+use App\c_store_product_image;
 use App\caravan;
 use App\champion_transaction;
 use App\charity_champion;
@@ -41,6 +43,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Input;
 use Larabookir\Gateway\Mellat\Mellat;
 use Larabookir\Gateway\Sadad\Sadad;
@@ -938,6 +941,226 @@ class global_view extends Controller
             return redirect(route('vow_cart',['id'=>$new_pay['id']]));
         }
         return back();
+
+    }
+
+    public function c_store()
+    {
+        $products = c_store_product::where('active', 1)->get()->map(function ($product){
+            $image = c_store_product_image::where('CSP_id',$product['id'])->where('main_img',1)->first();
+            return [
+              'id'=>$product['id'],
+              'title'=>$product['title'],
+              'description'=>$product['description'],
+              'slug'=>$product['slug'],
+              'price'=>$product['price'],
+              'image'=>$image ? $image['medium'] : "http://lorempixel.com/output/nature-q-c-640-394-5.jpg",
+            ];
+        });
+        return view('global.c_store.index', compact('products'));
+    }
+
+    public function c_store_show($slug)
+    {
+        $product = c_store_product::with('images')
+            ->where('slug',$slug)
+            ->where('active', 1)
+            ->firstOrFail();
+        $image = c_store_product_image::where('CSP_id',$product['id'])->first();
+        return view('global.c_store.show', compact('product','image'));
+    }
+
+    public function c_store_checkout()
+    {
+
+        $card = session()->get('c_store_cart');
+        if (!$card){
+            $card=[];
+        }
+        return view('global.c_store.checkout',compact('card'));
+    }
+
+    public function c_store_add_to_card(Request $request)
+    {
+        $this->validate($request,
+            [
+                'product' => 'required',
+            ]);
+        $product = c_store_product::findOrFail($request['product']);
+
+            $cart = session()->get('c_store_cart');
+            $image = c_store_product_image::where('CSP_id',$product['id'])->where('main_img',1)->exists() ?c_store_product_image::where('CSP_id',$product['id'])->where('main_img',1)->first()['large']:"";
+            if(!$cart) {
+                $cart = [
+                    $product['id'] => [
+                        "name" => $product->title,
+                        "quantity" => 1,
+                        "price" => $product->price,
+                        "slug" => $product->slug,
+                        "image" => $image,
+                    ]
+                ];
+
+                session()->put('c_store_cart', $cart);
+
+                return redirect(route('global.c_store_checkout'));
+            }
+
+            // if cart not empty then check if this product exist then increment quantity
+            if(isset($cart[$product['id']])) {
+
+                $cart[$product['id']]['quantity']++;
+
+                session()->put('c_store_cart', $cart);
+
+                return redirect(route('global.c_store_checkout'));
+
+            }
+            // if item not exist in cart then add to cart with quantity = 1
+            $cart[$product['id']] = [
+                "name" => $product->title,
+                "quantity" => 1,
+                "price" => $product->price,
+                "slug" => $product->slug,
+                "image" => $image
+            ];
+
+            session()->put('c_store_cart', $cart);
+
+        return redirect(route('global.c_store_checkout'));
+
+    }
+
+    public function c_store_remove_from_card($id,Request $request)
+    {
+        $cart = session()->get('c_store_cart');
+        if ($cart){
+            unset($cart[$id]);
+            session()->put('c_store_cart', $cart);
+        }
+        return back_normal($request,'آیتم حذف شد');
+    }
+
+    public function c_store_update_card(Request $request)
+    {
+        $cart=[];
+        session()->put('c_store_cart', $cart);
+        foreach ($request['quantity'] as $key=>$value){
+            $product = c_store_product::find($key);
+            if ($product and $value >0){
+                $image = c_store_product_image::where('CSP_id',$product['id'])->where('main_img',1)->exists() ?c_store_product_image::where('CSP_id',$product['id'])->where('main_img',1)->first()['large']:"";
+                $cart[$product['id']] = [
+                    "name" => $product->title,
+                    "quantity" => $value,
+                    "price" => $product->price,
+                    "slug" => $product->slug,
+                    "image" => $image
+                ];
+            }
+        }
+        session()->put('c_store_cart', $cart);
+        return back_normal($request,'سبد بروزرسانی شد');
+    }
+    public function c_store_card_completion_phone(Request $request)
+    {
+        $user = Auth::user();
+        if ($user and $user['phone_verified_at']){
+            return "next";
+        }
+        else{
+
+            $phone = '';
+        if ($request->phone){
+            $phone = $request->phone;
+        }
+        return view('global.c_store.partial.get_phone',compact(['phone']));
+        }
+
+    }
+    public function c_store_card_completion_submit_phone(Request $request)
+    {
+
+        $this->validate($request,
+            [
+                'phone' => 'required|regex:/(09)[0-9]{9}/',
+            ]);
+        $user = Auth::user();
+        if ($user and $user['phone_verified_at']){
+            return 'go to addresses';
+        }
+        else{
+
+            $phone = $request['phone'];
+        $code = rand(11111,99999);
+        if ($user){
+            if ($user->code_phone and $user->code_phone_send and (strtotime($user->code_phone_send)+180 < strtotime() ) ){
+            $user->code_phone = $code;
+            $user->code_phone_send = date("Y-m-d H:i:s");
+            $user->save();
+            }
+            $smsData = [
+                'phone'=>$user->phone,
+                'code'=>$user->code_phone,
+            ];
+            event(new confirmPhone($smsData));
+        }else{
+            $user = new User();
+            $user->phone = $phone;
+            $user->code_phone = $code;
+            $user->password = Hash::make($code);
+            $user->code_phone_send = date("Y-m-d H:i:s");
+            $user->save();
+
+            $smsData = [
+                'phone'=>$user->phone,
+                'code'=>$user->code_phone,
+            ];
+            event(new confirmPhone($smsData));
+            }
+            return view('global.c_store.partial.submit_code',compact(['phone']));
+        }
+
+    }
+    public function c_store_resend_code(Request $request)
+    {
+        $phone = $request['phone'];
+        $user = User::where('phone',$phone)->first();
+        if (!$user){
+            return redirect(route('global.c_store_card_completion_phone'));
+        }
+        else{
+            if ($user->code_phone and $user->code_phone_send and ((strtotime($user->code_phone_send)+180) < strtotime() ) ){
+                $code = rand(11111,99999);
+                $user->code_phone = $code;
+                $user->code_phone_send = date("Y-m-d H:i:s");
+                $user->save();
+            }
+
+            $smsData = [
+                'phone'=>$user->phone,
+                'code'=>$user->code_phone,
+            ];
+            event(new confirmPhone($smsData));
+
+        return view('global.c_store.partial.submit_code',compact(['phone']));
+        }
+    }
+    public function c_store_card_completion_submit_code(Request $request)
+    {
+
+        $this->validate($request,[
+           'phone'=>'required',
+           'code'=>'required',
+        ]);
+        $user = User::where('phone',$request['phone'])->first();
+        if ($user['code_phone'] == $request['code']){
+            session()->put('c_store_phone', $request['phone']);
+
+            return "next";
+        }
+        else{
+            return back_error($request,['خطا'=>'کد وارد شده صحیح نمی باشد.']);
+        }
 
     }
 }

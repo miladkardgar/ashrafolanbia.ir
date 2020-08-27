@@ -22,7 +22,11 @@
         <div class="row top-bar-row">
             <div class="pt-10 pr-10 top-bar-half  "  >
 
-
+                @permission('manage_store')
+                <a class="text-white"
+                   href="{{route('dashboard')}}">پنل مدیریت</a>
+                <span class="text-white">|</span>
+                @endpermission
                 @if(Auth::check())
 
                     <a class="text-white"
