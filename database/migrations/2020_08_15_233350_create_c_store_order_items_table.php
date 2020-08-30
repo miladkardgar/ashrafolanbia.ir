@@ -15,6 +15,13 @@ class CreateCStoreOrderItemsTable extends Migration
     {
         Schema::create('c_store_order_items', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->unsignedInteger('CSO_id');
+            $table->unsignedInteger('CSP_id');
+            $table->string('name');
+            $table->integer('quantity');
+            $table->unsignedInteger('price');
+            $table->text('slug');
+            $table->text('image');
             $table->timestamps();
         });
     }

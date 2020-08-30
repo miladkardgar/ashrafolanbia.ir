@@ -673,10 +673,15 @@ Route::group(
     Route::get('/c_store/card/completion/phone', 'globals\global_view@c_store_card_completion_phone')->name('global.c_store_card_completion_phone');
     // throttle to a max of 5 attempts in 3 minutes:
     Route::group(['middleware' => 'throttle:5,3'], function () {
-        Route::get('/c_store/card/completion/submit_phone', 'globals\global_view@c_store_card_completion_submit_phone')->name('global.c_store_card_completion_submit_phone');
-        Route::get('/c_store/card/completion/resend_code', 'globals\global_view@c_store_resend_code')->name('global.c_store_resend_code');
+        Route::post('/c_store/card/completion/submit_phone', 'globals\global_view@c_store_card_completion_submit_phone')->name('global.c_store_card_completion_submit_phone');
+        Route::post('/c_store/card/completion/resend_code', 'globals\global_view@c_store_resend_code')->name('global.c_store_resend_code');
     });
+    Route::get('/c_store/card/completion/submit_code/{phone}', 'globals\global_view@c_store_card_completion_submit_phone_page')->name('global.c_store_card_completion_submit_phone_page');
     Route::post('/c_store/card/completion/submit_code', 'globals\global_view@c_store_card_completion_submit_code')->name('global.c_store_card_completion_submit_code');
+    Route::get('/c_store/card/completion/order', 'globals\global_view@c_store_card_completion_order')->name('global.c_store_card_completion_order');
+    Route::post('/c_store/card/completion/order', 'globals\global_view@c_store_card_completion_order_save')->name('global.c_store_card_completion_order_save');
+    Route::get('/c_store/card/completion/order/confirm', 'globals\global_view@c_store_card_completion_order_confirm_show')->name('global.c_store_card_completion_order_confirm_show');
+    Route::post('/c_store/card/completion/order/confirm', 'globals\global_view@c_store_card_completion_order_confirm_save')->name('global.c_store_card_completion_order_confirm_save');
 
 
 //charity view

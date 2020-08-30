@@ -5,7 +5,6 @@
 @section('mrn-content')
     <div class="mrn-main-page-content">
 
-
         <div class="mrn-content-inner mrn-container" role="main">
 
             @if($product['warning_info'])

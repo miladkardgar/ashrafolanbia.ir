@@ -15,7 +15,7 @@
                 </form>
 
                 <div class="row mt-10">
-                    <form method="get" action="{{route('global.c_store_resend_code')}}" class="">
+                    <form method="post" action="{{route('global.c_store_resend_code')}}" class="">
                         @csrf
                         <input type="hidden" name="phone" value="{{$phone }}" class="">
                         <button class="" type="submit" style="

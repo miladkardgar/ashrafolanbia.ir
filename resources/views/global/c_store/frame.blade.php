@@ -3,6 +3,7 @@
 
 @section('css')
     <link href="{{ URL::asset('/public/assets/global/css/mrn/style.css') }}?i=2" rel="stylesheet" type="text/css">
+
     @yield('css2')
 @endsection
 @section('content')

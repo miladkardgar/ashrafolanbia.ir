@@ -25,10 +25,10 @@ class CreateCStoreProductsTable extends Migration
             $table->text('warning_info')->nullable();
             $table->unsignedBigInteger('price')->default(0);
             $table->unsignedBigInteger('count')->default(0);
-            $table->text('allowed_province')->nullable();
+            $table->text('allowed_provinces')->nullable();
             $table->text('allowed_cities')->nullable();
             $table->int('delivery_delay')->default(0); // day of delay
-            $table->string('delivery_delay_type')->nullable(); // working day or holiday etc
+            $table->string('delivery_delay_type')->nullable(); // actual_day , working_day
             $table->boolean('active')->default(0);
             $table->timestamps();
         });

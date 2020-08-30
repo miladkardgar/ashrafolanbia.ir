@@ -47,7 +47,6 @@ class CStoreController extends Controller
         $c_product->allowed_cities = implode(',',$request['allowed_cities']);
         $c_product->delivery_delay = latin_num($request['delivery_delay']);
         $c_product->delivery_delay_type = $request['delay_type'];
-        $c_product->delivery_delay_type = $request['delay_type'];
         $c_product->active = $request['status'];
         $c_product->save();
 
@@ -86,7 +85,6 @@ class CStoreController extends Controller
         $c_product->allowed_provinces = implode(',',$request['allowed_provinces']);
         $c_product->allowed_cities = implode(',',$request['allowed_cities']);
         $c_product->delivery_delay = latin_num($request['delivery_delay']);
-        $c_product->delivery_delay_type = $request['delay_type'];
         $c_product->delivery_delay_type = $request['delay_type'];
         $c_product->active = $request['status'];
         $c_product->save();

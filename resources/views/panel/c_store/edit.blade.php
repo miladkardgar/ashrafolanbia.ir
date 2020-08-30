@@ -260,7 +260,7 @@ $active_sidbare = ['c_store', 'c_store_list']
                         </div>
                         <div class="col-md-3">
                             <label for="Price" class="label-default text-info font-weight-bold">قیمت</label>
-                            <input type="text" name="price" value="{{$product['price']}}" class="form-control amount"
+                            <input type="text" name="price" value="{{number_format($product['price'])}}" class="form-control amount"
                                    id="Price">
                         </div>
                         <div class="col-md-3">
@@ -348,17 +348,17 @@ $active_sidbare = ['c_store', 'c_store_list']
                                 <span class="text-muted"> (روز) </span>
                             </label>
                             <input type="text" id="Delivery_delay" name="delivery_delay"
-                                   value="{{$product['delay_day']}}" class="form-control">
+                                   value="{{$product['delivery_delay']}}" class="form-control">
                         </div>
                         <div class="col-md-3">
                             <label for="Delay_type" class="label-default ">
                                 نوع فاصله زمانی
                             </label>
                             <select id="Delay_type" name="delay_type" class="form-control select" data-fouc>
-                                <option {{ $product['delay_type'] == 'actual_day' ? "selected":""}} value="actual_day">
+                                <option {{ $product['delivery_delay_type'] == 'actual_day' ? "selected":""}} value="actual_day">
                                     روز واقعی
                                 </option>
-                                <option {{ $product['delay_type'] == 'working_day' ? "selected":""}} value="working_day">
+                                <option {{ $product['delivery_delay_type'] == 'working_day' ? "selected":""}} value="working_day">
                                     روز کاری
                                 </option>
                             </select>

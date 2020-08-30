@@ -5,6 +5,8 @@ namespace App\Http\Controllers\globals;
 use App\blog;
 use App\blog_option;
 use App\blog_slider;
+use App\c_store_order;
+use App\c_store_order_item;
 use App\c_store_product;
 use App\c_store_product_image;
 use App\caravan;
@@ -26,6 +28,7 @@ use App\Events\userRegisterEvent;
 use App\gallery_category;
 use App\gateway;
 use App\gateway_transaction;
+use App\Http\HijriDate;
 use App\Mail\confirmEmail;
 use App\media;
 use App\order;
@@ -133,10 +136,10 @@ class global_view extends Controller
     public function profile_app()
     {
 
-        if (isset($_GET['lt'])){
-            $user = User::where('login_token',$_GET['lt'])->first();
-            if ($user){
-                $user['login_token']='';
+        if (isset($_GET['lt'])) {
+            $user = User::where('login_token', $_GET['lt'])->first();
+            if ($user) {
+                $user['login_token'] = '';
                 $user->save();
                 Auth::loginUsingId($user['id']);
             }
@@ -148,10 +151,10 @@ class global_view extends Controller
     {
         Artisan::call("cache:clear");
 
-        if (isset($_GET['lt'])){
-            $user = User::where('login_token',$_GET['lt'])->first();
-            if ($user){
-                $user['login_token']='';
+        if (isset($_GET['lt'])) {
+            $user = User::where('login_token', $_GET['lt'])->first();
+            if ($user) {
+                $user['login_token'] = '';
                 $user->save();
                 Auth::loginUsingId($user['id']);
             }
@@ -169,7 +172,7 @@ class global_view extends Controller
                 ['user_id', '=', Auth::id()],
             ])->get();
         $userInfo = User::with('addresses', 'people', 'profile_image')->find(Auth::id());
-        return view('global.profile', compact('periods', 'unpaidPeriod', 'userInfo','paidPeriod'));
+        return view('global.profile', compact('periods', 'unpaidPeriod', 'userInfo', 'paidPeriod'));
     }
 
     public function global_profile_completion()
@@ -207,7 +210,7 @@ class global_view extends Controller
     public function send_sms(Request $request)
     {
         $user = User::findOrFail(Auth::id());
-        if ($request->mobile){
+        if ($request->mobile) {
             $user->phone = $request->mobile;
         }
         $user->code_phone = random_int(12320, 98750);
@@ -215,8 +218,8 @@ class global_view extends Controller
         $user->save();
 
         $smsData = [
-            'phone'=>$user->phone,
-            'code'=>$user->code_phone,
+            'phone' => $user->phone,
+            'code' => $user->code_phone,
         ];
         event(new confirmPhone($smsData));
 
@@ -226,20 +229,20 @@ class global_view extends Controller
     public function send_email(Request $request)
     {
         $user = Auth::user();
-        if ($request->email){
+        if ($request->email) {
             $user->email = $request->email;
         }
-        if ($user->email){
+        if ($user->email) {
 
-        $user->code_email = random_int(12320, 98750);
-        $user->code_email_send = date("Y-m-d H:i:s");
-        $user->save();
+            $user->code_email = random_int(12320, 98750);
+            $user->code_email_send = date("Y-m-d H:i:s");
+            $user->save();
 
-        $mailData = [
-            'address'=> $user->email,
-            'code'=>$user->code_email,
-        ];
-        event(new \App\Events\confirmEmail($mailData));
+            $mailData = [
+                'address' => $user->email,
+                'code' => $user->code_email,
+            ];
+            event(new \App\Events\confirmEmail($mailData));
         }
         return redirect(route('global_profile_change_password'));
     }
@@ -359,19 +362,19 @@ class global_view extends Controller
         return view('global.store.payment', compact('tran'));
     }
 
-    public function vow_view($id,Request $request)
+    public function vow_view($id, Request $request)
     {
         $charity = charity_payment_patern::with('fields')->find($request['id']);
-        $titles = charity_payment_title::where('ch_pay_pattern_id',$id)->get();
+        $titles = charity_payment_title::where('ch_pay_pattern_id', $id)->get();
         $gateways = gateway::with('bank')->where('online', 1)->get();
         $user = null;
-        if (Auth::user()){
-            $user['name'] = Auth::user()->people['name'] ." ". Auth::user()->people['family'];
+        if (Auth::user()) {
+            $user['name'] = Auth::user()->people['name'] . " " . Auth::user()->people['family'];
             $user['phone'] = Auth::user()->phone;
             $user['email'] = Auth::user()->email;
         }
 
-        return view('global.vows.vow', compact('charity', 'gateways','titles','user'));
+        return view('global.vows.vow', compact('charity', 'gateways', 'titles', 'user'));
     }
 
     public function vow_payment(Request $request)
@@ -390,9 +393,9 @@ class global_view extends Controller
         $user_id = 0;
         if (Auth::id()) {
             $user_id = Auth::id();
-        }else{
-            $user = User::where('phone',$request['phone'])->first();
-            if ($user){
+        } else {
+            $user = User::where('phone', $request['phone'])->first();
+            if ($user) {
                 $user_id = $user['id'];
             }
         }
@@ -441,26 +444,26 @@ class global_view extends Controller
         $charityIn = charity_periods_transaction::with('period')
             ->withoutGlobalScope(nonGroupPayment::class)->findOrFail($request['id']);
         $user = User::with('people')->find($charityIn['user_id']);
-        $name = $user['people']['name']." ".$user['people']['family'];
+        $name = $user['people']['name'] . " " . $user['people']['family'];
         $gateways = gateway::with('bank')->get();
 
-        return view('global.vows.cart', compact('charityIn', 'gateways','name'));
+        return view('global.vows.cart', compact('charityIn', 'gateways', 'name'));
 
     }
 
     public function vow_donate()
     {
-        $title = charity_payment_title::where('ch_pay_pattern_id',2)->get();
+        $title = charity_payment_title::where('ch_pay_pattern_id', 2)->get();
         $patern = charity_payment_patern::find(2);
         $gateways = gateway::with('bank')->where('online', 1)->get();
         $user = null;
-        if (Auth::user()){
+        if (Auth::user()) {
             $user['name'] = get_name(Auth::user()->id);
             $user['phone'] = Auth::user()->phone;
             $user['email'] = Auth::user()->email;
         }
 
-        return view('global.vows.donate', compact('title', 'patern', 'gateways','user'));
+        return view('global.vows.donate', compact('title', 'patern', 'gateways', 'user'));
     }
 
     public function vow_period()
@@ -471,7 +474,7 @@ class global_view extends Controller
 
     public function gallery()
     {
-        $medias = gallery_category::where('status', 'active')->with('media', 'media_one', 'media_two')->orderBy('created_at','desc')->paginate('9');
+        $medias = gallery_category::where('status', 'active')->with('media', 'media_one', 'media_two')->orderBy('created_at', 'desc')->paginate('9');
         return view('global.gallery', compact('medias'));
     }
 
@@ -589,7 +592,7 @@ class global_view extends Controller
                 } catch (\Exception $e) {
                     echo $e->getMessage();
                 }
-            }elseif ($gatewayInfo['function_name'] == "MelliGateway") {
+            } elseif ($gatewayInfo['function_name'] == "MelliGateway") {
                 try {
                     $gateway = \Larabookir\Gateway\Gateway::make(new Sadad());
 
@@ -649,7 +652,7 @@ class global_view extends Controller
             $name = "";
             $gateway = config('gateway.table', 'gateway_transactions');
             $data = \DB::table($gateway)->find($request['transaction_id']);
-            $date = jdate("Y/m/d",strtotime($data->created_at));
+            $date = jdate("Y/m/d", strtotime($data->created_at));
             if ($data->module == "charity_donate" || $data->module == "charity_vow") {
                 $charity = charity_transaction::with('title')->findOrFail($data->module_id);
                 $charity->status = 'success';
@@ -668,8 +671,8 @@ class global_view extends Controller
                 $charity->save();
                 $name = $charity->name;
                 $amount = $charity->amount;
-                    $this_charity = charity_payment_title::find($charity->title_id);
-                $reason =($this_charity ? $this_charity['title']:" ایتام و محرومین ");
+                $this_charity = charity_payment_title::find($charity->title_id);
+                $reason = ($this_charity ? $this_charity['title'] : " ایتام و محرومین ");
 
                 $messages['des'] = $charity['title']['title'];
             } elseif ($data->module == "charity_period") {
@@ -681,11 +684,11 @@ class global_view extends Controller
                 $user = User::find($charity['user_id']);
                 $charity->save();
 
-                if ($charity->group_pay){
+                if ($charity->group_pay) {
                     $groupIds = json_decode($charity->group_ids);
-                    foreach ($groupIds as $groupId){
+                    foreach ($groupIds as $groupId) {
                         $groupItem = charity_periods_transaction::find($groupId);
-                        if ($groupItem){
+                        if ($groupItem) {
                             $groupItem->status = 'paid';
                             $groupItem->trans_id = $data->id;
                             $groupItem->pay_date = date("Y-m-d H:i:s", time());
@@ -698,11 +701,11 @@ class global_view extends Controller
                 $phone = $user['phone'];
                 $email = $user['email'];
 
-                if($user->people){
-                    $name = ($user->people->gender == 1 ? " آقای " :" خانم "). $user->people->name." ".$user->people->family;
+                if ($user->people) {
+                    $name = ($user->people->gender == 1 ? " آقای " : " خانم ") . $user->people->name . " " . $user->people->family;
                 }
                 $amount = $charity->amount;
-                $reason =$charity->description;
+                $reason = $charity->description;
 
 
             } elseif ($data->module == "charity_champion") {
@@ -714,7 +717,7 @@ class global_view extends Controller
                     $user = User::find($charity['user_id']);
                     $phone = $user['phone'];
                     $email = $user['email'];
-                    $name = ($user->people->gender == 1 ? " آقای " :" خانم "). $user->people->name." ".$user->people->family;
+                    $name = ($user->people->gender == 1 ? " آقای " : " خانم ") . $user->people->name . " " . $user->people->family;
                 } else {
                     if ($charity['phone'] != "") {
                         $phone = $charity['phone'];
@@ -737,8 +740,7 @@ class global_view extends Controller
                 );
                 $chapion = charity_champion::find($charity['champion_id']);
                 $amount = $charity->amount;
-                $reason = ($chapion ? $chapion['title']:" کمپین خیریه ");
-
+                $reason = ($chapion ? $chapion['title'] : " کمپین خیریه ");
 
 
             } elseif ($data->module == "shop") {
@@ -759,30 +761,30 @@ class global_view extends Controller
 
             $messages['amount'] = number_format($charity->amount) . " " . __('messages.rial');
 
-            if($phone and $amount>0){
+            if ($phone and $amount > 0) {
                 $smsData = [
-                    'phone'=> $phone,
-                    'name'=>$name,
-                    'date'=>$date,
-                    'price'=>number_format($amount),
-                    'reason'=>$reason,
+                    'phone' => $phone,
+                    'name' => $name,
+                    'date' => $date,
+                    'price' => number_format($amount),
+                    'reason' => $reason,
                 ];
                 $mailData = [
-                    'address'=> $email,
-                    'messages'=>$messages,
+                    'address' => $email,
+                    'messages' => $messages,
                 ];
-                event(new payToCharityMoney($smsData,$mailData));
+                event(new payToCharityMoney($smsData, $mailData));
             }
-            $messages['share']=
-                "رسید پرداخت"." %0D%0A ".
-                " %0D%0A ".
-                "نام نیکوکار:".$name." %0D%0A ".
-                "مبلغ:".number_format($amount)." %0D%0A ".
-                "در تاریخ:".$date." %0D%0A ".
-                ($reason?"بابت:".$reason." %0D%0A ":"").
-                ($messages['trackingCode']?"شماره پیگیری:".$messages['trackingCode']." %0D%0A ":"").
-                " %0D%0A ".
-                "موسسه خیریه اشرف الانبیا(ص)"." %0D%0A ";
+            $messages['share'] =
+                "رسید پرداخت" . " %0D%0A " .
+                " %0D%0A " .
+                "نام نیکوکار:" . $name . " %0D%0A " .
+                "مبلغ:" . number_format($amount) . " %0D%0A " .
+                "در تاریخ:" . $date . " %0D%0A " .
+                ($reason ? "بابت:" . $reason . " %0D%0A " : "") .
+                ($messages['trackingCode'] ? "شماره پیگیری:" . $messages['trackingCode'] . " %0D%0A " : "") .
+                " %0D%0A " .
+                "موسسه خیریه اشرف الانبیا(ص)" . " %0D%0A ";
 
             return view('global.callbackmain', compact('messages'));
         } else {
@@ -837,12 +839,13 @@ class global_view extends Controller
         return response()->json($list);
     }
 
-    public function t_profile(){
+    public function t_profile()
+    {
 
-        if (isset($_GET['lt'])){
-            $user = User::where('login_token',$_GET['lt'])->first();
-            if ($user){
-                $user['login_token']='';
+        if (isset($_GET['lt'])) {
+            $user = User::where('login_token', $_GET['lt'])->first();
+            if ($user) {
+                $user['login_token'] = '';
                 $user->save();
                 Auth::loginUsingId($user['id']);
             }
@@ -853,7 +856,7 @@ class global_view extends Controller
             [
                 ['status', '=', 'unpaid'],
                 ['user_id', '=', Auth::id()],
-            ])->orderBy('payment_date','DESC')->paginate(50);
+            ])->orderBy('payment_date', 'DESC')->paginate(50);
         $unpaidPeriodCount = charity_periods_transaction::where(
             [
                 ['status', '=', 'unpaid'],
@@ -870,62 +873,67 @@ class global_view extends Controller
                 ['user_id', '=', Auth::id()],
             ])->sum('amount');
 
-        return view('global.t-profile.index',compact('period','history','unpaidPeriodCount','paidPeriodAmount','paidPeriodCount'));
+        return view('global.t-profile.index', compact('period', 'history', 'unpaidPeriodCount', 'paidPeriodAmount', 'paidPeriodCount'));
     }
 
-    public function t_payment_history(){
+    public function t_payment_history()
+    {
 
         $history = charity_periods_transaction::where(
             [
                 ['user_id', '=', Auth::id()],
                 ['status', '=', 'paid'],
-            ])->orderBy('payment_date',"DESC")->with('period')->paginate(20);
+            ])->orderBy('payment_date', "DESC")->with('period')->paginate(20);
         $otherHistory = charity_transaction::where(
             [
                 ['user_id', '=', Auth::id()],
                 ['status', '=', 'success'],
             ]
-        )->with('patern','title')->get();
-        return view('global.t-profile.pay_history',compact('history','otherHistory'));
+        )->with('patern', 'title')->get();
+        return view('global.t-profile.pay_history', compact('history', 'otherHistory'));
     }
 
-    public function t_addresses(){
+    public function t_addresses()
+    {
 
         $provinces = city::all();
         $userInfo = User::with('addresses')->findOrFail(Auth::id());
-        return view('global.t-profile.addresses',compact('userInfo','provinces'));
+        return view('global.t-profile.addresses', compact('userInfo', 'provinces'));
     }
 
-    public function t_edit_profile(){
+    public function t_edit_profile()
+    {
 
         $userInfo = User::with('addresses', 'people', 'profile_image')->find(Auth::id());
 
-        return view('global.t-profile.edit',compact('userInfo'));
+        return view('global.t-profile.edit', compact('userInfo'));
     }
 
-    public function t_routine_vow(){
+    public function t_routine_vow()
+    {
 
 
-        $routine = charity_period::where('user_id',Auth::id())->first();
+        $routine = charity_period::where('user_id', Auth::id())->first();
         $routine_types = config('charity.routine_types');
-        $pattern = charity_payment_patern::where('periodic','1')->first();
-        return view('global.t-profile.vow',compact('routine','pattern','routine_types'));
+        $pattern = charity_payment_patern::where('periodic', '1')->first();
+        return view('global.t-profile.vow', compact('routine', 'pattern', 'routine_types'));
     }
 
-    public function t_routine_payment(Request $request){
-        $group_id=[];
-        $total_amount =0;
-        $this_routine=null;
-        if ($request['payment'] and is_array($request['payment'])){
-        foreach ($request['payment'] as $payment_id){
-            $this_routine = charity_periods_transaction::whereNull('pay_date')->find($payment_id);
-            if ($this_routine){
-                $group_id[]=$this_routine['id'];
-                $total_amount+= $this_routine['amount'];
+    public function t_routine_payment(Request $request)
+    {
+        $group_id = [];
+        $total_amount = 0;
+        $this_routine = null;
+        if ($request['payment'] and is_array($request['payment'])) {
+            foreach ($request['payment'] as $payment_id) {
+                $this_routine = charity_periods_transaction::whereNull('pay_date')->find($payment_id);
+                if ($this_routine) {
+                    $group_id[] = $this_routine['id'];
+                    $total_amount += $this_routine['amount'];
+                }
             }
         }
-        }
-        if ($total_amount>0){
+        if ($total_amount > 0) {
             $new_pay = charity_periods_transaction::create(
                 [
                     'user_id' => Auth::id(),
@@ -937,8 +945,8 @@ class global_view extends Controller
                     'group_ids' => json_encode($group_id),
                     'group_pay' => 1,
                 ]
-                );
-            return redirect(route('vow_cart',['id'=>$new_pay['id']]));
+            );
+            return redirect(route('vow_cart', ['id' => $new_pay['id']]));
         }
         return back();
 
@@ -946,15 +954,15 @@ class global_view extends Controller
 
     public function c_store()
     {
-        $products = c_store_product::where('active', 1)->get()->map(function ($product){
-            $image = c_store_product_image::where('CSP_id',$product['id'])->where('main_img',1)->first();
+        $products = c_store_product::where('active', 1)->get()->map(function ($product) {
+            $image = c_store_product_image::where('CSP_id', $product['id'])->where('main_img', 1)->first();
             return [
-              'id'=>$product['id'],
-              'title'=>$product['title'],
-              'description'=>$product['description'],
-              'slug'=>$product['slug'],
-              'price'=>$product['price'],
-              'image'=>$image ? $image['medium'] : "http://lorempixel.com/output/nature-q-c-640-394-5.jpg",
+                'id' => $product['id'],
+                'title' => $product['title'],
+                'description' => $product['description'],
+                'slug' => $product['slug'],
+                'price' => $product['price'],
+                'image' => $image ? $image['medium'] : "http://lorempixel.com/output/nature-q-c-640-394-5.jpg",
             ];
         });
         return view('global.c_store.index', compact('products'));
@@ -962,22 +970,24 @@ class global_view extends Controller
 
     public function c_store_show($slug)
     {
+
         $product = c_store_product::with('images')
-            ->where('slug',$slug)
+            ->where('slug', $slug)
             ->where('active', 1)
             ->firstOrFail();
-        $image = c_store_product_image::where('CSP_id',$product['id'])->first();
-        return view('global.c_store.show', compact('product','image'));
+        $image = c_store_product_image::where('CSP_id', $product['id'])->first();
+        return view('global.c_store.show', compact('product', 'image'));
     }
 
     public function c_store_checkout()
     {
 
         $card = session()->get('c_store_cart');
-        if (!$card){
-            $card=[];
+        if (!$card) {
+            $card = [];
         }
-        return view('global.c_store.checkout',compact('card'));
+
+        return view('global.c_store.checkout', compact('card'));
     }
 
     public function c_store_add_to_card(Request $request)
@@ -987,96 +997,108 @@ class global_view extends Controller
                 'product' => 'required',
             ]);
         $product = c_store_product::findOrFail($request['product']);
-
-            $cart = session()->get('c_store_cart');
-            $image = c_store_product_image::where('CSP_id',$product['id'])->where('main_img',1)->exists() ?c_store_product_image::where('CSP_id',$product['id'])->where('main_img',1)->first()['large']:"";
-            if(!$cart) {
-                $cart = [
-                    $product['id'] => [
-                        "name" => $product->title,
-                        "quantity" => 1,
-                        "price" => $product->price,
-                        "slug" => $product->slug,
-                        "image" => $image,
-                    ]
-                ];
-
-                session()->put('c_store_cart', $cart);
-
-                return redirect(route('global.c_store_checkout'));
-            }
-
-            // if cart not empty then check if this product exist then increment quantity
-            if(isset($cart[$product['id']])) {
-
-                $cart[$product['id']]['quantity']++;
-
-                session()->put('c_store_cart', $cart);
-
-                return redirect(route('global.c_store_checkout'));
-
-            }
-            // if item not exist in cart then add to cart with quantity = 1
-            $cart[$product['id']] = [
-                "name" => $product->title,
-                "quantity" => 1,
-                "price" => $product->price,
-                "slug" => $product->slug,
-                "image" => $image
+        $cart = session()->get('c_store_cart');
+        $image = c_store_product_image::where('CSP_id', $product['id'])->where('main_img', 1)->exists() ? c_store_product_image::where('CSP_id', $product['id'])->where('main_img', 1)->first()['large'] : "";
+        if (!$cart) {
+            $cart = [
+                $product['id'] => [
+                    "name" => $product->title,
+                    "quantity" => 1,
+                    "price" => $product->price,
+                    "slug" => $product->slug,
+                    "image" => $image,
+                    "provinces" => $product->allowed_provinces,
+                    "cities" => $product->allowed_cities,
+                    "delay" => $product->delivery_delay,
+                    "delay_type" => $product->delivery_delay_type,
+                ]
             ];
 
             session()->put('c_store_cart', $cart);
+
+            return redirect(route('global.c_store_checkout'));
+        }
+
+        // if cart not empty then check if this product exist then increment quantity
+        if (isset($cart[$product['id']])) {
+
+            $cart[$product['id']]['quantity']++;
+
+            session()->put('c_store_cart', $cart);
+
+            return redirect(route('global.c_store_checkout'));
+
+        }
+        // if item not exist in cart then add to cart with quantity = 1
+        $cart[$product['id']] = [
+            "name" => $product->title,
+            "quantity" => 1,
+            "price" => $product->price,
+            "slug" => $product->slug,
+            "image" => $image,
+            "provinces" => $product->allowed_provinces,
+            "cities" => $product->allowed_cities,
+            "delay" => $product->delivery_delay,
+            "delay_type" => $product->delivery_delay_type,
+        ];
+
+        session()->put('c_store_cart', $cart);
 
         return redirect(route('global.c_store_checkout'));
 
     }
 
-    public function c_store_remove_from_card($id,Request $request)
+    public function c_store_remove_from_card($id, Request $request)
     {
         $cart = session()->get('c_store_cart');
-        if ($cart){
+        if ($cart) {
             unset($cart[$id]);
             session()->put('c_store_cart', $cart);
         }
-        return back_normal($request,'آیتم حذف شد');
+        return back_normal($request, 'آیتم حذف شد');
     }
 
     public function c_store_update_card(Request $request)
     {
-        $cart=[];
+        $cart = [];
         session()->put('c_store_cart', $cart);
-        foreach ($request['quantity'] as $key=>$value){
+        foreach ($request['quantity'] as $key => $value) {
             $product = c_store_product::find($key);
-            if ($product and $value >0){
-                $image = c_store_product_image::where('CSP_id',$product['id'])->where('main_img',1)->exists() ?c_store_product_image::where('CSP_id',$product['id'])->where('main_img',1)->first()['large']:"";
+            if ($product and $value > 0) {
+                $image = c_store_product_image::where('CSP_id', $product['id'])->where('main_img', 1)->exists() ? c_store_product_image::where('CSP_id', $product['id'])->where('main_img', 1)->first()['large'] : "";
                 $cart[$product['id']] = [
                     "name" => $product->title,
                     "quantity" => $value,
                     "price" => $product->price,
                     "slug" => $product->slug,
-                    "image" => $image
+                    "image" => $image,
+                    "provinces" => $product->allowed_provinces,
+                    "cities" => $product->allowed_cities,
+                    "delay" => $product->delivery_delay,
+                    "delay_type" => $product->delivery_delay_type,
                 ];
             }
         }
         session()->put('c_store_cart', $cart);
-        return back_normal($request,'سبد بروزرسانی شد');
+        return back_normal($request, 'سبد بروزرسانی شد');
     }
+
     public function c_store_card_completion_phone(Request $request)
     {
         $user = Auth::user();
-        if ($user and $user['phone_verified_at']){
-            return "next";
-        }
-        else{
+        if ($user and $user['phone_verified_at']) {
+            return redirect(route('global.c_store_card_completion_order'));
+        } else {
 
             $phone = '';
-        if ($request->phone){
-            $phone = $request->phone;
-        }
-        return view('global.c_store.partial.get_phone',compact(['phone']));
+            if ($request->phone) {
+                $phone = $request->phone;
+            }
+            return view('global.c_store.partial.get_phone', compact(['phone']));
         }
 
     }
+
     public function c_store_card_completion_submit_phone(Request $request)
     {
 
@@ -1085,81 +1107,381 @@ class global_view extends Controller
                 'phone' => 'required|regex:/(09)[0-9]{9}/',
             ]);
         $user = Auth::user();
-        if ($user and $user['phone_verified_at']){
+        if ($user and $user['phone_verified_at']) {
             return 'go to addresses';
-        }
-        else{
+        } else {
 
             $phone = $request['phone'];
-        $code = rand(11111,99999);
-        if ($user){
-            if ($user->code_phone and $user->code_phone_send and (strtotime($user->code_phone_send)+180 < strtotime() ) ){
-            $user->code_phone = $code;
-            $user->code_phone_send = date("Y-m-d H:i:s");
-            $user->save();
-            }
-            $smsData = [
-                'phone'=>$user->phone,
-                'code'=>$user->code_phone,
-            ];
-            event(new confirmPhone($smsData));
-        }else{
-            $user = new User();
-            $user->phone = $phone;
-            $user->code_phone = $code;
-            $user->password = Hash::make($code);
-            $user->code_phone_send = date("Y-m-d H:i:s");
-            $user->save();
+            $code = rand(11111, 99999);
+            if ($user) {
+                if ($user->code_phone and $user->code_phone_send and (strtotime($user->code_phone_send) + 180 < strtotime())) {
+                    $user->code_phone = $code;
+                    $user->code_phone_send = date("Y-m-d H:i:s");
+                    $user->save();
+                }
+                $smsData = [
+                    'phone' => $user->phone,
+                    'code' => $user->code_phone,
+                ];
+                event(new confirmPhone($smsData));
+            } else {
+                $user = new User();
+                $user->phone = $phone;
+                $user->code_phone = $code;
+                $user->password = Hash::make($code);
+                $user->code_phone_send = date("Y-m-d H:i:s");
+                $user->save();
 
-            $smsData = [
-                'phone'=>$user->phone,
-                'code'=>$user->code_phone,
-            ];
-            event(new confirmPhone($smsData));
+                $smsData = [
+                    'phone' => $user->phone,
+                    'code' => $user->code_phone,
+                ];
+                event(new confirmPhone($smsData));
             }
-            return view('global.c_store.partial.submit_code',compact(['phone']));
+            return redirect(route('global.c_store_card_completion_submit_phone_page',['phone'=>$user->phone]));
         }
 
     }
+    public function c_store_card_completion_submit_phone_page(Request $request,$phone)
+    {
+
+        $user = Auth::user();
+        if ($user and $user['phone_verified_at']) {
+            return 'go to addresses';
+        } else {
+            return view('global.c_store.partial.submit_code', compact(['phone']));
+        }
+
+    }
+
     public function c_store_resend_code(Request $request)
     {
         $phone = $request['phone'];
-        $user = User::where('phone',$phone)->first();
-        if (!$user){
+        $user = User::where('phone', $phone)->first();
+        if (!$user) {
             return redirect(route('global.c_store_card_completion_phone'));
-        }
-        else{
-            if ($user->code_phone and $user->code_phone_send and ((strtotime($user->code_phone_send)+180) < strtotime() ) ){
-                $code = rand(11111,99999);
+        } else {
+            if (!empty($user->code_phone) and !empty($user->code_phone_send) and ((strtotime($user->code_phone_send) + 180) < time())) {
+                $code = rand(11111, 99999);
                 $user->code_phone = $code;
                 $user->code_phone_send = date("Y-m-d H:i:s");
                 $user->save();
             }
 
             $smsData = [
-                'phone'=>$user->phone,
-                'code'=>$user->code_phone,
+                'phone' => $user->phone,
+                'code' => $user->code_phone,
             ];
             event(new confirmPhone($smsData));
 
-        return view('global.c_store.partial.submit_code',compact(['phone']));
+            return redirect(route('global.c_store_card_completion_submit_phone_page',['phone'=>$user->phone]));
         }
     }
+
     public function c_store_card_completion_submit_code(Request $request)
     {
 
-        $this->validate($request,[
-           'phone'=>'required',
-           'code'=>'required',
+        $this->validate($request, [
+            'phone' => 'required',
+            'code' => 'required',
         ]);
-        $user = User::where('phone',$request['phone'])->first();
-        if ($user['code_phone'] == $request['code']){
+        $user = User::where('phone', $request['phone'])->first();
+        if ($user['code_phone'] == $request['code']) {
             session()->put('c_store_phone', $request['phone']);
-
-            return "next";
+            return redirect(route('global.c_store_card_completion_order'));
+        } else {
+            return back_error($request, ['خطا' => 'کد وارد شده صحیح نمی باشد.']);
         }
-        else{
-            return back_error($request,['خطا'=>'کد وارد شده صحیح نمی باشد.']);
+
+    }
+
+    public function c_store_card_completion_order(Request $request)
+    {
+        $user = Auth::user();
+        $phone = session()->get('c_store_phone');
+        $card = session()->get('c_store_cart');
+        $allowed_provinces = get_provinces()->pluck('id')->toArray();
+        $allowed_cities = get_cites()->pluck('id')->toArray();
+        $actual_day_delay = 0;
+        $working_day_delay = 0;
+        if (!$card) {
+            return redirect(route('global.c_store'));
+        }
+        foreach ($card as $key => $value) {
+//            if ($value['provinces']){
+//                $allowed_provinces = array_intersect($allowed_provinces,explode(',',$value['provinces'])) ;
+//            };
+//
+//            if ($value['cities']){
+//                $allowed_cities = array_intersect($allowed_cities,explode(',',$value['cities'])) ;
+//            };
+
+            if ($value['delay_type'] == 'actual_day' and $actual_day_delay < $value['delay']) {
+                $actual_day_delay = $value['delay'];
+            } elseif ($value['delay_type'] == 'working_day' and $working_day_delay < $value['delay']) {
+                $working_day_delay = $value['delay'];
+            }
+        }
+
+        $allowed_provinces = array_map(function ($province) {
+            return [
+                'id' => $province,
+                'name' => get_provinces($province)['name'],
+            ];
+        }, $allowed_provinces);
+
+        $allowed_cities = array_map(function ($city) {
+            return [
+                'id' => $city,
+                'name' => get_cites($city)['name'],
+            ];
+        }, $allowed_cities);
+
+        $working_day_delay = $this->working_day_delay($working_day_delay);
+
+        $delay = max($working_day_delay, $actual_day_delay);
+        $firstDate = time() + ($delay * 86400);
+
+        if (!$user and $phone) {
+            $user = User::where('phone', $phone)->first();
+        } elseif (!$user and !$phone) {
+            return redirect(route('global.c_store_checkout'));
+        }
+        $order = session()->get('cs_order');
+        return view('global.c_store.order_data', compact('order','firstDate', 'user', 'allowed_provinces', 'allowed_cities'));
+    }
+
+    private function working_day_delay($days)
+    {
+        $delay = 0;
+        if ($days <= 0) {
+            return 0;
+        }
+        $balance = 0;
+
+
+        for ($i = 0; $i <= ($days + $balance); $i++) {
+            $off = false;
+            $timestamp = time() + ($i * 86400);
+            $hijri = new HijriDate($timestamp);
+            $icD = $hijri->get_day();
+            $icM = $hijri->get_month();
+            $response = getEvents(tr_num(jdate('j', $timestamp)), tr_num(jdate('m', $timestamp)), $icD, $icM);
+            if (json_decode($response)->values) {
+                foreach (json_decode($response)->values as $value) {
+                    if ($value->dayoff) {
+                        $days++;
+                        $off = true;
+                        break;
+                    };
+                }
+                if ($i == 0 and !$off and time() > strtotime('12:00:00')) {
+                    $balance = 1;
+                }
+            }
+            $delay++;
+        }
+        return $delay;
+    }
+
+    public function c_store_card_completion_order_save(Request $request)
+    {
+        $this->validate($request,
+            [
+                'province' => 'required',
+                'cities' => 'required',
+                'receiver' => 'required',
+                'zip_code' => 'nullable',
+                'phone' => 'nullable',
+                'mobile' => 'required',
+                'description' => 'nullable',
+                'condolences_to' => 'required',
+                'from_as' => 'required',
+                'late_name' => 'required',
+                'meeting_date' => 'required',
+                'meeting_time' => 'required',
+                'meeting_address' => 'required',
+                'lat' => 'nullable',
+                'lon' => 'nullable',
+            ]
+        );
+        $user = Auth::user();
+        $card = session()->get('c_store_cart');
+        $allowed_provinces = get_provinces()->pluck('id')->toArray();
+        $allowed_cities = get_cites()->pluck('id')->toArray();
+        $actual_day_delay = 0;
+        $working_day_delay = 0;
+        if (!$card) {
+            return redirect(route('global.c_store'));
+        }
+        foreach ($card as $key => $value) {
+
+            if ($value['provinces']) {
+                $allowed_provinces = array_intersect($allowed_provinces, explode(',', $value['provinces']));
+            };
+
+            if ($value['cities']) {
+                $allowed_cities = array_intersect($allowed_cities, explode(',', $value['cities']));
+            };
+
+            if ($value['delay_type'] == 'actual_day' and $actual_day_delay < $value['delay']) {
+                $actual_day_delay = $value['delay'];
+            } elseif ($value['delay_type'] == 'working_day' and $working_day_delay < $value['delay']) {
+                $working_day_delay = $value['delay'];
+            }
+        }
+
+
+        $working_day_delay = $this->working_day_delay($working_day_delay);
+        $delay = max($working_day_delay, $actual_day_delay);
+        $firstDate = time() + ($delay * 86400);
+        if (!in_array($request['cities'], $allowed_cities) and !in_array($request['province'], $allowed_provinces)) {
+            return back_error($request, ['محل مراسم' => 'متاسفانه امکان ارسال سفارش به شهر انتخاب شده وجود ندارد، برای اطلاعات بیشتر تماس بگیرید.']);
+        }
+
+        //compare date
+        $meetingDate = shamsi_to_miladi($request['meeting_date']);
+        if ($meetingDate < date("Y-m-d 00:00:00", $firstDate)) {
+            return back_error($request, ['زمان مراسم' => 'امکان ثبت درخواست در این تاریخ وجود ندارد']);
+        };
+
+        $cs_order = [];
+        session()->put('cs_order', $cs_order);
+        $cs_order = [
+            "user_id" => Auth::id(),
+            "province" => $request['province'],
+            "cities" => $request['cities'],
+            "receiver" => $request['receiver'],
+            "zip_code" => $request['zip_code'],
+            "phone" => $request['phone'],
+            "mobile" => $request['mobile'],
+            "description" => $request['description'],
+            "condolences_to" => $request['condolences_to'],
+            "from_as" => $request['from_as'],
+            "late_name" => $request['late_name'],
+            "date" => $meetingDate,
+            "time" => $request['meeting_time'],
+            "meeting_address" => $request['meeting_address'],
+            "lat" => $request['lat'],
+            "lon" => $request['lon'],
+        ];
+        session()->put('cs_order', $cs_order);
+        return redirect(route('global.c_store_card_completion_order_confirm_show'));
+    }
+
+    public function c_store_card_completion_order_confirm_show(Request $request){
+        $card = session()->get('c_store_cart');
+        $gateways = gateway::with('bank')->where('online', 1)->get();
+
+        if (!$card){
+            return redirect(route('global.c_store'));
+        }
+        $order = session()->get('cs_order');
+        if (empty($order)){
+            return redirect('global.c_store_checkout');
+        }
+        return view('global.c_store.order_summary',compact('card','order','gateways'));
+    }
+    public function c_store_card_completion_order_confirm_save(Request $request)
+    {
+        $this->validate($request,
+            [
+                'province' => 'required',
+                'cities' => 'required',
+                'receiver' => 'required',
+                'zip_code' => 'nullable',
+                'phone' => 'nullable',
+                'mobile' => 'required',
+                'description' => 'nullable',
+                'condolences_to' => 'required',
+                'from_as' => 'required',
+                'late_name' => 'required',
+                'meeting_date' => 'required',
+                'meeting_time' => 'required',
+                'meeting_address' => 'required',
+                'lat' => 'nullable',
+                'lon' => 'nullable',
+            ]
+        );
+        $user = Auth::user();
+        $card = session()->get('c_store_cart');
+        $allowed_provinces = get_provinces()->pluck('id')->toArray();
+        $allowed_cities = get_cites()->pluck('id')->toArray();
+        $actual_day_delay = 0;
+        $working_day_delay = 0;
+        if (!$card) {
+            return redirect(route('global.c_store'));
+        }
+        foreach ($card as $key => $value) {
+            if ($value['provinces']) {
+                $allowed_provinces = array_intersect($allowed_provinces, explode(',', $value['provinces']));
+            };
+
+            if ($value['cities']) {
+                $allowed_cities = array_intersect($allowed_cities, explode(',', $value['cities']));
+            };
+
+            if ($value['delay_type'] == 'actual_day' and $actual_day_delay < $value['delay']) {
+                $actual_day_delay = $value['delay'];
+            } elseif ($value['delay_type'] == 'working_day' and $working_day_delay < $value['delay']) {
+                $working_day_delay = $value['delay'];
+            }
+        }
+
+        $allowed_provinces = array_map(function ($province) {
+            return [
+                'id' => $province,
+                'name' => get_provinces($province)['name'],
+            ];
+        }, $allowed_provinces);
+
+        $allowed_cities = array_map(function ($city) {
+            return [
+                'id' => $city,
+                'name' => get_cites($city)['name'],
+            ];
+        }, $allowed_cities);
+
+        $working_day_delay = $this->working_day_delay($working_day_delay);
+        $delay = max($working_day_delay, $actual_day_delay);
+        $firstDate = time() + ($delay * 86400);
+        if (!in_array($request['cities'], $allowed_cities) and !in_array($request['province'], $allowed_provinces)) {
+            return back_error($request, ['محل مراسم' => 'متاسفانه امکان ارسال سفارش به شهر انتخاب شده وجود ندارد، برای اطلاعات بیشتر تماس بگیرید.']);
+        }
+
+        //compare date
+        $meetingDate = shamsi_to_miladi($request['meeting_date']);
+        if ($meetingDate < date("Y-m-d 00:00:00", $firstDate)) {
+            return back_error($request, ['زمان مراسم' => 'امکان ثبت درخواست در این تاریخ وجود ندارد']);
+        };
+        $cs_order = new c_store_order();
+        $cs_order->user_id = Auth::id();
+        $cs_order->province = $request['province'];
+        $cs_order->cities = $request['cities'];
+        $cs_order->receiver = $request['receiver'];
+        $cs_order->zip_code = $request['zip_code'];
+        $cs_order->phone = $request['phone'];
+        $cs_order->mobile = $request['mobile'];
+        $cs_order->description = $request['description'];
+        $cs_order->condolences_to = $request['condolences_to'];
+        $cs_order->from_as = $request['from_as'];
+        $cs_order->late_name = $request['late_name'];
+        $cs_order->date = $meetingDate;
+        $cs_order->time = $request['meeting_time'];
+        $cs_order->meeting_address = $request['meeting_address'];
+        $cs_order->lat = $request['lat'];
+        $cs_order->lon = $request['lon'];
+        $cs_order->save();
+        foreach ($card as $key => $value) {
+            $cs_order_item = new c_store_order_item();
+            $cs_order->CSO_id = $cs_order['id'];
+            $cs_order->CSP_id = $key;
+            $cs_order->name = $value['name'];
+            $cs_order->quantity = $value['quantity'];
+            $cs_order->price = $value['price'];
+            $cs_order->slug = $value['slug'];
+            $cs_order->image = $value['image'];
+            $cs_order_item->save();
         }
 
     }
