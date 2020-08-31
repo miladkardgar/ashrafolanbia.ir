@@ -206,6 +206,10 @@ Route::group(
             Route::delete('remove_product_image', 'panel\CStoreController@remove_product_image')->name('c_store.remove_product_image');
             Route::post('set_main_product_image', 'panel\CStoreController@set_main_product_image')->name('c_store.set_main_product_image');
 
+            Route::get('orders_list', 'panel\CStoreController@orders_list')->name('c_store.orders_list');
+            Route::get('order/{id}', 'panel\CStoreController@order')->name('c_store.order');
+            Route::post('order/status/{id}', 'panel\CStoreController@change_order_status')->name('c_store.change_order_status');
+
         });
         Route::prefix('building')->group(function () {
             Route::get('dashboard', 'panel\panel_view@building_dashboard')->name('building_dashboard');
@@ -676,12 +680,12 @@ Route::group(
         Route::post('/c_store/card/completion/submit_phone', 'globals\global_view@c_store_card_completion_submit_phone')->name('global.c_store_card_completion_submit_phone');
         Route::post('/c_store/card/completion/resend_code', 'globals\global_view@c_store_resend_code')->name('global.c_store_resend_code');
     });
-    Route::get('/c_store/card/completion/submit_code/{phone}', 'globals\global_view@c_store_card_completion_submit_phone_page')->name('global.c_store_card_completion_submit_phone_page');
+    Route::get('/c_store/card/completion/submit_code/{phone}', 'globals\global_view@c_store_card_completion_submit_code_page')->name('global.c_store_card_completion_submit_phone_page');
     Route::post('/c_store/card/completion/submit_code', 'globals\global_view@c_store_card_completion_submit_code')->name('global.c_store_card_completion_submit_code');
     Route::get('/c_store/card/completion/order', 'globals\global_view@c_store_card_completion_order')->name('global.c_store_card_completion_order');
     Route::post('/c_store/card/completion/order', 'globals\global_view@c_store_card_completion_order_save')->name('global.c_store_card_completion_order_save');
     Route::get('/c_store/card/completion/order/confirm', 'globals\global_view@c_store_card_completion_order_confirm_show')->name('global.c_store_card_completion_order_confirm_show');
-    Route::post('/c_store/card/completion/order/confirm', 'globals\global_view@c_store_card_completion_order_confirm_save')->name('global.c_store_card_completion_order_confirm_save');
+    Route::post('/c_store/card/completion/order/confirm', 'globals\global_view@c_store_card_completion_order_confirm_process')->name('global.c_store_card_completion_order_confirm_process');
 
 
 //charity view

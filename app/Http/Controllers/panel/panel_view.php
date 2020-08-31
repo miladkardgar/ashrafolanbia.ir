@@ -1366,6 +1366,10 @@ class panel_view extends Controller
 
     public function test()
     {
-//        Artisan::call('migrate');
+
+//        dd(env('DB_PASSWORD'));
+
+//      Artisan::call('migrate');
+
     }
 }

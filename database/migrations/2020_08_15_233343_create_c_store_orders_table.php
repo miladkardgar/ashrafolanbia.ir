@@ -31,6 +31,14 @@ class CreateCStoreOrdersTable extends Migration
             $table->text('meeting_address');
             $table->string('lat');
             $table->string('lon');
+            $table->integer('amount')->default(0);
+            $table->integer('paid_amount')->nullable();//deleted
+            $table->integer('gateway_id')->nullable();
+            $table->integer('trans_id')->nullable();
+            $table->string('status')->default('waiting');
+            $table->string('process_status')->default('new');
+            $table->dateTime('pay_date')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

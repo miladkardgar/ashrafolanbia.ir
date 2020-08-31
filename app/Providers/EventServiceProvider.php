@@ -6,6 +6,7 @@ use App\Events\charityPaymentConfirmation;
 use App\Events\paymentReminder;
 use App\Events\payToCharityMoney;
 use App\Events\storePaymentConfirmation;
+use App\Events\c_storePaymentAlert;
 use App\Events\userRegisterEvent;
 use App\Events\confirmPhone;
 use App\Events\confirmEmail;
@@ -35,10 +36,15 @@ class EventServiceProvider extends ServiceProvider
                 \App\Listeners\payment\smsListener::class,
             ],
         storePaymentConfirmation::class=>
-        [
+            [
 //            \App\Listeners\store\mailListener::class,
-            \App\Listeners\store\smsListener::class,
-        ],
+                \App\Listeners\store\smsListener::class,
+            ],
+        c_storePaymentAlert::class=>
+            [
+//            \App\Listeners\store\mailListener::class,
+                \App\Listeners\c_store\smsListener::class,
+            ],
         charityPaymentConfirmation::class=>
             [
 //                \App\Listeners\charity\mailListener::class,
@@ -59,10 +65,9 @@ class EventServiceProvider extends ServiceProvider
      *
      * @return void
      */
+
     public function boot()
     {
         parent::boot();
-
-        //
     }
 }

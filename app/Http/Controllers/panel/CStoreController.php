@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\panel;
 
+use App\c_store_order;
 use App\c_store_product;
 use App\c_store_product_image;
 use Illuminate\Http\Request;
@@ -123,6 +124,31 @@ class CStoreController extends Controller
         c_store_product_image::where('CSP_id',$request['CSP_id'])->update(['main_img'=>0]);
         c_store_product_image::where('CSP_id',$request['CSP_id'])->where('id',$request['media_id'])->update(['main_img'=>1]);
         return back_normal($request);
+    }
+
+    public function orders_list()
+    {
+        $orders = c_store_order::where('status','paid')->get();
+        return view('panel.c_store.orders_list',compact('orders'));
+
+    }
+    public function order($id)
+    {
+        $order = c_store_order::with('items')->find($id);
+        return view('panel.c_store.order',compact('order'));
+
+    }
+    public function change_order_status($id,Request $request)
+    {
+        $order = c_store_order::with('items')->find($id);
+        $this->validate($request,
+            [
+                'status' => 'required|in:new,processing,done,canceled',
+            ]);
+        $order->process_status = $request['status'];
+        $order->save();
+        return back_normal($request,'وضعیت سفارش بروزرسانی شد');
+
     }
 
 }

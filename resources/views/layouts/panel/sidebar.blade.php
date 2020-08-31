@@ -247,8 +247,8 @@ if (!isset($active_sidbare)) {
                     <ul class="nav nav-group-sub" data-submenu-title="{{trans('تاج گل و استند')}}"
                         style="display:{{in_array("c_store", $active_sidbare) ? 'block' : 'none' }}">
 
-                        <li class="nav-item"><a href=""
-                                                class="nav-link {{in_array("product_add", $active_sidbare) ? 'active' : '' }}">
+                        <li class="nav-item"><a href="{{route('c_store.orders_list')}}"
+                                                class="nav-link {{in_array("c_store_orders", $active_sidbare) ? 'active' : '' }}">
                                 {{trans('سفارشات ')}}</a>
                         </li>
                         <li class="nav-item"><a href="{{route('c_store.product_list')}}"

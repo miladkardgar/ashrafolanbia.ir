@@ -22,11 +22,11 @@ class CreateOrdersTable extends Migration
             $table->foreign('address_id')->references('id')->on('users_addresses');
             $table->integer('transportation_id')->nullable();
             $table->foreign('transportation_id')->references('id')->on('setting_transportations');
-            $table->integer('payment')->nullable();
             $table->string('price')->default(0);
             $table->string('tax')->default(0);
             $table->string('discount')->default(0);
             $table->string('amount')->default(0);
+            $table->integer('payment')->nullable();
             $table->integer('gateway_id')->nullable();
             $table->integer('trans_id')->nullable();
             $table->string('status')->default('waiting');

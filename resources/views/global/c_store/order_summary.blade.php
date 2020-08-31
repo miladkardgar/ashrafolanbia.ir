@@ -2,6 +2,7 @@
 @section('css2')
     <link rel="stylesheet" href="{{URL::asset('/public/assets/panel/css/iranBanks/ibl.css')}}">
 @stop
+
 @section('mrn-content')
     <div class="mrn-main-page-content">
         <div class="mrn-content-inner mrn-container" role="main">
@@ -147,13 +148,14 @@
                                     </p>
                                 </div>
 
-
+                                <form class="cart" method="post" action="{{route('global.c_store_card_completion_order_confirm_process')}}">
+                                @csrf
                                 @foreach($gateways as $gateway)
                                     <div class="col-md-6 col-xs-4" >
                                         <div class="radio text-center">
                                             <label>
                                                 <strong>{!! $gateway['logo'] !!}</strong><br>
-                                                <input type="radio" name="gateway"
+                                                <input type="radio" name="gateway_id"
                                                        id="gateway_{{$gateway['id']}}"
                                                        value="{{$gateway['id']}}"
                                                        checked="checked">
@@ -163,7 +165,6 @@
                                     </div>
                                 @endforeach
 
-                                <form class="cart" method="get" action="{{route('global.c_store_card_completion_phone')}}">
 
                                     <button type="submit" name="add-to-cart" value="302"
                                             class="single_add_to_cart_button button alt">

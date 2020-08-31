@@ -20,6 +20,7 @@ use App\charity_supportForm;
 use App\charity_transaction;
 use App\charity_transactions_value;
 use App\city;
+use App\Events\c_storePaymentAlert;
 use App\Events\charityPaymentConfirmation;
 use App\Events\confirmPhone;
 use App\Events\payToCharityMoney;
@@ -547,12 +548,15 @@ class global_view extends Controller
             $info = champion_transaction::findOrFail($id);
             $info->gateway_id = $request['gateway_id'];
             $info->save();
-            $info = champion_transaction::findOrFail($id);
         } elseif ($type == 'shop') {
             $info = order::find($id);
             $info->gateway_id = $request['gateway_id'];
             $info->save();
-            $info = order::find($id);
+        }
+        elseif ($type == 'c_store') {
+            $info = c_store_order::find($id);
+            $info->gateway_id = $request['gateway_id'];
+            $info->save();
         }
 
         if (!is_null($info) && $con) {
@@ -563,7 +567,7 @@ class global_view extends Controller
                 try {
                     $gateway = \Gateway::make(new Saman());
                     $gateway->setCallback(route('callback', ['gateway' => 'saman']));
-                    $gateway->moduleSet($request['type'])->moduleIDSet($info['id']);
+                    $gateway->moduleSet($type)->moduleIDSet($info['id']);
                     $gateway->price($info['amount'])->ready();
                     $refId = $gateway->refId();
                     $transID = $gateway->transactionId();
@@ -580,7 +584,7 @@ class global_view extends Controller
                 try {
                     $gateway = \Larabookir\Gateway\Gateway::make(new Mellat());
                     $gateway->setCallback(route('callback', ['gateway' => 'mellat']));
-                    $gateway->price($info['amount'])->moduleSet($request['type'])->moduleIDSet($info['id'])->ready();
+                    $gateway->price($info['amount'])->moduleSet($type)->moduleIDSet($info['id'])->ready();
                     $refId = $gateway->refId();
                     $transID = $gateway->transactionId();
 
@@ -597,7 +601,7 @@ class global_view extends Controller
                     $gateway = \Larabookir\Gateway\Gateway::make(new Sadad());
 
                     $gateway->setCallback(route('callback', ['gateway' => 'sadad']));
-                    $gateway->price($info['amount'])->moduleSet($request['type'])->moduleIDSet($info['id'])->ready();
+                    $gateway->price($info['amount'])->moduleSet($type)->moduleIDSet($info['id'])->ready();
                     $refId = $gateway->refId();
                     $transID = $gateway->transactionId();
 
@@ -754,8 +758,32 @@ class global_view extends Controller
                 $user = User::find($charity['user_id']);
                 event(new storePaymentConfirmation($user));
             }
+            elseif ($data->module == "c_store") {
+                $charity = c_store_order::findOrFail($data->module_id);
+                $charity->status = 'paid';
+                $charity->pay_date = date("Y-m-d H:i:s", time());
+                $charity->save();
+                session()->forget('c_store_cart');
+                session()->forget('cs_order');
+                $messages['des'] = __('messages.shop_order');
+                $user = User::find($charity['user_id']);
+                event(new storePaymentConfirmation($user));
+                $phone = $user['phone'];
+                $amount = $charity->amount;
+                $reason = 'سفارش تاج گل/استند';
+
+                $smsData = [
+                    'phone' => '09365944410',
+                    'c_phone' => $phone,
+                    'title' => "تاج گل و استند",
+                    'meeting_date' => miladi_to_shamsi_date($charity['date']),
+                ];
+
+                event(new c_storePaymentAlert($smsData));
+
+            }
             $messages['result'] = "success";
-            $messages['name'] = $charity->name;
+            $messages['name'] = (isset($charity) and isset($charity->name)) ? $charity->name : get_name($user['id']);
             $messages['trackingCode'] = $request['transaction_id'];
             $messages['date'] = jdate("Y/m/d");
 
@@ -804,6 +832,12 @@ class global_view extends Controller
                 $charity->save();
             } elseif ($data->module == "shop") {
                 $charity = order::findOrFail($data->module_id);
+                $charity->status = 'fail';
+                $charity->trans_id = $data->id;
+                $charity->save();
+            }
+            elseif ($data->module == "c_store") {
+                $charity = c_store_order::findOrFail($data->module_id);
                 $charity->status = 'fail';
                 $charity->trans_id = $data->id;
                 $charity->save();
@@ -1108,13 +1142,14 @@ class global_view extends Controller
             ]);
         $user = Auth::user();
         if ($user and $user['phone_verified_at']) {
-            return 'go to addresses';
+            return redirect(route('global.c_store_card_completion_order'));
         } else {
 
             $phone = $request['phone'];
             $code = rand(11111, 99999);
+            $user = User::where('phone',$request['phone'])->first();
             if ($user) {
-                if ($user->code_phone and $user->code_phone_send and (strtotime($user->code_phone_send) + 180 < strtotime())) {
+                if ($user->code_phone and $user->code_phone_send and (strtotime($user->code_phone_send) + 180 < time())) {
                     $user->code_phone = $code;
                     $user->code_phone_send = date("Y-m-d H:i:s");
                     $user->save();
@@ -1142,14 +1177,14 @@ class global_view extends Controller
         }
 
     }
-    public function c_store_card_completion_submit_phone_page(Request $request,$phone)
+    public function c_store_card_completion_submit_code_page(Request $request,$phone)
     {
 
         $user = Auth::user();
         if ($user and $user['phone_verified_at']) {
-            return 'go to addresses';
+            return redirect(route('global.c_store_card_completion_order'));
         } else {
-            return view('global.c_store.partial.submit_code', compact(['phone']));
+            return view('global.c_store.partial.submit_code', compact('phone'));
         }
 
     }
@@ -1382,107 +1417,72 @@ class global_view extends Controller
         }
         return view('global.c_store.order_summary',compact('card','order','gateways'));
     }
-    public function c_store_card_completion_order_confirm_save(Request $request)
+    public function c_store_card_completion_order_confirm_process(Request $request)
     {
         $this->validate($request,
             [
-                'province' => 'required',
-                'cities' => 'required',
-                'receiver' => 'required',
-                'zip_code' => 'nullable',
-                'phone' => 'nullable',
-                'mobile' => 'required',
-                'description' => 'nullable',
-                'condolences_to' => 'required',
-                'from_as' => 'required',
-                'late_name' => 'required',
-                'meeting_date' => 'required',
-                'meeting_time' => 'required',
-                'meeting_address' => 'required',
-                'lat' => 'nullable',
-                'lon' => 'nullable',
+                'gateway_id' => 'required',
             ]
         );
-        $user = Auth::user();
+
         $card = session()->get('c_store_cart');
-        $allowed_provinces = get_provinces()->pluck('id')->toArray();
-        $allowed_cities = get_cites()->pluck('id')->toArray();
-        $actual_day_delay = 0;
-        $working_day_delay = 0;
         if (!$card) {
             return redirect(route('global.c_store'));
         }
-        foreach ($card as $key => $value) {
-            if ($value['provinces']) {
-                $allowed_provinces = array_intersect($allowed_provinces, explode(',', $value['provinces']));
-            };
-
-            if ($value['cities']) {
-                $allowed_cities = array_intersect($allowed_cities, explode(',', $value['cities']));
-            };
-
-            if ($value['delay_type'] == 'actual_day' and $actual_day_delay < $value['delay']) {
-                $actual_day_delay = $value['delay'];
-            } elseif ($value['delay_type'] == 'working_day' and $working_day_delay < $value['delay']) {
-                $working_day_delay = $value['delay'];
+        $order = session()->get('cs_order');
+        if (empty($order)){
+            return redirect('global.c_store_checkout');
+        }
+        $user = Auth::user();
+        $phone = session()->get('c_store_phone');
+        if (!$user and $phone){
+            $user = User::where('phone',$phone)->first();
+            if (!$user){
+                return redirect(route('global.c_store_card_completion_phone'));
             }
         }
-
-        $allowed_provinces = array_map(function ($province) {
-            return [
-                'id' => $province,
-                'name' => get_provinces($province)['name'],
-            ];
-        }, $allowed_provinces);
-
-        $allowed_cities = array_map(function ($city) {
-            return [
-                'id' => $city,
-                'name' => get_cites($city)['name'],
-            ];
-        }, $allowed_cities);
-
-        $working_day_delay = $this->working_day_delay($working_day_delay);
-        $delay = max($working_day_delay, $actual_day_delay);
-        $firstDate = time() + ($delay * 86400);
-        if (!in_array($request['cities'], $allowed_cities) and !in_array($request['province'], $allowed_provinces)) {
-            return back_error($request, ['محل مراسم' => 'متاسفانه امکان ارسال سفارش به شهر انتخاب شده وجود ندارد، برای اطلاعات بیشتر تماس بگیرید.']);
+        elseif (!$user and !$phone){
+            return redirect(route('global.c_store_card_completion_phone'));
         }
 
-        //compare date
-        $meetingDate = shamsi_to_miladi($request['meeting_date']);
-        if ($meetingDate < date("Y-m-d 00:00:00", $firstDate)) {
-            return back_error($request, ['زمان مراسم' => 'امکان ثبت درخواست در این تاریخ وجود ندارد']);
-        };
+        $total_amount = 0;
+        foreach ($card as $key => $value) {
+            $total_amount += $value['price']*$value['quantity'];
+        }
+
         $cs_order = new c_store_order();
-        $cs_order->user_id = Auth::id();
-        $cs_order->province = $request['province'];
-        $cs_order->cities = $request['cities'];
-        $cs_order->receiver = $request['receiver'];
-        $cs_order->zip_code = $request['zip_code'];
-        $cs_order->phone = $request['phone'];
-        $cs_order->mobile = $request['mobile'];
-        $cs_order->description = $request['description'];
-        $cs_order->condolences_to = $request['condolences_to'];
-        $cs_order->from_as = $request['from_as'];
-        $cs_order->late_name = $request['late_name'];
-        $cs_order->date = $meetingDate;
-        $cs_order->time = $request['meeting_time'];
-        $cs_order->meeting_address = $request['meeting_address'];
-        $cs_order->lat = $request['lat'];
-        $cs_order->lon = $request['lon'];
+        $cs_order->user_id = $user['id'];
+        $cs_order->province = $order['province'];
+        $cs_order->cities = $order['cities'];
+        $cs_order->receiver = $order['receiver'];
+        $cs_order->zip_code = $order['zip_code'];
+        $cs_order->phone = $order['phone'];
+        $cs_order->mobile = $order['mobile'];
+        $cs_order->description = $order['description'];
+        $cs_order->condolences_to = $order['condolences_to'];
+        $cs_order->from_as = $order['from_as'];
+        $cs_order->late_name = $order['late_name'];
+        $cs_order->date = $order['date'];
+        $cs_order->time = $order['time'];
+        $cs_order->meeting_address = $order['meeting_address'];
+        $cs_order->lat = $order['lat'];
+        $cs_order->lon = $order['lon'];
+        $cs_order->amount = $total_amount;
+//        $cs_order->amount = 10000;
         $cs_order->save();
+
         foreach ($card as $key => $value) {
             $cs_order_item = new c_store_order_item();
-            $cs_order->CSO_id = $cs_order['id'];
-            $cs_order->CSP_id = $key;
-            $cs_order->name = $value['name'];
-            $cs_order->quantity = $value['quantity'];
-            $cs_order->price = $value['price'];
-            $cs_order->slug = $value['slug'];
-            $cs_order->image = $value['image'];
+            $cs_order_item->CSO_id = $cs_order->id;
+            $cs_order_item->CSP_id = $key;
+            $cs_order_item->name = $value['name'];
+            $cs_order_item->quantity = $value['quantity'];
+            $cs_order_item->price = $value['price'];
+            $cs_order_item->slug = $value['slug'];
+            $cs_order_item->image = $value['image'];
             $cs_order_item->save();
         }
 
+        return $this->payment('c_store',$cs_order['id'],$request);
     }
 }
