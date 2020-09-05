@@ -202,9 +202,13 @@ Route::group(
             Route::post('add_product', 'panel\CStoreController@store_product')->name('c_store.store_product');
             Route::get('edit_product/{slug}', 'panel\CStoreController@edit_product')->name('c_store.edit_product');
             Route::post('edit_product/{slug}', 'panel\CStoreController@update_product')->name('c_store.update_product');
+            Route::delete('delete_product/{slug}', 'panel\CStoreController@delete_product')->name('c_store.delete_product');
             Route::post('upload_product_images', 'panel\CStoreController@upload_product_image')->name('c_store.upload_product_image');
             Route::delete('remove_product_image', 'panel\CStoreController@remove_product_image')->name('c_store.remove_product_image');
             Route::post('set_main_product_image', 'panel\CStoreController@set_main_product_image')->name('c_store.set_main_product_image');
+
+            Route::get('setting', 'panel\CStoreController@setting_show')->name('c_store.setting_show');
+            Route::post('setting', 'panel\CStoreController@setting_update')->name('c_store.setting_update');
 
             Route::get('orders_list', 'panel\CStoreController@orders_list')->name('c_store.orders_list');
             Route::get('order/{id}', 'panel\CStoreController@order')->name('c_store.order');

@@ -36,9 +36,12 @@ $active_sidbare = ['c_store','c_store_orders']
                                 <td>{{miladi_to_shamsi_date($order['pay_date'])}}</td>
                                 <td>{{miladi_to_shamsi_date($order['date']) ." ". $order['time']}}</td>
                                 <td><div class="badge badge-warning">{{$order['process_status']}}</div></td>
-                                <td><a href="{{route('c_store.order',['id'=>$order['id']])}}" class="btn btn-sm btn-outline-success ">
+                                <td>
+                                    <a href="{{route('c_store.order',['id'=>$order['id']])}}" class="btn btn-sm btn-outline-success ">
                                         <span class="icon-eye"></span>
-                                    </a></td>
+                                    </a>
+
+                                </td>
                             </tr>
                         @endforeach
                     </tbody>

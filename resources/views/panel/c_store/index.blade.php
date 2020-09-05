@@ -35,9 +35,12 @@ $active_sidbare = ['c_store','c_store_list']
                             <tr>
                                 <td>{{$product['title']}}</td>
                                 <td>{{number_format($product['price'])}}</td>
-                                <td><a href="{{route('c_store.edit_product',['slug'=>$product['slug']])}}" class="btn btn-sm btn-outline-success ">
+                                <td>
+                                    <a href="{{route('c_store.edit_product',['slug'=>$product['slug']])}}" class="btn btn-sm btn-outline-success ">
                                         <span class="icon-eye"></span>
-                                    </a></td>
+                                    </a>
+
+                                </td>
                             </tr>
                         @endforeach
                     </tbody>

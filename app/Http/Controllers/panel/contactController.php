@@ -127,12 +127,12 @@ class contactController extends Controller
         $info->save();
         $res = 'پاسخ شما ';
         if (isset($info['phone']) && $info['phone'] != "" && strlen($info['phone']) == 11) {
-            $message = 'با احترام از حسن نیست شما پاسخ موسسه اشرف النبیاء به شرح زیر میباشد:' . "\n\n" . $request['response'];
+            $message = 'با احترام از حسن نیت شما پاسخ موسسه اشرف النبیاء(ص) به شرح زیر میباشد:' . "\n\n" . $request['response'];
             \sendSms($info['phone'], $message, true);
             $res .=' | از طریق پیامک';
         }
         if (isset($info['email'])) {
-            $message = 'با احترام از حسن نیست شما پاسخ موسسه اشرف النبیاء به شرح زیر میباشد:' . "<br/><br/>" . $request['response'];
+            $message = 'با احترام از حسن نیت شما پاسخ موسسه اشرف النبیاء(ص) به شرح زیر میباشد:' . "<br/><br/>" . $request['response'];
             Mail::to($info['email'])->send(new ContactResponseMail($message));
             $res .=' | از طریق ایمیل';
         }

@@ -977,7 +977,7 @@ function updateNextRoutine($routineId)
         $routine->next_date = $newDate;
         $routine->save();
 
-        return true;
+        return $routine;
     } catch (Throwable $e) {
         return false;
     }

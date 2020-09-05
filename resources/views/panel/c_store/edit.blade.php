@@ -209,16 +209,16 @@ $active_sidbare = ['c_store', 'c_store_list']
 
 
                                             <a href="javascript:;"
-                                               class="btn btn-outline bg-white text-white border-white border-2 btn-icon rounded-round swal-alert m-1"
-                                               data-ajax-link="{{route('c_store.remove_product_image',['id'=>$media['id']])}}"
-                                               data-method="DELETE"
-                                               data-csrf="{{csrf_token()}}"
-                                               data-title="{{trans('messages.delete_item',['item'=>trans('messages.file')])}}"
-                                               data-text="{{trans('messages.delete_item_text',['item'=>trans('messages.file')])}}"
-                                               data-type="warning"
-                                               data-cancel="true"
-                                               data-confirm-text="{{trans('messages.delete')}}"
-                                               data-cancel-text="{{trans('messages.cancel')}}"><i
+                                                    class="btn btn-outline bg-white text-white border-white border-2 btn-icon rounded-round swal-alert m-1"
+                                                    data-ajax-link="{{route('c_store.remove_product_image',['id'=>$media['id']])}}"
+                                                    data-method="DELETE"
+                                                    data-csrf="{{csrf_token()}}"
+                                                    data-title="{{trans('messages.delete_item',['item'=>trans('messages.file')])}}"
+                                                    data-text="{{trans('messages.delete_item_text',['item'=>trans('messages.file')])}}"
+                                                    data-type="warning"
+                                                    data-cancel="true"
+                                                    data-confirm-text="{{trans('messages.delete')}}"
+                                                    data-cancel-text="{{trans('messages.cancel')}}"><i
                                                         class="icon-trash"></i>
                                             </a>
 
@@ -389,6 +389,24 @@ $active_sidbare = ['c_store', 'c_store_list']
                         </div>
                     </div>
                 </form>
+            </div>
+        </div>
+        <div class="card border-danger ">
+            <div class="card-body">
+                <p class="text-danger">حذف محصول!!!</p>
+                <a href="javascript:;"
+                   class="btn  btn-outline-danger swal-alert m-1"
+                   data-ajax-link="{{route('c_store.delete_product',['slug'=>$product['slug']])}}"
+                   data-method="DELETE"
+                   data-csrf="{{csrf_token()}}"
+                   data-title="{{trans('messages.delete_item',['item'=>'محصول'])}}"
+                   data-text="{{trans('messages.delete_item_text',['item'=>'محصول'])}}"
+                   data-type="warning"
+                   data-cancel="true"
+                   data-confirm-text="{{trans('messages.delete')}}"
+                   data-cancel-text="{{trans('messages.cancel')}}"><i
+                            class="icon-trash"></i>
+                </a>
             </div>
         </div>
     </div>

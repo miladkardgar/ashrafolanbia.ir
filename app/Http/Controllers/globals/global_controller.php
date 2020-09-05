@@ -333,6 +333,11 @@ class global_controller extends Controller
                 'description' => " ",
             ]
         );
+        if ($day < latin_num(jdate('d'))){
+            $info = updateNextRoutine($info['id']);
+        }
+
+
         if (strtotime($info['next_date']) <= time() and !charity_periods_transaction::where('user_id',Auth::id())->where('payment_date',$info['next_date'])->exists()) {
             charity_periods_transaction::create(
                 [

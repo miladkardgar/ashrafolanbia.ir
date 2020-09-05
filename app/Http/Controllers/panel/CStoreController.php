@@ -5,6 +5,7 @@ namespace App\Http\Controllers\panel;
 use App\c_store_order;
 use App\c_store_product;
 use App\c_store_product_image;
+use App\c_store_setting;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -93,6 +94,11 @@ class CStoreController extends Controller
         return redirect(route('c_store.product_list'));
 
     }
+    public function delete_product(Request $request,$slug)
+    {
+        $product = c_store_product::with('images')->where('slug',$slug)->delete();
+        return back_normal($request,'محصول حذف شد');
+    }
 
     public function upload_product_image (Request $request)
     {
@@ -148,6 +154,68 @@ class CStoreController extends Controller
         $order->process_status = $request['status'];
         $order->save();
         return back_normal($request,'وضعیت سفارش بروزرسانی شد');
+
+    }
+
+    public function setting_show()
+    {
+        $phones = c_store_setting::where('key','phones')->first()['value'];
+        $end_time = c_store_setting::where('key','end_time')->first()['value'];
+        $transport_price = c_store_setting::where('key','transport_price')->first()['value'];
+        $transport_free = c_store_setting::where('key','transport_free')->first()['value'];
+        $free_provinces = json_decode(c_store_setting::where('key','free_provinces')->first()['value']);
+
+        $free_cities = json_decode(c_store_setting::where('key','free_cities')->first()['value']);
+
+        return view('panel.c_store.setting',compact('phones','end_time','transport_free','transport_price'
+        ,'free_provinces','free_cities'));
+    }
+    public function setting_update(Request $request)
+    {
+        if ($request['phones']){
+            c_store_setting::where('key','phones')->delete();
+            $setting = new c_store_setting();
+            $setting->key = 'phones';
+            $setting->value = $request['phones'];
+            $setting->save();
+        }
+        if ($request['time']){
+            c_store_setting::where('key','end_time')->delete();
+            $setting = new c_store_setting();
+            $setting->key = 'end_time';
+            $setting->value = $request['time'];
+            $setting->save();
+        }
+        if ($request['transport_price']){
+            c_store_setting::where('key','transport_price')->delete();
+            $setting = new c_store_setting();
+            $setting->key = 'transport_price';
+            $setting->value = preg_replace("/[^0-9.]/", "", latin_num($request['transport_price']));
+            $setting->save();
+        }
+        if ($request['transport_free']){
+            c_store_setting::where('key','transport_free')->delete();
+            $setting = new c_store_setting();
+            $setting->key = 'transport_free';
+            $setting->value = preg_replace("/[^0-9.]/", "", latin_num($request['transport_free']));
+            $setting->save();
+        }
+        if ($request['free_provinces']){
+            c_store_setting::where('key','free_provinces')->delete();
+            $setting = new c_store_setting();
+            $setting->key = 'free_provinces';
+            $setting->value = json_encode($request['free_provinces']);
+            $setting->save();
+        }
+        if ($request['free_cities']){
+            c_store_setting::where('key','free_cities')->delete();
+            $setting = new c_store_setting();
+            $setting->key = 'free_cities';
+            $setting->value = json_encode($request['free_cities']);
+            $setting->save();
+        }
+
+        return back_normal($request,'تنظیمات ذخیره شد');
 
     }
 
