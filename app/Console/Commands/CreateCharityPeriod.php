@@ -6,6 +6,7 @@ use App\charity_period;
 use App\charity_periods_transaction;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class CreateCharityPeriod extends Command
 {
@@ -40,19 +41,23 @@ class CreateCharityPeriod extends Command
      */
     public function handle()
     {
-        Log::notice("Charity period maker Run At" . date("Y-m-d H:i:s"));
+        Log::info("Charity period maker Run At" . date("Y-m-d H:i:s"));
 
-        $charity = charity_period::where('status', 'active')->where("next_date", "<=", date("Y-m-d"))->get();
+        $charity = charity_period::where('status', 'active')->where("next_date", "<=", date("Y-m-d"))->limit(300)->get();
         foreach ($charity as $item) {
 
             $exists = charity_periods_transaction::where('period_id', $item['id'])
                 ->where('payment_date', $item['next_date'])->exists();
             $description= '';
-            if (array_key_exists($charity->period,config('charity.routine_types'))){
-                $description =  config('charity.routine_types')[$charity->period]['title'];
+            if (array_key_exists($item->period,config('charity.routine_types'))){
+                $description =  config('charity.routine_types')[$item->period]['title'];
             };
 
             if (!$exists) {
+                $random = Str::random(6);
+                while (charity_periods_transaction::where('slug',$random)->exists()){
+                    $random = Str::random(7);
+                }
                 charity_periods_transaction::create(
                     [
                         'user_id' => $item['user_id'],
@@ -61,6 +66,7 @@ class CreateCharityPeriod extends Command
                         'amount' => $item['amount'],
                         'description' => $item['id'] . " " .($description ? $description :"پرداخت دوره ای "),
                         'status' => "unpaid",
+                        'slug' => $random,
                     ]
                 );
                 updateNextRoutine($item['id']);

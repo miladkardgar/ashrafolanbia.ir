@@ -14,6 +14,7 @@ use App\users_address_extra_info;
 use Carbon\Carbon;
 use function GuzzleHttp\Psr7\str;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Str;
 use Validator;
 use App\charity_period;
 use App\charity_periods_transaction;
@@ -640,6 +641,22 @@ class global_controller extends Controller
             }
         } else {
             return back_error($request, __('messages.user_not_valid'));
+        }
+    }
+
+    public function login_link($slug)
+    {
+        $ct = charity_periods_transaction::where('slug',$slug)
+            ->where('payment_date','>=',date("Y-m-d H:i:s",strtotime(date('Y-m-d H:i:s')."-31 days")))
+            ->first();
+        if (!$ct){
+            return redirect(route('home_main'));
+        }
+        else{
+        $user = User::findOrFail($ct['user_id']);
+        $user->login_token = Str::random(60);
+        $user->Save();
+        return redirect(route('app_profile')."?lt=".$user->login_token);
         }
     }
 

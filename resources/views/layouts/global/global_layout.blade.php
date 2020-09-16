@@ -56,6 +56,7 @@
           sizes="144x144">
 
     <!-- Stylesheet -->
+    <link href="{{ URL::asset('/public/css/common.css') }}" rel="stylesheet" type="text/css">
     <link href="{{ URL::asset('/public/assets/global/css/bootstrap.min.css') }}" rel="stylesheet" type="text/css">
     <link href="{{ URL::asset('/public/assets/global/css/jquery-ui.min.css') }}" rel="stylesheet" type="text/css">
     <link href="{{ URL::asset('/public/assets/global/css/animate.css') }}" rel="stylesheet" type="text/css">

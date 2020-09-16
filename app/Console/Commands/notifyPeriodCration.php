@@ -4,7 +4,9 @@ namespace App\Console\Commands;
 
 use App\charity_periods_transaction;
 use App\notification_template;
+use App\User;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 
 class notifyPeriodCration extends Command
 {
@@ -39,16 +41,36 @@ class notifyPeriodCration extends Command
      */
     public function handle()
     {
+        Log::info("routine notify creation Run At" . date("Y-m-d H:i:s"));
+
         $periodicTransaction = charity_periods_transaction::where('status','unpaid')
             ->where('payment_date','>=',date('Y-m-d',strtotime(date('Y-m-d')." -1 day")))
             ->where('payment_date','<',date('Y-m-d'))
             ->get();
-        $smsText = strip_tags(notification_messages('sms','reminder'));
+
 
         foreach ($periodicTransaction as $value){
             $phone = get_user($value['user_id'])['phone'];
+            $user = User::find($value['user_id']);
+            $name = get_name($value['user_id']);
+            if ($user->people){
+                if ($user->people->name and $user->people->family){
+                    $name = ($user->people->gender == 1 ? " آقای " :" خانم "). $name;
+                }
+            }
+            $smsText = notification_messages('sms','reminder',['name' => $name]);
+
+
+            $short_link= "";
+            if ($value['slug']){
+                $short_link.="\r\n";
+                $short_link.=' لینک پرداخت سریع: ';
+                $short_link.="\r\n";
+                $short_link.=config('app.short_url')."/i/".$value['slug'];
+            }
+
             if ($phone){
-                sendSms($phone,$smsText['text']);
+                sendSms($phone,$smsText['text'] . $short_link);
             }
         }
     }

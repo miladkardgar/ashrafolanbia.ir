@@ -308,7 +308,7 @@
         <form id="contact_form" name="contact_form" class="" novalidate
               method="post">
             <div class="row">
-                <div class="col-xs-12 col-md-6">
+                <div class=" col-md-6">
                     <div class="form-group">
                         <label for="form_name">{{__('messages.name')}}
                             <small>*</small>
@@ -318,7 +318,7 @@
                                minlength="2" maxlength="100" value="{{$userInfo['people']['name']}}">
                     </div>
                 </div>
-                <div class="col-xs-12 col-md-6">
+                <div class=" col-md-6">
                     <div class="form-group">
                         <label for="form_family">{{__('messages.family')}}
                             <small>*</small>
@@ -328,7 +328,7 @@
                                minlength="2" maxlength="100" value="{{$userInfo['people']['family']}}">
                     </div>
                 </div>
-                <div class="col-xs-12 col-md-6">
+                <div class=" col-md-6">
                     <div class="form-group">
                         <label for="form_national_code">{{__('messages.national_code')}} </label>
                         <input id="form_national_code" name="national_code" class="form-control"
@@ -337,7 +337,7 @@
                                value="{{$userInfo['people']['national_code']}}">
                     </div>
                 </div>
-                <div class="col-xs-12 col-md-6">
+                <div class=" col-md-6">
                     <div class="form-group">
                         <label for="form_username">{{__('messages.username')}}
                         </label>
@@ -346,7 +346,7 @@
                                value="{{$userInfo['name']}}">
                     </div>
                 </div>
-                <div class="col-xs-12 col-md-6">
+                <div class=" col-md-6">
                     <div class="form-group">
                         <label for="form_email">{{__('messages.email')}}
                             @if($userInfo['email_verified_at'])
@@ -358,7 +358,7 @@
                                value="{{$userInfo['email']}}">
                     </div>
                 </div>
-                <div class="col-xs-12 col-md-6">
+                <div class=" col-md-6">
                     <div class="form-group">
                         <label for="form_phone">{{__('messages.phone')}}
 
@@ -369,7 +369,7 @@
                                value="{{$userInfo['people']['phone']}}">
                     </div>
                 </div>
-                <div class="col-xs-12 col-md-6">
+                <div class=" col-md-6">
                     <div class="form-group">
                         <label for="form_mobile">{{__('messages.mobile')}}
                             @if($userInfo['phone_verified_at'])
@@ -381,7 +381,7 @@
                                value="{{$userInfo['phone']}}">
                     </div>
                 </div>
-                <div class="col-xs-12 col-md-6">
+                <div class=" col-md-6">
                     <div class="form-group">
                         <label for="amount">{{__('messages.birth_date')}}</label>
                         <input id="birthday" type="text" class="form-control"
@@ -390,7 +390,7 @@
                                autocomplete="capacity">
                     </div>
                 </div>
-                <div class="col-xs-12 col-md-6">
+                <div class=" col-md-6">
                     <div class="form-group">
                         <label for="">{{__('messages.gender')}}</label>
                         <div class="custom-control custom-radio custom-control-inline">
@@ -408,7 +408,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-xs-12 col-md-12">
+                <div class=" col-md-12">
                     <div class="form-group">
                         <label for="">{{__('messages.address')}}</label>
                         <textarea name="address" id="Address" cols="30" rows="3" class="form-control">{{$userInfo['address']}}</textarea>

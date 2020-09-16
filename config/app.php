@@ -128,6 +128,7 @@ return [
     */
 
     'key' => env('APP_KEY'),
+    'short_url' => 'www.aoaci.ir',
 
     'cipher' => 'AES-256-CBC',
 

@@ -164,11 +164,11 @@ class CStoreController extends Controller
         $transport_price = c_store_setting::where('key','transport_price')->first()['value'];
         $transport_free = c_store_setting::where('key','transport_free')->first()['value'];
         $free_provinces = json_decode(c_store_setting::where('key','free_provinces')->first()['value']);
-
         $free_cities = json_decode(c_store_setting::where('key','free_cities')->first()['value']);
+        $description = json_decode(c_store_setting::where('key','description ')->first()['value']);
 
         return view('panel.c_store.setting',compact('phones','end_time','transport_free','transport_price'
-        ,'free_provinces','free_cities'));
+        ,'free_provinces','free_cities','description'));
     }
     public function setting_update(Request $request)
     {
@@ -212,6 +212,13 @@ class CStoreController extends Controller
             $setting = new c_store_setting();
             $setting->key = 'free_cities';
             $setting->value = json_encode($request['free_cities']);
+            $setting->save();
+        }
+        if ($request['description']){
+            c_store_setting::where('key','description')->delete();
+            $setting = new c_store_setting();
+            $setting->key = 'description';
+            $setting->value = json_encode($request['description']);
             $setting->save();
         }
 

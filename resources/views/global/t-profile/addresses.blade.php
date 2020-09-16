@@ -219,8 +219,8 @@
         <form action="{{route('store_order_add_address')}}" id="frm_add_address" method="post"
               class="border">
             <div class="row add-address ">
-                <div class="col-md-6 col-xs-12 form-group ">
-                    <div class="col-md-6 col-xs-12 form-group">
+                <div class="col-md-6  form-group ">
+                    <div class="col-md-6  form-group">
                         <label for="province">{{__('messages.province')}}</label>
                         <select name="province" required="required" id="province" class="form-control">
                             <option value="">{{__('messages.please_select')}}</option>
@@ -229,42 +229,42 @@
                             @endforeach
                         </select>
                     </div>
-                    <div class="col-md-6 col-xs-12 form-group">
+                    <div class="col-md-6  form-group">
                         <label for="cities">{{__('messages.city')}}</label>
                         <select name="cities" required="required" id="cities" class="form-control">
 
                         </select>
                     </div>
-                    <div class="col-md-12 col-xs-12 form-group">
+                    <div class="col-md-12  form-group">
                         <label for="address">{{__('messages.address')}}</label>
                         <textarea name="address" id="address" class="form-control" required="required"
                                   cols="30" rows="4"></textarea>
                     </div>
                 </div>
-                <div class="col-md-6 col-xs-12 form-group">
-                    <div class="col-md-6 col-xs-12">
+                <div class="col-md-6  form-group">
+                    <div class="col-md-6 ">
                         <label for="receiver">{{__('messages.receiver_name')}}</label>
                         <input type="text" class="form-control" required="required" name="receiver">
                     </div>
-                    <div class="col-md-6 col-xs-12">
+                    <div class="col-md-6 ">
                         <label for="zip_code">{{__('messages.zip_code')}}</label>
                         <input type="text" class="form-control" name="zip_code">
                     </div>
-                    <div class="col-md-6 col-xs-12 form-group pt-10">
+                    <div class="col-md-6  form-group pt-10">
                         <label for="phone">{{__('messages.phone')}}</label>
                         <input type="text" class="form-control input-sm" dir="ltr" name="phone">
                     </div>
-                    <div class="col-md-6 col-xs-12 form-group pt-10">
+                    <div class="col-md-6  form-group pt-10">
                         <label for="mobile">{{__('messages.mobile')}}</label>
                         <input type="text" class="form-control" dir="ltr" name="mobile">
                     </div>
                 </div>
-                <div class="col-md-12 col-xs-12 form-group">
+                <div class="col-md-12  form-group">
                     <div id="mapid"></div>
                     <input type="hidden" name="lat" id="lat">
                     <input type="hidden" name="lon" id="lon">
                 </div>
-                <div class="col-md-12 col-xs-12 form-group">
+                <div class="col-md-12  form-group">
                     <button type="submit"
                             class="button mrn-button">{{__('messages.submit')}}</button>
                 </div>

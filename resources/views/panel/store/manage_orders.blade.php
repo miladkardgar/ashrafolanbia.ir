@@ -85,14 +85,6 @@
             DatatableBasic.init();
         });
 
-        $(document).ready(function () {
-            if ($(".nav-link").hasClass("active")) {
-                var aCount = '{{$aCount}}';
-                if(aCount>0) {
-                    $('.nav-link.active').append(" <span class='badge badge-danger float-left'>{{$aCount}}</span>")
-                }
-            }
-        });
     </script>
 @endsection
 @section('css')

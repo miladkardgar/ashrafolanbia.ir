@@ -16,7 +16,7 @@ class CreateCStoreSettingsTable extends Migration
         Schema::create('c_store_settings', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('key');
-            $table->string('value');
+            $table->longText('value');
             $table->timestamps();
         });
     }

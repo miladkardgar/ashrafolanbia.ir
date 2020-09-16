@@ -1,5 +1,5 @@
 
-        <table class="table table-responsive">
+        <table class="table table-responsive" style="display: block">
             <tr class="">
                 <th class="text-center"> </th>
                 <th class="text-center">مبلغ (ریال)</th>

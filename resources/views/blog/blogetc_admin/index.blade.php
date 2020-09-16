@@ -55,15 +55,80 @@ $active_sidbare = ['blog', 'blog_posts', 'blog_posts_list']
 @section("content")
     <section>
         <div class="content">
-            @if(sizeof($posts)>=1)
                 <div class="row">
                     <div class="col-lg-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="mb-3">جستجو پیشرفته</h5>
+
+                                <form action="#">
+                                    <div class="input-group mb-3">
+                                        <div class="form-group-feedback form-group-feedback-left">
+                                            <input type="text" id="t_search_q" class="form-control form-control-lg alpha-grey"
+                                                   placeholder="همه یا قسمتی از عنوان">
+                                            <div class="form-control-feedback form-control-feedback-lg">
+                                                <i class="icon-search4 text-muted"></i>
+                                            </div>
+                                        </div>
+
+                                        <div class="input-group-append">
+                                            <button type="button" id="t_search" class="btn btn-primary btn-lg">جستجو</button>
+                                        </div>
+                                    </div>
+
+                                    <div class="d-md-flex align-items-md-center flex-md-wrap text-center text-md-left">
+                                        <ul class="list-inline list-inline-condensed mb-0">
+                                            <li class="list-inline-item ">
+                                                <a href="#" id="t_search_reset" class=" btn btn-link text-default "
+                                                >
+                                                    <i class="icon-reset mr-2"></i>
+                                                    حذف فیلتر ها
+                                                </a>
+                                            </li>
+                                            <li class="list-inline-item dropdown">
+                                                <a href="#" class="btn btn-link text-default dropdown-toggle"
+                                                   data-toggle="dropdown">
+                                                    <i class="icon-stack2 mr-2"></i>
+                                                    دسته بندی:
+                                                </a>
+
+                                                <div class="dropdown-menu">
+                                                    @foreach(\WebDevEtc\BlogEtc\Models\BlogEtcCategory::orderBy("category_name","asc")->get() as $category)
+                                                        <a href="#" data-param="cat"
+                                                           data-value="{{$category->id}}" class="dropdown-item t_filter">{{$category->category_name}}</a>
+                                                    @endforeach
+                                                </div>
+                                            </li>
+                                            <li class="list-inline-item dropdown">
+                                                <a href="#" class="btn btn-link text-default dropdown-toggle"
+                                                   data-toggle="dropdown">
+                                                    <i class="icon-warning mr-2"></i>
+                                                    صفحات خاص:
+                                                </a>
+
+                                                <div class="dropdown-menu">
+                                                    @foreach(\WebDevEtc\BlogEtc\Models\BlogEtcSpecificPages::orderBy("category_name","asc")->get() as $category)
+                                                        <a href="#" data-param="sp"
+                                                           data-value="{{$category->id}}" class="dropdown-item t_filter">{{$category->category_name}}</a>
+                                                    @endforeach
+
+                                                </div>
+                                            </li>
+
+                                        </ul>
+
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        @if(sizeof($posts)>=1)
+
                         <div class="card ">
                             <div class="card-header bg-light">
                                 <span class="card-title">{{__('messages.post_list')}}</span>
                             </div>
-                            <div class="card-body ">
-                                <table class="table datatable-basic">
+                            <div class="card-body table-responsive">
+                                <table class="table ">
                                     <thead class="fullwidth">
                                     <tr>
                                         <th>{{__('messages.id')}}</th>
@@ -75,7 +140,7 @@ $active_sidbare = ['blog', 'blog_posts', 'blog_posts_list']
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    @php $i=1; @endphp
+                                    @php $i=1+(isset($_REQUEST['page']) ? ($_REQUEST['page']-1) *100 :0); @endphp
                                     @forelse($posts as $post)
                                         <tr>
                                             <td>{{$i}}</td>
@@ -136,18 +201,56 @@ $active_sidbare = ['blog', 'blog_posts', 'blog_posts_list']
                                     </tbody>
                                 </table>
                                 <div class='text-center'>
-                                    {{$posts->appends( [] )->links()}}
+                                    {{$posts->appends(request()->except('page'))->links()}}
                                 </div>
                             </div>
                         </div>
+
+                        @else
+                            @include('panel.not_found',['html'=>'<a class="btn btn-primary" href="'.route('blogetc.admin.create_post').'">
+                            '.__('messages.new_post').'</a>',
+                           'msg'=>__('messages.not_found_any_data'),
+                           'des'=>__('messages.please_insert_post')])
+                        @endif
+
                     </div>
                 </div>
-            @else
-                @include('panel.not_found',['html'=>'<a class="btn btn-primary" href="'.route('blogetc.admin.create_post').'">
-                '.__('messages.new_post').'</a>',
-               'msg'=>__('messages.not_found_any_data'),
-               'des'=>__('messages.please_insert_post')])
-            @endif
+
         </div>
     </section>
 @endsection
+@section('footer_js')
+    <script>
+        $(document).on('click', '.t_filter', function () {
+            var url = new URL(window.location.href);
+
+            var search_params = url.searchParams;
+            let param = $(this).attr('data-param');
+            let value = $(this).attr('data-value');
+
+            search_params.set(param, value);
+            url.search = search_params.toString();
+            var new_url = url.toString();
+            window.location.replace(new_url);
+
+        });
+        $(document).on('click', '#t_search', function () {
+            var url = new URL(window.location.href);
+
+            var search_params = url.searchParams;
+            let param = 'q';
+            let value = document.getElementById('t_search_q').value;
+            search_params.set(param, value);
+            url.search = search_params.toString();
+            var new_url = url.toString();
+            window.location.replace(new_url);
+        });
+        $(document).on('click', '#t_search_reset', function () {
+            var url = new URL(window.location.href);
+            url.search = '';
+            var new_url = url.toString();
+            window.location.replace(new_url);
+        });
+
+    </script>
+@stop

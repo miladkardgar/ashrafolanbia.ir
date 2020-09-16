@@ -309,7 +309,7 @@ function user_information($type)
     } elseif ($type == 'id') {
         return $user->id;
     } elseif ($type == 'avatar') {
-        if ($user->profile_image->last()) {
+        if ($user->profile_image and $user->profile_image->last()) {
             return $user->profile_image->last()->url;
         } else {
             return '/public/assets/panel/images/person.png';
@@ -906,6 +906,7 @@ function notification_messages($module, $key, $variables = [])
     }
 
     $message['text'] = strip_tags($message['text']);
+
     return $message;
 }
 

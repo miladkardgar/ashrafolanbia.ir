@@ -71,9 +71,9 @@ class ForgotPasswordController extends Controller
             $text = 'کد بازیابی شما: ' . $code . " **موسسه خیریه اشرف الانبیاء (ص) ** ";
         sendSms($user->phone, $text);
         }
-        if ($user->email){
-        Mail::to($user->email)->send(new passwordResetCode($code));
-        }
+//        if ($user->email){
+//        Mail::to($user->email)->send(new passwordResetCode($code));
+//        }
         return view('global.materials.password_reset',['code_sent'=>true,'login'=>$login]);
         }
         else{

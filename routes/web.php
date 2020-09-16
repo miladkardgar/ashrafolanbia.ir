@@ -13,6 +13,8 @@
 
 use Illuminate\Support\Facades\Route;
 
+Route::get('/i/{slug}', 'globals\global_controller@login_link')->name('sms_login_link');
+
 Route::group(
     [
         'prefix' => LaravelLocalization::setLocale(),
@@ -213,8 +215,8 @@ Route::group(
             Route::get('orders_list', 'panel\CStoreController@orders_list')->name('c_store.orders_list');
             Route::get('order/{id}', 'panel\CStoreController@order')->name('c_store.order');
             Route::post('order/status/{id}', 'panel\CStoreController@change_order_status')->name('c_store.change_order_status');
-
         });
+
         Route::prefix('building')->group(function () {
             Route::get('dashboard', 'panel\panel_view@building_dashboard')->name('building_dashboard');
             Route::post('dashboard/excel_report', 'panel\building@excel_report')->name('building_excel_report');
@@ -381,6 +383,8 @@ Route::group(
 
                 Route::get('/blog_slider', 'BlogEtcAdminController@slider')
                     ->name('blog_slider');
+                Route::post('/blog_slider/save_order', 'BlogEtcAdminController@save_order')
+                    ->name('save_slider_order');
                 Route::get('/slider_page/{slider_id?}', 'BlogEtcAdminController@slider_page')
                     ->name('slider_page');
                 Route::post('/slider_page/{slider_id?}', 'BlogEtcAdminController@save_slider')
@@ -642,6 +646,8 @@ Route::group(
             Route::get('/routine_vow', 'globals\global_view@t_routine_vow')->name('t_routine_vow');
             Route::post('/routine_payment', 'globals\global_view@t_routine_payment')->name('t_routine_payment');
 
+            Route::get('/c_store/{id?}', 'globals\global_view@t_c_store')->name('t_c_store');
+
         });
         Route::group(['middleware' => 'throttle:10,3'], function () {
             Route::get('/sms/verify', 'globals\global_view@send_sms')->name('global_profile_send_sms');
@@ -699,6 +705,7 @@ Route::group(
     Route::post('vow/periodic/add', 'globals\global_controller@add_charity_period')->name('add_charity_period');
     Route::get('vow/{id}', 'globals\global_view@vow_view')->name('vows');
     Route::get('sform/{id}', 'panel\supportFormController@show')->name('sform_view');
+    Route::get('vow/payment', 'globals\global_view@vow_payment')->name('add_charity_transaction');
     Route::POST('vow/payment', 'globals\global_view@vow_payment')->name('add_charity_transaction');
     Route::get('vow/cart/{id}', 'globals\global_view@vow_cart')->name('vow_cart');
     Route::get('app/profile', 'globals\global_view@profile_app')->name('app_profile');
@@ -718,6 +725,7 @@ Route::group(
     Route::post('city/list', 'globals\global_controller@get_city_list')->name('get_city_list');
     Route::get('champion/{id}', 'globals\global_view@champion_show')->name('champion_show');
     Route::post('champion/payment', 'globals\global_controller@champion_payment')->name('champion_payment');
+    Route::get('champion/payment', 'globals\global_controller@champion_payment')->name('champion_payment');
     Route::get('champion/cart/{id}', 'globals\global_view@champion_cart')->name('champion_card');
 
 

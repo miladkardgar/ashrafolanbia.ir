@@ -10,31 +10,20 @@
 
 return [
     'social_media' => [
-        'facebook' => [
-            'name' => 'Facebook',
-            'icon' => 'fa fa-facebook',
-            'link'=>''
-        ],
         'Instagram' => [
             'name' => 'Instagram',
-            'icon' => 'fa fa-instagram',
-            'link'=>''
-        ],
-        'twitter' => [
-            'name' => 'twitter',
-            'icon' => 'fa fa-twitter',
-            'link'=>''
-        ],
-        'aparat' => [
-            'name' => 'aparat',
-            'icon' => 'fa fa-aparat',
+            'icon' => 'sprite sprite-instagram sprite-small',
             'link'=>''
         ],
         'telegram' => [
             'name' => 'telegram',
-            'icon' => 'fa fa-twitter',
+            'icon' => 'sprite sprite-telegram sprite-small',
+            'link'=>''
+        ],
+        'aparat' => [
+            'name' => 'aparat',
+            'icon' => 'sprite sprite-aparat sprite-small',
             'link'=>''
         ],
     ],
-
 ];

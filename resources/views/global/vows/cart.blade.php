@@ -59,50 +59,50 @@
                         <input type="hidden" value="{{$charityIn['id']}}" name="id">
                         <input type="hidden" value="charity_period" name="type">
                         <div class="row" style="margin: 3px">
-                            <div class="col-xs-12 col-md-7">
+                            <div class=" col-md-7">
                                 <div class="row">
-                                    <div class="col-md-4 col-xs-12 pt-20">
+                                    <div class="col-md-4  pt-20">
                                         <strong>{{__('messages.description')}}</strong>
                                     </div>
-                                    <div class="col-md-8 col-xs-12 pt-20 text-center">
+                                    <div class="col-md-8  pt-20 text-center">
                                         <h4>{{$charityIn['description']}}</h4>
                                     </div>
 
 
-                                    <div class="col-md-4 col-xs-12 pt-20">
+                                    <div class="col-md-4  pt-20">
                                         <strong>{{__('messages.name')}}</strong>
                                     </div>
-                                    <div class="col-md-8 col-xs-12 pt-20 text-center">
+                                    <div class="col-md-8  pt-20 text-center">
                                         <h4>{{$name}}</h4>
                                     </div>
-                                    <div class="col-md-4 col-xs-12 pt-20">
+                                    <div class="col-md-4  pt-20">
                                         <strong>{{__('messages.price')}}:</strong>
                                     </div>
-                                    <div class="col-md-8 col-xs-12 pt-20 text-center">
+                                    <div class="col-md-8  pt-20 text-center">
                                         <h4> {{number_format($charityIn['amount'])}}
                                             <small>{{__('messages.rial')}}</small>
                                         </h4>
                                     </div>
-                                    <div class="col-md-4 col-xs-12 pt-20">
+                                    <div class="col-md-4  pt-20">
                                         <strong>{{__("messages.payment_date")}}:</strong>
                                     </div>
-                                    <div class="col-md-8 col-xs-12 pt-20 text-center">
+                                    <div class="col-md-8  pt-20 text-center">
                                         <h4>{{jdate("Y-m-d",strtotime($charityIn['payment_date']))}}</h4>
                                     </div>
                                     <?php  $count_ids = count(explode(',',str_replace(['[',']'],'',$charityIn['group_ids']))); ?>
                                     @if($count_ids >1)
-                                        <div class="col-md-12 col-xs-12 pt-20 text-center">
+                                        <div class="col-md-12  pt-20 text-center">
                                             <h4>پرداخت {{$count_ids}} مورد کمک ماهانه </h4>
                                         </div>
 
                                     @endif
                                 </div>
                             </div>
-                            <div class="col-xs-12 col-md-5">
-                                <div class="col-md-12 col-xs-12 text-center form-group">
+                            <div class=" col-md-5">
+                                <div class="col-md-12  text-center form-group">
                                     <strong>{{__('messages.payment_gateway')}}</strong>
                                 </div>
-                                <div class="col-md-12 col-xs-12 text-center form-group">
+                                <div class="col-md-12  text-center form-group row">
                                     @foreach($gateways as $gateway)
                                         <div class="col-md-6 col-xs-6" >
                                             <div class="radio m-1">
@@ -119,7 +119,7 @@
                                         </div>
                                     @endforeach
                                 </div>
-                                <div class="col-md-12 col-xs-12 text-center form-group">
+                                <div class="col-md-12  text-center form-group">
                                     <button class="btn btn-block btn-theme-colored"
                                             type="submit">{{__("messages.pay")}}</button>
                                 </div>

@@ -1,0 +1,41 @@
+.sprite {
+    background-image: url(/public/images/spritesheet.png);
+    background-repeat: no-repeat;
+    display: inline-block;
+}
+
+.sprite-aparat {
+    width: 150px;
+    height: 150px;
+    background-position: -5px -5px;
+}
+
+.sprite-instagram {
+    width: 150px;
+    height: 150px;
+    background-position: -165px -5px;
+}
+
+.sprite-telegram {
+    width: 150px;
+    height: 150px;
+    background-position: -5px -165px;
+}
+
+.sprite-huge{
+    zoom:1;
+    -moz-transform:scale(1);
+    -moz-transform-origin: 0 0;
+}
+
+.sprite-big{
+    zoom:0.60;
+    -moz-transform:scale(0.60);
+    -moz-transform-origin: 0 0;
+}
+
+.sprite-small{
+    zoom:0.35;
+    -moz-transform:scale(0.29);
+    -moz-transform-origin: 0 0;
+}

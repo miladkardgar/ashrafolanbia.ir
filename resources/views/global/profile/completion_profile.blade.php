@@ -125,7 +125,7 @@
         <section class="divider">
             <div class="container pt-10">
                 <div class="row pt-10">
-                    <div class="col-md-3 col-xs-12">
+                    <div class="col-md-3 ">
                         <h4 class="mt-0 mb-30 line-bottom">{{__('messages.image')}}</h4>
                         <div class="media text-center">
                             @if($userInfo['profile_image']->last())
@@ -147,13 +147,13 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-9 col-xs-12">
+                    <div class="col-md-9 ">
                         <h4 class="mt-0 mb-30 line-bottom">{{__('messages.information')}}</h4>
                         <!-- Contact Form -->
                         <form id="contact_form" name="contact_form" class="" novalidate
                               method="post">
                             <div class="row">
-                                <div class="col-xs-12 col-md-4">
+                                <div class=" col-md-4">
                                     <div class="form-group">
                                         <label for="form_name">{{__('messages.name')}}
                                             <small>*</small>
@@ -163,7 +163,7 @@
                                                minlength="2" maxlength="100" value="{{$userInfo['people']['name']}}">
                                     </div>
                                 </div>
-                                <div class="col-xs-12 col-md-4">
+                                <div class=" col-md-4">
                                     <div class="form-group">
                                         <label for="form_family">{{__('messages.family')}}
                                             <small>*</small>
@@ -173,7 +173,7 @@
                                                minlength="2" maxlength="100" value="{{$userInfo['people']['family']}}">
                                     </div>
                                 </div>
-                                <div class="col-xs-12 col-md-4">
+                                <div class=" col-md-4">
                                     <div class="form-group">
                                         <label for="form_national_code">{{__('messages.national_code')}} </label>
                                         <input id="form_national_code" name="national_code" class="form-control"
@@ -182,7 +182,7 @@
                                                value="{{$userInfo['people']['national_code']}}">
                                     </div>
                                 </div>
-                                <div class="col-xs-12 col-md-4">
+                                <div class=" col-md-4">
                                     <div class="form-group">
                                         <label for="form_username">{{__('messages.username')}}
                                         </label>
@@ -191,7 +191,7 @@
                                                value="{{$userInfo['name']}}">
                                     </div>
                                 </div>
-                                <div class="col-xs-12 col-md-4">
+                                <div class=" col-md-4">
                                     <div class="form-group">
                                         <label for="form_email">{{__('messages.email')}}
                                         </label>
@@ -200,7 +200,7 @@
                                                value="{{$userInfo['email']}}">
                                     </div>
                                 </div>
-                                <div class="col-xs-12 col-md-4">
+                                <div class=" col-md-4">
                                     <div class="form-group">
                                         <label for="form_phone">{{__('messages.phone')}}</label>
                                         <input id="form_phone" name="phone" class="form-control" type="number" {{$userInfo['number'] ? "readonly" :""}}
@@ -209,7 +209,7 @@
                                                value="{{$userInfo['people']['phone']}}">
                                     </div>
                                 </div>
-                                <div class="col-xs-12 col-md-4">
+                                <div class=" col-md-4">
                                     <div class="form-group">
                                         <label for="form_mobile">{{__('messages.mobile')}}</label>
                                         <input id="form_mobile" name="mobile" class="form-control" type="number"
@@ -218,7 +218,7 @@
                                     </div>
                                 </div>
 
-                                <div class="col-xs-12 col-md-4">
+                                <div class=" col-md-4">
                                     <div class="form-group">
                                         <label for="amount">{{__('messages.birth_date')}}</label>
                                         <input id="birthday" type="text" class="form-control"
@@ -229,7 +229,7 @@
                                 </div>
 
 
-                                <div class="col-xs-12 col-md-4">
+                                <div class=" col-md-4">
                                     <div class="form-group">
                                         <label for="">{{__('messages.gender')}}</label>
                                         <div class="custom-control custom-radio custom-control-inline">

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\blog;
 
+use App\blog_option;
 use App\blog_slider;
 use App\Http\Controllers\Controller;
 use Carbon\Carbon;
@@ -45,18 +46,42 @@ class BlogEtcAdminController extends Controller
      *
      * @return mixed
      */
+
     public function index()
     {
-        $posts = BlogEtcPost::orderBy("posted_at", "desc")
-            ->paginate(100);
+        $posts_query = BlogEtcPost::query();
+        if (isset($_GET['cat'])){
+            $posts_query->whereHas('categories',function ($q){
+               $q->where('blog_etc_category_id',$_GET['cat']);
+            });
+        }
+        if (isset($_GET['sp'])){
+            $posts_query->whereHas('specificPage',function ($q){
+                $q->where('blog_etc_page_specific_page_id',$_GET['sp']);
+            });
+        }
+        if (isset($_GET['q'])){
+            $posts_query->where('title','like','%'.$_GET['q'].'%');
+        }
+        $posts_query->orderBy('posted_at','desc');
+        $posts = $posts_query->paginate(50);
         return view("blog.blogetc_admin.index", ['posts' => $posts]);
     }
 
     public function slider()
     {
-        $sliders = blog_slider::get();
+        $sliders = blog_slider::orderBy('order')->get();
 
         return view("blog.blogetc_admin.slider.index", compact('sliders'));
+    }
+    public function save_order(Request $request)
+    {
+        $this->validate($request, [
+            'id' => 'required',
+            'order' => 'required',
+        ]);
+        blog_slider::where('id',$request['id'])->update(['order'=>$request['order']]);
+        return back_normal($request,'ترتیب ذخیره شد');
     }
 
     public function slider_page($slider_id = null)

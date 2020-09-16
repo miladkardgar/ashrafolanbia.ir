@@ -102,15 +102,22 @@
                         <div class="theiaStickySidebar"
                              style="padding-top: 0px; padding-bottom: 1px; position: static; transform: none; top: 0px; left: 1041.1px;">
                             <div class="sidebar-widgets-wrapper">
-                                <div id="text-11" class="widget widget_text"><h5 class="widget-title">چرا تاج گل امانی؟</h5>
+                                <div id="text-11" class="widget widget_text"><h5 class="widget-title">میخواهید ما با شما تماس بگیریم؟</h5>
                                     <div class="textwidget"><p>
-                                            <img
-                                                        class="aligncenter wp-image-1106 size-full"
-                                                        src="https://www.rajeoon.com/wp-content/uploads/2012/10/flower_product_image_50-flower_product_image_50-500.gif"
-                                                        alt="" width="259" height="258">
-                                            * مشارکت در حمایت و توانمندی ایتام و محرومین * مشارکت در ساخت مسکن روستایی * پرهیز از اسراف در هزینه گل طبیعی * خدمت و خیراتی ماندگار برای عزیز متوفی
-
+                                            در صورت تمایل میتوانید شماره خود را وارد کنید تا پرسنل موسسه در اولین زمان کاری با شما تماس بگیرند.
                                         </p>
+                                        
+                                    </div>
+                                    <input type="text" class="form-control">
+                                    <input type="text" class="form-control">
+                                    <br>
+                                    <button class="btn btn-block btn-success">ثبت شماره</button>
+                                </div>
+                            </div>
+                            <div class="sidebar-widgets-wrapper">
+                                <div id="text-11" class="widget widget_text"><h5 class="widget-title">چرا تاج گل امانی؟</h5>
+                                    <div class="textwidget">
+                                        {!! $description !!}
                                     </div>
                                 </div>
                             </div>

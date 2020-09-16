@@ -78,26 +78,26 @@
         <div class="container">
             <div class="section-content">
                 <div class="row">
-                    <div class="col-xs-12 col-sm-8 col-md-8">
+                    <div class="col-sm-8 col-md-8">
                         <h3 class="mt-0 line-bottom">{{$charity['title']}}<span class="font-weight-300"></span></h3>
                         <form action="" method="post" id="frm_add_charity">
                             @csrf
                             <input type="hidden" name="charity_id" value="{{$charity['id']}}">
                             <div class="row">
                                 <div class="col-md-6">
-                                    <div class="col-md-12 col-xs-12">
+                                    <div class="col-md-12 ">
                                         <div class="form-group">
                                             <label>{{__('messages.name_op')}}</label>
                                             <input type="text" class="form-control" value="{{isset($user['name'])?$user['name']:""}}" name="name">
                                         </div>
                                     </div>
-                                    <div class="col-md-12 col-xs-12">
+                                    <div class="col-md-12 ">
                                         <div class="form-group">
                                             <label>{{__('messages.phone_op')}}</label>
                                             <input type="number" class="form-control" value="{{isset($user['phone'])?$user['phone']:""}}" name="phone">
                                         </div>
                                     </div>
-                                    <div class="col-md-12 col-xs-12">
+                                    <div class="col-md-12 ">
                                         <div class="form-group">
                                             <label>{{__('messages.email_op')}}</label>
                                             <input type="email" class="form-control" value="{{isset($user['email'])?$user['email']:""}}" name="email">
@@ -132,6 +132,7 @@
 
                                 </div>
                                 <div class="col-md-6">
+                                <div class="row">
 
                                     @if(count($titles)>0)
 
@@ -152,7 +153,7 @@
                                     @endif
 
 <br>
-                                    <div class="col-md-12 col-xs-12">
+                                    <div class="col-md-12">
                                         <div class="form-group">
                                             <label for="amount">{{__('messages.amount')}} <small>({{__('messages.rial')}})</small></label>
                                             <input type="text" min="{{$charity['min']}}" max="{{$charity['max']}}" class="form-control amount" name="amount">
@@ -172,17 +173,18 @@
                                             </div>
                                         </div>
                                     @endforeach
-                                    <div class="col-md-12 col-xs-12">
+                                    <div class="col-md-12 ">
                                         <div class="form-group pt-20">
                                             <button type="submit" class="btn btn-success btn-block p-20 pull-left btn-theme-colored"><strong>{{__("messages.pay")}}</strong></button>
                                         </div>
                                     </div>
 
                                 </div>
+                                </div>
                             </div>
                         </form>
                     </div>
-                    <div class="col-xs-12 col-sm-4 col-md-4">
+                    <div class="col-sm-4 col-md-4">
                         <h3 class="mt-0 line-bottom">{{__('messages.cooperation')}}</h3>
                         <div class="testimonial style1 ">
                             <div class="item">

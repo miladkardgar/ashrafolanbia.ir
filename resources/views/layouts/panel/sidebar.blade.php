@@ -84,7 +84,11 @@ if (!isset($active_sidbare)) {
                 @permission('manage_weblog')
                 <li class="nav-item nav-item-submenu {{in_array("blog", $active_sidbare) ? ' nav-item-open' : '' }}">
                     <a href="#" class=" nav-link"><i class="icon-blogger"></i>
-                        <span>{{trans('messages.blog')}}</span></a>
+                        <span>{{trans('messages.blog')}}</span>
+                        @if($comments_count>0)
+                            <span class="badge badge-danger align-self-center ml-auto">{{$comments_count}}</span>
+                        @endif
+                    </a>
 
                     <ul class="nav nav-group-sub" data-submenu-title="{{trans('messages.blog')}}"
                         style="display:{{in_array("blog", $active_sidbare) ? 'block' : 'none' }}">
@@ -105,12 +109,20 @@ if (!isset($active_sidbare)) {
                         </li>
                         <li class="nav-item nav-item-submenu {{in_array("blog_comments", $active_sidbare) ? ' nav-item-open' : '' }}">
                             <a href="#"
-                               class="nav-link {{in_array("blog_comments", $active_sidbare) ? 'active' : '' }}">{{trans('messages.blog_comments')}}</a>
+                               class="nav-link {{in_array("blog_comments", $active_sidbare) ? 'active' : '' }}">{{trans('messages.blog_comments')}}
+                                @if($comments_count>0)
+                                    <span class="badge badge-danger align-self-center ml-auto mr-3">{{$comments_count}}</span>
+                                @endif
+                            </a>
                             <ul class="nav nav-group-sub"
                                 style="display:{{in_array("blog_comments", $active_sidbare) ? 'block' : 'none' }}">
                                 <li class="nav-item {{in_array("all_blog_comments", $active_sidbare) ? ' nav-item-open' : '' }}">
                                     <a href="{{ route('blogetc.admin.comments.index') }}"
-                                       class="nav-link ">{{trans('messages.all_blog_comments')}}</a>
+                                       class="nav-link ">{{trans('messages.all_blog_comments')}}
+                                        @if($comments_count>0)
+                                            <span class="badge badge-danger align-self-center ml-auto">{{$comments_count}}</span>
+                                        @endif
+                                    </a>
                                 </li>
                                 <li class="nav-item {{in_array("pending_blog_comments", $active_sidbare) ? ' nav-item-open' : '' }}">
                                     <a href='{{ route('blogetc.admin.comments.index') }}?waiting_for_approval=true'
@@ -202,7 +214,11 @@ if (!isset($active_sidbare)) {
                 @permission('manage_store')
                 <li class="nav-item nav-item-submenu {{in_array("store", $active_sidbare) ? ' nav-item-open' : '' }}">
                     <a href="#" class=" nav-link"><i class="icon-cart"></i>
-                        <span>{{trans('messages.store')}}</span></a>
+                        <span>{{trans('messages.store')}}</span>
+                        @if($orders_count>0)
+                            <span class="badge badge-danger align-self-center ml-auto">{{$orders_count}}</span>
+                        @endif
+                    </a>
 
                     <ul class="nav nav-group-sub" data-submenu-title="{{trans('messages.store')}}"
                         style="display:{{in_array("store", $active_sidbare) ? 'block' : 'none' }}">
@@ -229,7 +245,12 @@ if (!isset($active_sidbare)) {
                         </li>
 
                         <li class="nav-item"><a href="{{route('manage_orders')}}"
-                                                class="nav-link {{in_array("manage_orders", $active_sidbare) ? 'active' : '' }}">{{trans('messages.manage_orders')}}</a>
+                                                class="nav-link {{in_array("manage_orders", $active_sidbare) ? 'active' : '' }}">
+                                {{trans('messages.manage_orders')}}
+                                @if($orders_count>0)
+                                    <span class="badge badge-danger align-self-center ml-auto">{{$orders_count}}</span>
+                                @endif
+                            </a>
                         </li>
 
                         {{--                        <li class="nav-item"><a href="{{route('store_setting')}}"--}}
@@ -324,7 +345,11 @@ if (!isset($active_sidbare)) {
                 @permission('manage_charity')
                 <li class="nav-item nav-item-submenu {{in_array("charity", $active_sidbare) ? ' nav-item-open' : '' }}">
                     <a href="#" class=" nav-link"><i class="icon-umbrella"></i>
-                        <span>{{trans('messages.charity_titel')}}</span></a>
+                        <span>{{trans('messages.charity_titel')}}</span>
+                        @if($s_form_count>0)
+                            <span class="badge badge-danger align-self-center ml-auto">{{$s_form_count}}</span>
+                        @endif
+                    </a>
                     <ul class="nav nav-group-sub" data-submenu-title="{{trans('messages.Charity')}}"
                         style="display:{{in_array("charity", $active_sidbare) ? 'block' : 'none' }}">
                         @permission('charity_periodic')
@@ -370,14 +395,22 @@ if (!isset($active_sidbare)) {
 
                         <li class="nav-item">
                             <a href="{{route('sform_reports')}}"
-                               class="nav-link {{in_array("support_form", $active_sidbare) ? 'active' : '' }}">{{trans('messages.support_forms_list')}}</a>
+                               class="nav-link {{in_array("support_form", $active_sidbare) ? 'active' : '' }}">{{trans('messages.support_forms_list')}}
+                                @if($s_form_count>0)
+                                <span class="badge badge-danger align-self-center ml-auto">{{$s_form_count}}</span>
+                                @endif
+                            </a>
+
                         </li>
                         @endpermission
 
                         @permission('charity_reports')
                         <li class="nav-item">
                             <a href="{{route('charity_reports')}}"
-                               class="nav-link {{in_array("charity_report", $active_sidbare) ? 'active' : '' }}">{{trans('messages.reports')}}</a>
+                               class="nav-link {{in_array("charity_report", $active_sidbare) ? 'active' : '' }}">
+                                {{trans('messages.reports')}}
+
+                            </a>
                         </li>
                         @endpermission
 
@@ -432,14 +465,22 @@ if (!isset($active_sidbare)) {
                 @permission('manage_setting')
                 <li class="nav-item nav-item-submenu {{in_array("setting", $active_sidbare) ? ' nav-item-open' : '' }}">
                     <a href="#" class=" nav-link"><i class="icon-gear"></i>
-                        <span>{{trans('messages.setting')}}</span></a>
+                        <span>{{trans('messages.setting')}}</span>
+                        @if($contact_msgs>0)
+                            <span class="badge badge-danger align-self-center ml-auto">{{$contact_msgs}}</span>
+                        @endif
+                    </a>
 
                     <ul class="nav nav-group-sub" data-submenu-title="{{trans('messages.setting')}}"
                         style="display:{{in_array("setting", $active_sidbare) ? 'block' : 'none' }}">
 
                         <li class="nav-item">
                             <a href="{{route('contact.index')}}"
-                               class="nav-link {{in_array("contact", $active_sidbare) ? 'active' : '' }}">{{trans('messages.contact_to_we')}}</a>
+                               class="nav-link {{in_array("contact", $active_sidbare) ? 'active' : '' }}">{{trans('messages.contact_to_we')}}
+                                @if($contact_msgs>0)
+                                    <span class="badge badge-danger align-self-center ml-auto">{{$contact_msgs}}</span>
+                                @endif
+                            </a>
                         </li>
 
 

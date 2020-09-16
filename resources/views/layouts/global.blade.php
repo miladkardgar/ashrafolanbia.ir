@@ -84,12 +84,12 @@
         <div class="header-top p-0 bg-theme-colored xs-text-center" data-bg-img="images/footer-bg.png">
             <div class="container pt-20 pb-20">
                 <div class="row">
-                    <div class="col-xs-12 col-sm-6 col-md-6">
+                    <div class=" col-sm-6 col-md-6">
                         <div class="widget no-border m-0">
                             <a class="menuzord-brand pull-left flip xs-pull-center mb-15" href="index-mp-layout1.html"><img src="images/logo-wide-white.png" alt=""></a>
                         </div>
                     </div>
-                    <div class="col-xs-12 col-sm-6 col-md-6">
+                    <div class=" col-sm-6 col-md-6">
                         <div class="widget no-border clearfix m-0 mt-5">
                             <ul class="list-inline pull-right flip sm-pull-none sm-text-center mt-5">
                                 <li>
@@ -1171,7 +1171,7 @@
                             <h3 class="line-bottom mt-0 mt-sm-30">Our Mission</h3>
                             <p class="mb-30">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatum quia, eaque tempora eligendi facere excepturi facilis earum inventore harum dolores. Maxime, aspernatur. Voluptatum, sit.</p>
                             <div class="row">
-                                <div class="col-xs-12 col-sm-6 col-md-6">
+                                <div class=" col-sm-6 col-md-6">
                                     <div class="icon-box p-0 mb-30">
                                         <a class="icon icon-sm pull-left sm-pull-none flip bg-theme-colored mb-sm-15 mb-0 mr-10" href="#">
                                             <i class="flaticon-charity-shelter text-white font-36"></i>
@@ -1181,7 +1181,7 @@
                                         <a href="#" class="text-theme-colored font-13">Read More →</a>
                                     </div>
                                 </div>
-                                <div class="col-xs-12 col-sm-6 col-md-6">
+                                <div class=" col-sm-6 col-md-6">
                                     <div class="icon-box p-0 mb-30">
                                         <a class="icon icon-sm pull-left sm-pull-none flip bg-theme-colored mb-sm-15 mb-0 mr-10" href="#">
                                             <i class="flaticon-charity-shaking-hands-inside-a-heart text-white font-36"></i>
@@ -1191,7 +1191,7 @@
                                         <a href="#" class="text-theme-colored font-13">Read More →</a>
                                     </div>
                                 </div>
-                                <div class="col-xs-12 col-sm-6 col-md-6">
+                                <div class=" col-sm-6 col-md-6">
                                     <div class="icon-box p-0 mb-30">
                                         <a class="icon icon-sm pull-left sm-pull-none flip bg-theme-colored mb-sm-15 mb-0 mr-10" href="#">
                                             <i class="flaticon-charity-alms text-white font-36"></i>
@@ -1201,7 +1201,7 @@
                                         <a href="#" class="text-theme-colored font-13">Read More →</a>
                                     </div>
                                 </div>
-                                <div class="col-xs-12 col-sm-6 col-md-6">
+                                <div class=" col-sm-6 col-md-6">
                                     <div class="icon-box p-0 mb-30">
                                         <a class="icon icon-sm pull-left sm-pull-none flip bg-theme-colored mb-sm-15 mb-0 mr-10" href="#">
                                             <i class="flaticon-charity-world-in-your-hands text-white font-36"></i>
@@ -1599,28 +1599,28 @@
         <section class="divider parallax layer-overlay overlay-theme-colored-9" data-bg-img="images/bg/bg14.jpg" data-parallax-ratio="0.7">
             <div class="container pt-90 pb-90">
                 <div class="row">
-                    <div class="col-xs-12 col-sm-6 col-md-3 mb-md-50">
+                    <div class=" col-sm-6 col-md-3 mb-md-50">
                         <div class="funfact text-center">
                             <i class="pe-7s-smile mt-5 text-white"></i>
                             <h2 data-animation-duration="2000" data-value="754" class="animate-number text-white font-42 font-weight-500 mt-0 mb-0">0</h2>
                             <h5 class="text-white text-uppercase font-weight-600">Happy Donators</h5>
                         </div>
                     </div>
-                    <div class="col-xs-12 col-sm-6 col-md-3 mb-md-50">
+                    <div class=" col-sm-6 col-md-3 mb-md-50">
                         <div class="funfact text-center">
                             <i class="pe-7s-rocket mt-5 text-white"></i>
                             <h2 data-animation-duration="2000" data-value="675" class="animate-number text-white font-42 font-weight-500 mt-0 mb-0">0</h2>
                             <h5 class="text-white text-uppercase font-weight-600">Success Mission</h5>
                         </div>
                     </div>
-                    <div class="col-xs-12 col-sm-6 col-md-3 mb-md-50">
+                    <div class=" col-sm-6 col-md-3 mb-md-50">
                         <div class="funfact text-center">
                             <i class="pe-7s-add-user mt-5 text-white"></i>
                             <h2 data-animation-duration="2000" data-value="1248" class="animate-number text-white font-42 font-weight-500 mt-0 mb-0">0</h2>
                             <h5 class="text-white text-uppercase font-weight-600">Volunteer Reached</h5>
                         </div>
                     </div>
-                    <div class="col-xs-12 col-sm-6 col-md-3 mb-md-50">
+                    <div class=" col-sm-6 col-md-3 mb-md-50">
                         <div class="funfact text-center">
                             <i class="pe-7s-global mt-5 text-white"></i>
                             <h2 data-animation-duration="2000" data-value="24" class="animate-number text-white font-42 font-weight-500 mt-0 mb-0">0</h2>
@@ -1925,7 +1925,7 @@
                 </div>
                 <div class="section-content">
                     <div class="row">
-                        <div class="col-xs-12 col-sm-6 col-md-4">
+                        <div class=" col-sm-6 col-md-4">
                             <article class="post clearfix mb-sm-30 bg-silver-light">
                                 <div class="entry-header">
                                     <div class="post-thumb thumb">
@@ -1954,7 +1954,7 @@
                                 </div>
                             </article>
                         </div>
-                        <div class="col-xs-12 col-sm-6 col-md-4">
+                        <div class=" col-sm-6 col-md-4">
                             <article class="post clearfix mb-sm-30 bg-silver-light">
                                 <div class="entry-header">
                                     <div class="post-thumb thumb">
@@ -1983,7 +1983,7 @@
                                 </div>
                             </article>
                         </div>
-                        <div class="col-xs-12 col-sm-6 col-md-4">
+                        <div class=" col-sm-6 col-md-4">
                             <article class="post clearfix mb-sm-30 bg-silver-light">
                                 <div class="entry-header">
                                     <div class="post-thumb thumb">

@@ -61,6 +61,11 @@
                                     <a href="{{route('global_profile_completion')}}">مشخصات نیکوکار</a>
                                 </li>
 
+                                <li class="mrn-account-navigation-link {{in_array('c_store',$active_sidebar)?"is-active":""}}">
+                                    <i class="fa fa-circle-o-notch"> </i>
+                                    <a href="{{route('t_c_store')}}">سوابق سفارش</a>
+                                </li>
+
                                 <li class="mrn-account-navigation-link">
                                     <i class="fa fa-sign-out"> </i>
                                     <a href="{{route('logout')}}">خروج</a>

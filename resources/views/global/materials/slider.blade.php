@@ -1,4 +1,4 @@
-<?php $sliders = App\blog_slider::get(); ?>
+<?php $sliders = App\blog_slider::orderBy('order')->get(); ?>
 <script src="{{ URL::asset('/public/js/jssor.slider-27.5.0.min.js') }}"></script>
 <script type="text/javascript">
     jssor_1_slider_init = function () {

@@ -493,7 +493,7 @@ class global_view extends Controller
                 ['category_id', '=', $request['id']],
                 ['thumbnail_size', '=', null],
             ])->get();
-        $categoryInfo = gallery_category::find($request['id']);
+        $categoryInfo = gallery_category::findOrFail($request['id']);
         return view('global.gallery.gallery_view', compact('pics', 'categoryInfo'));
     }
 
@@ -985,8 +985,19 @@ class global_view extends Controller
 
     }
 
+    public function t_c_store($id=null)
+    {
+        $order = null;
+        if ($id){
+            $order = c_store_order::where('user_id',Auth::id())->with('items')->findOrFail($id);
+        }
+        $orders = c_store_order::where('user_id',Auth::id())->where('status','paid')->paginate(20);
+        return view('global.t-profile.c_store_history', compact('orders','order'));
+    }
+
     public function c_store()
     {
+        $description = json_decode(c_store_setting::where('key','description ')->first()['value']);
         $products = c_store_product::where('active', 1)->get()->map(function ($product) {
             $image = c_store_product_image::where('CSP_id', $product['id'])->where('main_img', 1)->first();
             return [
@@ -998,7 +1009,7 @@ class global_view extends Controller
                 'image' => $image ? $image['medium'] : "http://lorempixel.com/output/nature-q-c-640-394-5.jpg",
             ];
         });
-        return view('global.c_store.index', compact('products'));
+        return view('global.c_store.index', compact('products','description'));
     }
 
     public function c_store_show($slug)

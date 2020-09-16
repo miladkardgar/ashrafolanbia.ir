@@ -36,7 +36,7 @@ class CreateCStoreOrdersTable extends Migration
             $table->integer('gateway_id')->nullable();
             $table->integer('trans_id')->nullable();
             $table->string('status')->default('waiting');
-            $table->string('process_status')->default('new');
+            $table->string('process_status')->default('new');//new , processing,canceled,done
             $table->dateTime('pay_date')->nullable();
             $table->softDeletes();
             $table->timestamps();

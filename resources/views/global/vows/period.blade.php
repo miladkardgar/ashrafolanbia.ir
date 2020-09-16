@@ -85,7 +85,7 @@
         <div class="container">
             <div class="section-content">
                 <div class="row">
-                    <div class="col-xs-12 col-sm-8 col-md-8">
+                    <div class=" col-sm-8 col-md-8">
                         <h3 class="mt-0 line-bottom">{{$patern['title']}}<span class="font-weight-300"></span></h3>
                         <div class="alert alert-success" role="alert">
                             {!!__('long_msg.periodic_list_guide',['link'=>route('global_profile')])!!}
@@ -102,8 +102,8 @@
                             @csrf
                             <input type="hidden" name="charity_id" value="{{$patern['id']}}">
                             <div class="row">
-                                <div class="col-md-6 col-xs-12">
-                                    <div class="col-md-12 col-xs-12">
+                                <div class="col-md-6 ">
+                                    <div class="col-md-12 ">
                                         <div class="form-group">
                                             <label for="amount">{{__('messages.amount')}} <small>({{__('messages.rial')}})</small></label>
                                             <input type="text" min="{{$patern['min']}}" max="{{$patern['max']}}"
@@ -111,8 +111,8 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-6 col-xs-12">
-                                    <div class="col-md-12 col-xs-12">
+                                <div class="col-md-6 ">
+                                    <div class="col-md-12 ">
                                         <div class="form-group">
                                             <label for="amount">{{__('messages.start_date')}}</label>
                                                 <input id="start_date" type="text" class="form-control"
@@ -120,8 +120,8 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-6 col-xs-12">
-                                    <div class="col-md-12 col-xs-12">
+                                <div class="col-md-6 ">
+                                    <div class="col-md-12 ">
                                         <div class="form-group">
                                             <label for="period">{{__('messages.period')}}</label>
                                             <select name="period" id="period" class="form-control">
@@ -135,8 +135,8 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-6 col-xs-12">
-                                    <div class="col-md-12 col-xs-12">
+                                <div class="col-md-6 ">
+                                    <div class="col-md-12 ">
                                         <div class="form-group">
                                             <label>{{__('messages.description')}}</label>
                                             <textarea name="description" class="form-control" id="description" cols="30"
@@ -144,7 +144,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-md-12 col-xs-12">
+                                    <div class="col-md-12 ">
                                         <div class="form-group pt-20">
                                             <button type="submit"
                                                     class="btn btn-success pull-left">{{__("messages.submit")}}</button>
@@ -154,7 +154,7 @@
                             </div>
                         </form>
                     </div>
-                    <div class="col-xs-12 col-sm-4 col-md-4">
+                    <div class=" col-sm-4 col-md-4">
                         <h3 class="mt-0 line-bottom">{{__('messages.cooperation')}}</h3>
 
                         <div class="testimonial style1 ">

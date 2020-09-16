@@ -151,7 +151,8 @@ class panel_view extends Controller
     public function users_list()
     {
         $users = User::with('people')->get();
-        return view('panel.user_manager.users_list', compact('users'));
+        $actvie_users = User::where('disabled',0)->count();
+        return view('panel.user_manager.users_list', compact('users','actvie_users'));
     }
 
     public function permission_assign($permission_id)
@@ -1368,10 +1369,34 @@ class panel_view extends Controller
 
     public function test()
     {
+//        $value = charity_periods_transaction::where('status','unpaid')->where('user_id',1)->whereNotNull('slug')
+//            ->first();
+//            $phone = get_user($value['user_id'])['phone'];
+//        $user = User::find($value['user_id']);
+//        $name = get_name($value['user_id']);
+//        if ($user->people){
+//            if ($user->people->name and $user->people->family){
+//                $name = ($user->people->gender == 1 ? " آقای " :" خانم "). $name;
+//            }
+//        }
+//        $smsText = notification_messages('sms','reminder',['name' => $name]);
+//
+//
+//        $short_link= "";
+//            if ($value['slug']){
+//                $short_link.="\r\n";
+//                $short_link.=' لینک پرداخت سریع: ';
+//                $short_link.="\r\n";
+//                $short_link.=config('app.short_url')."/i/".$value['slug'];
+//            }
+//            if ($phone){
+//                sendSms($phone, $smsText['text'] . $short_link);
+//            }
 
 //        dd(env('DB_PASSWORD'));
+        Log::notice("test loging" . date("Y-m-d H:i:s"));
 
-//      Artisan::call('migrate');
-
+//      Artisan::call('config:cache');
+        return config('app.short_url');
     }
 }

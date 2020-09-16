@@ -20,7 +20,8 @@ class Kernel extends ConsoleKernel
         'App\Console\Commands\CreateNextDateIfNull',
         'App\Console\Commands\CreateNextDateIfInactive',
         'App\Console\Commands\notifyPeriodCration',
-        'App\Console\Commands\notifyPeriodLate'
+        'App\Console\Commands\notifyPeriodLate',
+        'App\Console\Commands\removeOldQuickPayLinks'
     ];
 
     /**
@@ -37,7 +38,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('Create:charityPeriod')->hourly()->withoutOverlapping();
         $schedule->command('notify:periodCreation')->dailyAt('11:00')->withoutOverlapping();
         $schedule->command('notify:periodLate')->dailyAt('11:00')->withoutOverlapping();
-
+//        $schedule->command('Remove:oldQuickPayLinks')->dailyAt('01:00')->withoutOverlapping();
 
     }
 

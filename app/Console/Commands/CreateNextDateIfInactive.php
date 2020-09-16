@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\charity_period;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 
 class CreateNextDateIfInactive extends Command
 {
@@ -38,6 +39,7 @@ class CreateNextDateIfInactive extends Command
      */
     public function handle()
     {
+        Log::info("Charity routine updater Run At" . date("Y-m-d H:i:s"));
 
         $charity = charity_period::where('status',"!=","active")->get();
         foreach ($charity as $item) {

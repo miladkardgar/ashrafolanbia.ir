@@ -164,12 +164,12 @@ $active_sidbare = ['user_manager', 'users_list']
                                         @endif
                                     </div>
                                 </div>
-                                <div class="col-9 col-xs-12">
+                                <div class="col-9 ">
                                     <form id="contact_form" name="contact_form"
                                           method="post">
                                         <input type="hidden" name="user_id" value="{{$userInfo['id']}}">
                                         <div class="row">
-                                            <div class="col-xs-12 col-md-4">
+                                            <div class=" col-md-4">
                                                 <div class="form-group">
                                                     <label for="form_name">{{__('messages.name')}}
                                                         <small>*</small>
@@ -180,7 +180,7 @@ $active_sidbare = ['user_manager', 'users_list']
                                                            value="{{$userInfo['people']['name']}}">
                                                 </div>
                                             </div>
-                                            <div class="col-xs-12 col-md-4">
+                                            <div class=" col-md-4">
                                                 <div class="form-group">
                                                     <label for="form_family">{{__('messages.family')}}
                                                         <small>*</small>
@@ -193,7 +193,7 @@ $active_sidbare = ['user_manager', 'users_list']
                                                            value="{{$userInfo['people']['family']}}">
                                                 </div>
                                             </div>
-                                            <div class="col-xs-12 col-md-4">
+                                            <div class=" col-md-4">
                                                 <div class="form-group">
                                                     <label for="form_national_code">{{__('messages.national_code')}} </label>
                                                     <input id="form_national_code" name="national_code"
@@ -204,7 +204,7 @@ $active_sidbare = ['user_manager', 'users_list']
                                                            value="{{$userInfo['people']['national_code']}}">
                                                 </div>
                                             </div>
-                                            <div class="col-xs-12 col-md-4">
+                                            <div class=" col-md-4">
                                                 <div class="form-group">
                                                     <label for="form_email">{{__('messages.email')}}
                                                     </label>
@@ -213,7 +213,7 @@ $active_sidbare = ['user_manager', 'users_list']
                                                            value="{{$userInfo['email']}}">
                                                 </div>
                                             </div>
-                                            <div class="col-xs-12 col-md-4">
+                                            <div class=" col-md-4">
                                                 <div class="form-group">
                                                     <label for="form_phone">{{__('messages.phone')}}</label>
                                                     <input id="form_phone" name="phone" class="form-control"
@@ -223,7 +223,7 @@ $active_sidbare = ['user_manager', 'users_list']
                                                            value="{{$userInfo['people']['phone']}}">
                                                 </div>
                                             </div>
-                                            <div class="col-xs-12 col-md-4">
+                                            <div class=" col-md-4">
                                                 <div class="form-group">
                                                     <label for="form_mobile">{{__('messages.mobile')}}</label>
                                                     <input id="form_mobile" name="mobile" class="form-control"
@@ -232,7 +232,7 @@ $active_sidbare = ['user_manager', 'users_list']
                                                            value="{{$userInfo['phone']}}" readonly="readonly">
                                                 </div>
                                             </div>
-                                            <div class="col-xs-12 col-md-4">
+                                            <div class=" col-md-4">
                                                 <div class="form-group">
                                                     <label for="amount">{{__('messages.birth_date')}}</label>
                                                     <input id="birthday" type="text" class="form-control"
@@ -241,7 +241,7 @@ $active_sidbare = ['user_manager', 'users_list']
                                                            autocomplete="capacity">
                                                 </div>
                                             </div>
-                                            <div class="col-xs-12 col-md-4">
+                                            <div class=" col-md-4">
                                                 <label for="">{{__('messages.gender')}}</label>
                                                 <div class="form-group">
                                                     <div class="custom-control custom-radio custom-control-inline">
@@ -262,7 +262,7 @@ $active_sidbare = ['user_manager', 'users_list']
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-xs-12 col-md-4">
+                                            <div class=" col-md-4">
                                                 <label for="">{{__('messages.status')}}</label>
                                                 <div class="form-group">
                                                     <div class="custom-control custom-radio custom-control-inline">

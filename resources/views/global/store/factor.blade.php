@@ -247,7 +247,7 @@
                                                 <div class="col-md-12 col-xs-12 pt-20 text-center">
                                                     <strong>{{__('messages.payment_gateway')}}</strong>
                                                 </div>
-                                                <div class="col-md-12 pt-10">
+                                                <div class="col-md-12 pt-10 row">
                                                     @foreach($gateways as $gateway)
                                                         <div class="col-md-6 col-xs-6 border-1px border-success">
                                                             <div class="text-center">

@@ -14,7 +14,7 @@ return [
     */
 
 //    'default' => env('LOG_CHANNEL', 'stack'),
-    'default' => 'stack',
+    'default' => 'daily',
 
 
     /*
@@ -48,6 +48,12 @@ return [
             'driver' => 'daily',
             'path' => storage_path('logs/laravel.log'),
             'level' => 'debug',
+            'days' => 7,
+        ],
+        'schedule' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/schedule/laravel.log'),
+            'level' => 'info',
             'days' => 7,
         ],
 

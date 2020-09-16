@@ -1,5 +1,33 @@
 @extends('layouts.panel.panel_layout')
 
+@section('js')
+    <script>
+        $(document).ready(function () {
+            $(document).on("keyup", '.order-number', function (event) {
+                let order = $(this).val();
+                let id = $(this).data('id');
+                var csrf = $('meta[name="csrf-token"]').attr('content');
+
+                $.ajax({
+                    url: "{{route('save_slider_order')}}",
+                    type: "post",
+                    data: {
+                        _token: csrf,
+                        order: order,
+                        id: id
+                    },
+                    success: function () {
+                        alert('ذخیره شد');
+                    },
+                    error: function (response) {
+                        alert('error')
+                    }
+                });
+
+            });
+        });
+    </script>
+@endsection
 @section('content')
     <?php
     $active_sidbare = ['blog','blog_slider']
@@ -18,11 +46,17 @@
 
                     <div class="card-body">
 
-                        @foreach($sliders->chunk(2) as $chunk)
+                        @foreach($sliders->chunk(3) as $chunk)
                             <div class="row">
                                 @foreach($chunk as $slider)
-                                    <div class="col-md-6">
+                                    <div class="col-md-4">
                                         <div class="card">
+                                            <div class="card-header">
+                                            <div class="form-group">
+                                                <label for="Order-{{$slider['id']}}" class="label-info" >ترتیب نمایش</label>
+                                                <input type="number" data-id="{{$slider['id']}}" name="order[{{$slider['id']}}]"  id="Order-{{$slider['id']}}" class="form-control order-number" value="{{$slider['order']}}">
+                                            </div>
+                                            </div>
 
                                             <div class="card-img-actions px-1 pt-1">
                                                 <img class="card-img img-fluid img-absolute "
@@ -32,11 +66,11 @@
                                                 </div>
                                             </div>
 
-                                            <div class="card-body">
-                                            {!! $slider['text_1'] !!}<br>
-                                            {!! $slider['text_2'] !!}<br>
-                                            {!! $slider['text_3'] !!}<br>
-                                            </div>
+{{--                                            <div class="card-body">--}}
+{{--                                            {!! $slider['text_1'] !!}<br>--}}
+{{--                                            {!! $slider['text_2'] !!}<br>--}}
+{{--                                            {!! $slider['text_3'] !!}<br>--}}
+{{--                                            </div>--}}
                                             <div class="card-footer">
                                                 <a href="{{route('slider_page',['slider_id'=>$slider['id']])}}" class="float-right btn alpha-info border-info-400 text-info-800 btn-icon rounded-round ml-2"
                                                         >
@@ -54,6 +88,7 @@
                                                         data-confirm-text="{{trans('messages.delete')}}"
                                                         data-cancel-text="{{trans('messages.cancel')}}">
                                                     <i class="icon-trash"></i>
+                                                </button>
                                             </div>
                                         </div>
 

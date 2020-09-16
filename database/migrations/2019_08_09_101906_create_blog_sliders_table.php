@@ -26,6 +26,7 @@ class CreateBlogSlidersTable extends Migration
             $table->string("btn_text")->nullable();
             $table->string('btn_dir')->nullable();
             $table->string('btn_link')->nullable();
+            $table->integer('order')->nullable();
             $table->boolean("disable")->default(0);
             $table->timestamps();
         });

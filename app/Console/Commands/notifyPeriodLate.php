@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\charity_periods_transaction;
 use App\User;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 
 class notifyPeriodLate extends Command
 {
@@ -39,6 +40,8 @@ class notifyPeriodLate extends Command
      */
     public function handle()
     {
+        Log::info("routine late notify creation Run At" . date("Y-m-d H:i:s"));
+
         $periodicTransaction = charity_periods_transaction::where('status','unpaid')
             ->where('payment_date','>=',date('Y-m-d',strtotime(date('Y-m-d')." -4 day")))
             ->where('payment_date','<',date('Y-m-d',strtotime(date('Y-m-d')." -3 day")))
@@ -56,8 +59,13 @@ class notifyPeriodLate extends Command
             }
             $smsText = notification_messages('sms','reminderLate3',['name' => $name]);
 
+            $short_link= "";
+            if ($value['slug']){
+                $short_link.=' لینک پرداخت سریع: ';
+                $short_link.=config('app.short_url')."/i/".$value['slug'];
+            }
             if ($phone){
-                sendSms($phone,$smsText['text']);
+                sendSms($phone,$smsText['text'].$short_link);
             }
         }
     }

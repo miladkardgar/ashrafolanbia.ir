@@ -219,8 +219,8 @@
                               method="post"
                               class="border">
                             <div class="row add-address m-20">
-                                <div class="col-md-6 col-xs-12 form-group">
-                                    <div class="col-md-6 col-xs-12 form-group">
+                                <div class="col-md-6  form-group">
+                                    <div class="col-md-6  form-group">
                                         <label for="province">{{__('messages.province')}}</label>
                                         <select name="province" required="required" id="province" class="form-control">
                                             <option value="">{{__('messages.please_select')}}</option>
@@ -229,71 +229,71 @@
                                             @endforeach
                                         </select>
                                     </div>
-                                    <div class="col-md-6 col-xs-12 form-group">
+                                    <div class="col-md-6  form-group">
                                         <label for="cities">{{__('messages.city')}}</label>
                                         <select name="cities" required="required" id="cities" class="form-control">
 
                                         </select>
                                     </div>
-                                    <div class="col-md-6 col-xs-12 form-group">
+                                    <div class="col-md-6  form-group">
                                         <label for="receiver">{{__('messages.receiver_name')}}</label>
                                         <input type="text" class="form-control" required="required" name="receiver">
                                     </div>
-                                    <div class="col-md-6 col-xs-12 form-group">
+                                    <div class="col-md-6  form-group">
                                         <label for="zip_code">{{__('messages.zip_code')}}</label>
                                         <input type="text" class="form-control" name="zip_code">
                                     </div>
-                                    <div class="col-md-6 col-xs-12 form-group">
+                                    <div class="col-md-6  form-group">
                                         <label for="phone">{{__('messages.phone')}}</label>
                                         <input type="text" class="form-control input-sm" dir="ltr" name="phone">
                                     </div>
-                                    <div class="col-md-6 col-xs-12 form-group">
+                                    <div class="col-md-6  form-group">
                                         <label for="mobile">{{__('messages.mobile')}}</label>
                                         <input type="text" class="form-control" dir="ltr" name="mobile">
                                     </div>
-                                    <div class="col-md-12 col-xs-12 form-group">
+                                    <div class="col-md-12  form-group">
                                         <label for="description">{{__('messages.descriptions')}}</label>
                                         <textarea name="description" id="description" class="form-control" cols="30"
                                                   rows="4"></textarea>
                                     </div>
                                 </div>
-                                <div class="col-md-6 col-xs-12 form-group ">
-                                    <div class="col-md-12 col-xs-12 form-group">
+                                <div class="col-md-6  form-group ">
+                                    <div class="col-md-12  form-group">
                                         <label for="receiver">{{__('messages.condolences_to')}}</label>
                                         <input type="text" class="form-control" required="required"
                                                name="condolences_to">
                                     </div>
-                                    <div class="col-md-6 col-xs-12 form-group">
+                                    <div class="col-md-6  form-group">
                                         <label for="receiver">{{__('messages.on_behalf_of')}}</label>
                                         <input type="text" class="form-control" required="required" name="from_as">
                                     </div>
-                                    <div class="col-md-6 col-xs-12 form-group">
+                                    <div class="col-md-6  form-group">
                                         <label for="receiver">{{__('messages.late_name')}}</label>
                                         <input type="text" class="form-control" required="required" name="late_name">
                                     </div>
-                                    <div class="col-md-6 col-xs-12 form-group">
+                                    <div class="col-md-6  form-group">
                                         <label for="receiver">{{__('messages.meeting_date')}}</label>
                                         <input type="text" class="form-control" required="required" id="meeting_date"
                                                name="meeting_date">
                                     </div>
-                                    <div class="col-md-6 col-xs-12 form-group">
+                                    <div class="col-md-6  form-group">
                                         <label for="receiver">{{__('messages.meeting_time')}}</label>
                                         <input type="text" class="form-control clockpicker" required="required"
                                                value="09:30" name="meeting_time">
                                     </div>
-                                    <div class="col-md-12 col-xs-12 form-group">
+                                    <div class="col-md-12  form-group">
                                         <label for="meeting_address">{{__('messages.meeting_address')}}</label>
                                         <textarea cols="30" rows="4" class="form-control" required="required"
                                                   name="meeting_address" id="meeting_address"></textarea>
                                     </div>
                                 </div>
-                                <div class="col-md-12 col-xs-12 form-group">
+                                <div class="col-md-12  form-group">
                                     <label for="mapid">{{__('messages.map_position')}}</label>
                                     <input type="hidden" name="lat" id="lat">
                                     <input type="hidden" name="lon" id="lon">
                                     <div id="mapid"></div>
                                 </div>
-                                <div class="col-md-12 col-xs-12 form-group">
+                                <div class="col-md-12  form-group">
                                     <button type="submit"
                                             class="btn btn-success pull-left p-10 pr-20 pl-20">{{__('messages.continue_shopping')}}
                                         <i class="fa fa-caret-left pr-10"></i></button>

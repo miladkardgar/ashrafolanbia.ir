@@ -2,25 +2,25 @@
 
 namespace App\Console\Commands;
 
-use App\charity_period;
+use App\charity_periods_transaction;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
-class CreateNextDateIfNull extends Command
+class removeOldQuickPayLinks extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'Create:NextDateIfNull';
+    protected $signature = 'Remove:oldQuickPayLinks';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Create Next Date If Null';
+    protected $description = 'Remove Quick pay links older than 30 days';
 
     /**
      * Create a new command instance.
@@ -39,13 +39,9 @@ class CreateNextDateIfNull extends Command
      */
     public function handle()
     {
-        Log::info("Charity routine null updater Run At" . date("Y-m-d H:i:s"));
+        Log::info("Remove quick pay link Run at " . date("Y-m-d H:i:s"));
 
-        $charity = charity_period::whereNull('next_date')->get();
-        foreach ($charity as $item) {
-            updateNextRoutine($item['id']);
-        }
-        return true;
-
+        charity_periods_transaction::where('payment_date','<=',date("Y-m-d H:i:s",strtotime(date('Y-m-d H:i:s')."-30 days")))
+        ->update(['slug'=>null]);
     }
 }

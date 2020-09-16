@@ -75,6 +75,14 @@ $active_sidbare = ['user_manager', 'users_list']
                     <div class="card">
                         <div class="card-header bg-light">
                             <h4 class="card-title">{{__('messages.users_list')}}</h4>
+                            تعداد کل کاربران:
+                            {{count($users)}}
+                            |
+                            تعداد کاربران فعال:
+                            {{$actvie_users}}
+                            |
+                            تعداد کاربران غیرفعال:
+                            {{count($users)-$actvie_users}}
                         </div>
                         <div class="card-body">
                             <table class="table datatable-basic">
@@ -166,7 +174,7 @@ $active_sidbare = ['user_manager', 'users_list']
                                                         data-text="{{trans('messages.delete',['item'=>trans('messages.user')])}}"
                                                         data-type="warning"
                                                         data-cancel="true"
-                                                        data-toggle="tooltip" data-placement="top" title="{{__('messages.activate')}}"
+                                                        data-toggle="tooltip" data-placement="top" title="{{trans('messages.delete',['item'=>__('messages.user')])}}"
                                                         data-confirm-text="{{trans('messages.delete')}}"
                                                         data-cancel-text="{{trans('messages.cancel')}}">
                                                     <i class="fa fa-trash"></i>

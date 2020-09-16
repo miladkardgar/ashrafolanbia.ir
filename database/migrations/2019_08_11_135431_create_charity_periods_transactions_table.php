@@ -28,6 +28,7 @@ class CreateCharityPeriodsTransactionsTable extends Migration
             $table->integer('review_user_id')->nullable();
             $table->string('group_ids')->nullable();
             $table->boolean('group_pay')->default(0);
+            $table->string('slug')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });
