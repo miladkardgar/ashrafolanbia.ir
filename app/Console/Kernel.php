@@ -38,7 +38,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('Create:charityPeriod')->hourly()->withoutOverlapping();
         $schedule->command('notify:periodCreation')->dailyAt('11:00')->withoutOverlapping();
         $schedule->command('notify:periodLate')->dailyAt('11:00')->withoutOverlapping();
-//        $schedule->command('Remove:oldQuickPayLinks')->dailyAt('01:00')->withoutOverlapping();
+        $schedule->command('send:systemLogFile')->dailyAt('03:00')->withoutOverlapping();
 
     }
 

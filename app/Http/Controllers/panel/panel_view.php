@@ -62,6 +62,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Laratrust\Models\LaratrustPermission;
 use Laratrust\Models\LaratrustRole;
@@ -1394,9 +1395,17 @@ class panel_view extends Controller
 //            }
 
 //        dd(env('DB_PASSWORD'));
-        Log::notice("test loging" . date("Y-m-d H:i:s"));
+//        Log::info("test loging" . date("Y-m-d H:i:s"));
 
 //      Artisan::call('config:cache');
-        return config('app.short_url');
+        $date = date("Y-m-d");
+        $path = storage_path('/logs/laravel-'.$date.'.log');
+        if(file_exists($path)) {
+            // log files exist
+            $mails = config('logging.mails');
+            Mail::to($mails)->send(new \App\Mail\system_log_report_mail($date,$path,$date."-report.log",".log"));
+        return 'sent';
+        }
+        return 'not sent';
     }
 }

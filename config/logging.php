@@ -15,6 +15,9 @@ return [
 
 //    'default' => env('LOG_CHANNEL', 'stack'),
     'default' => 'daily',
+    'mails' => [
+        'mehranmarandi90@gmail.com',
+    ],
 
 
     /*
