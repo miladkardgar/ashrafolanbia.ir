@@ -39,9 +39,10 @@ class CreateNextDateIfNull extends Command
      */
     public function handle()
     {
-        Log::info("Charity routine null updater Run At" . date("Y-m-d H:i:s"));
 
         $charity = charity_period::whereNull('next_date')->get();
+        Log::info("Charity routine null updater Run for ".count($charity)." item");
+
         foreach ($charity as $item) {
             updateNextRoutine($item['id']);
         }

@@ -6,6 +6,7 @@ use App\Events\payToCharityMoney;
 use App\notification_template;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Support\Facades\Log;
 
 class smsListener
 {
@@ -22,23 +23,28 @@ class smsListener
     /**
      * Handle the event.
      *
-     * @param  payToCharityMoney  $event
+     * @param payToCharityMoney $event
      * @return void
      */
     public function handle(payToCharityMoney $event)
     {
+        try {
+            if (isset($event->smsData['phone'])) {
+                $template = notification_template::where('key', 'payConfirm')->first();
 
-        if (isset($event->smsData['phone'])){
-            $template = notification_template::where('key','payConfirm')->first();
+                $message = $template->text;
+                $variables = explode(',', $template['variables']);
+                foreach ($variables as $variable) {
+                    $newVariable = (isset($event->smsData[$variable]) ? $event->smsData[$variable] : " -- ");
+                    $message = str_replace("{" . $variable . "}", $newVariable, $message);
+                }
 
-            $message = $template->text;
-            $variables = explode(',',$template['variables']);
-            foreach ($variables as $variable){
-                $newVariable = (isset($event->smsData[$variable])? $event->smsData[$variable]:" -- ");
-                $message = str_replace("{".$variable."}",$newVariable,$message);
+                sendSms($event->smsData['phone'], $message);
+            } else {
+                Log::warning('cant sent sms after payment phone is empty');
             }
-
-            sendSms($event->smsData['phone'],$message);
+        } catch (\Throwable $e) {
+            Log::error($e);
         }
     }
 }

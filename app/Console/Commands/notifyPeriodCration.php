@@ -41,36 +41,40 @@ class notifyPeriodCration extends Command
      */
     public function handle()
     {
-        Log::info("routine notify creation Run At" . date("Y-m-d H:i:s"));
+        Log::info("routine notify creation Run");
 
-        $periodicTransaction = charity_periods_transaction::where('status','unpaid')
-            ->where('payment_date','>=',date('Y-m-d',strtotime(date('Y-m-d')." -1 day")))
-            ->where('payment_date','<',date('Y-m-d'))
+        $periodicTransaction = charity_periods_transaction::where('status', 'unpaid')
+            ->where('payment_date', '>=', date('Y-m-d', strtotime(date('Y-m-d') . " -1 day")))
+            ->where('payment_date', '<', date('Y-m-d'))
             ->get();
 
 
-        foreach ($periodicTransaction as $value){
-            $phone = get_user($value['user_id'])['phone'];
+        foreach ($periodicTransaction as $value) {
             $user = User::find($value['user_id']);
-            $name = get_name($value['user_id']);
-            if ($user->people){
-                if ($user->people->name and $user->people->family){
-                    $name = ($user->people->gender == 1 ? " آقای " :" خانم "). $name;
+
+            if ($user and $user['phone']) {
+                $user = User::find($value['user_id']);
+                $name = get_name($value['user_id']);
+                if (isset($user->people) and $user->people->name and $user->people->family) {
+                    $name = ($user->people->gender == 1 ? " آقای " : " خانم ") . $name;
                 }
-            }
-            $smsText = notification_messages('sms','reminder',['name' => $name]);
+
+                $smsText = notification_messages('sms', 'reminder', ['name' => $name]);
 
 
-            $short_link= "";
-            if ($value['slug']){
-                $short_link.="\r\n";
-                $short_link.=' لینک پرداخت سریع: ';
-                $short_link.="\r\n";
-                $short_link.=config('app.short_url')."/i/".$value['slug'];
-            }
+                $short_link = "";
+                if ($value['slug']) {
+                    $short_link .= "\r\n";
+                    $short_link .= ' لینک پرداخت سریع: ';
+                    $short_link .= "\r\n";
+                    $short_link .= config('app.short_url') . "/i/" . $value['slug'];
+                }
 
-            if ($phone){
-                sendSms($phone,$smsText['text'] . $short_link);
+                if ($user['phone']) {
+                    sendSms($user['phone'], $smsText['text'] . $short_link);
+                }
+            }else{
+                Log::warning("routine notify sms didnt sent to user for transaction with id of ".$value['id']);
             }
         }
     }

@@ -12,6 +12,7 @@ return [
     */
     'route'          => [
         'prefix'     => 'panel/translations',
+        'name'     => 'translations',
         'middleware' => [
             'web',
             'auth',

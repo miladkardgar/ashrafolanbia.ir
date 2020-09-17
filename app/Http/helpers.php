@@ -133,7 +133,7 @@ function get_name($user_id)
             }
         }
     }catch (Throwable $e){
-        return '***';
+        return ' ';
     }
 }
 

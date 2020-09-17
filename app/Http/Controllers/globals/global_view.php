@@ -717,6 +717,7 @@ class global_view extends Controller
                 $charity->status = 'paid';
                 $charity->trans_id = $data->id;
                 $messages['des'] = $charity['champion']['title'];
+                $user=null;
                 if ($charity['user_id'] != 0) {
                     $user = User::find($charity['user_id']);
                     $phone = $user['phone'];

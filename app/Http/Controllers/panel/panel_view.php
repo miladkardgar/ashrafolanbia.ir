@@ -1370,6 +1370,10 @@ class panel_view extends Controller
 
     public function test()
     {
+
+
+
+
 //        $value = charity_periods_transaction::where('status','unpaid')->where('user_id',1)->whereNotNull('slug')
 //            ->first();
 //            $phone = get_user($value['user_id'])['phone'];
@@ -1397,15 +1401,15 @@ class panel_view extends Controller
 //        dd(env('DB_PASSWORD'));
 //        Log::info("test loging" . date("Y-m-d H:i:s"));
 
-//      Artisan::call('config:cache');
-        $date = date("Y-m-d");
-        $path = storage_path('/logs/laravel-'.$date.'.log');
-        if(file_exists($path)) {
-            // log files exist
-            $mails = config('logging.mails');
-            Mail::to($mails)->send(new \App\Mail\system_log_report_mail($date,$path,$date."-report.log",".log"));
-        return 'sent';
-        }
-        return 'not sent';
+      Artisan::call('config:cache');
+//        $date = date("Y-m-d");
+//        $path = storage_path('/logs/laravel-'.$date.'.log');
+//        if(file_exists($path)) {
+//            // log files exist
+//            $mails = config('logging.mails');
+//            Mail::to($mails)->send(new \App\Mail\system_log_report_mail($date,$path,$date."-report.log",".log"));
+//        return 'sent';
+//        }
+//        return 'not sent';
     }
 }

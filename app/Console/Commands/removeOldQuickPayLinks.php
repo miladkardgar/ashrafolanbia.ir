@@ -39,7 +39,7 @@ class removeOldQuickPayLinks extends Command
      */
     public function handle()
     {
-        Log::info("Remove quick pay link Run at " . date("Y-m-d H:i:s"));
+        Log::info("Remove quick pay link Run");
 
         charity_periods_transaction::where('payment_date','<=',date("Y-m-d H:i:s",strtotime(date('Y-m-d H:i:s')."-30 days")))
         ->update(['slug'=>null]);

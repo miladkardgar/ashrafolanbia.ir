@@ -17,6 +17,7 @@ return [
     'default' => 'daily',
     'mails' => [
         'mehranmarandi90@gmail.com',
+        'aoacimail@gmail.com',
     ],
 
 

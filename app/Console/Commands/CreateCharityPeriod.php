@@ -41,9 +41,10 @@ class CreateCharityPeriod extends Command
      */
     public function handle()
     {
-        Log::info("Charity period maker Run At" . date("Y-m-d H:i:s"));
 
-        $charity = charity_period::where('status', 'active')->where("next_date", "<=", date("Y-m-d"))->limit(300)->get();
+        $charity = charity_period::where('status', 'active')->where("next_date", "<=", date("Y-m-d 23:59:59"))->limit(300)->get();
+        Log::info("Charity routine maker Run For ".count($charity)." item");
+
         foreach ($charity as $item) {
 
             $exists = charity_periods_transaction::where('period_id', $item['id'])

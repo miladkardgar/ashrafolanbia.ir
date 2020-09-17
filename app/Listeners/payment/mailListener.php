@@ -6,6 +6,7 @@ use App\Events\payToCharityMoney;
 use App\Mail\payment_confirmation;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
 class mailListener
@@ -31,8 +32,7 @@ class mailListener
         try{
             Mail::to($event->mailData['address'])->send(new payment_confirmation($event->mailData['messages']));
         }catch (\Throwable $e){
-            return false;
-
+            Log::error($e);
         }
     }
 }

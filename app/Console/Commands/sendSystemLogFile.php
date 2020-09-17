@@ -40,7 +40,7 @@ class sendSystemLogFile extends Command
     public function handle()
     {
         try{
-            Log::info("log file sent to registered emails at " . date("Y-m-d H:i:s"));
+            Log::info("log file sent to registered emails");
 
             $date = date("Y-m-d",strtotime(date("Y-m-d")." -1 day"));
             $path = storage_path('/logs/laravel-'.$date.'.log');
@@ -50,7 +50,7 @@ class sendSystemLogFile extends Command
                 Mail::to($mails)->send(new \App\Mail\system_log_report_mail($date,$path,$date."-report.log",".log"));
             }
         }catch (\Throwable $e){
-            Log::info("failed to sent log file to email at " . date("Y-m-d H:i:s"));
+            Log::info("failed to sent log file to email");
 
         }
     }

@@ -40,7 +40,7 @@ class notifyPeriodLate extends Command
      */
     public function handle()
     {
-        Log::info("routine late notify creation Run At" . date("Y-m-d H:i:s"));
+        Log::info("routine late notify creation Run");
 
         $periodicTransaction = charity_periods_transaction::where('status','unpaid')
             ->where('payment_date','>=',date('Y-m-d',strtotime(date('Y-m-d')." -4 day")))
@@ -52,7 +52,7 @@ class notifyPeriodLate extends Command
             $phone = get_user($value['user_id'])['phone'];
             $user = User::find($value['user_id']);
             $name = get_name($value['user_id']);
-            if ($user->people){
+            if (isset($user->people)){
                 if ($user->people->name and $user->people->family){
                     $name = ($user->people->gender == 1 ? " آقای " :" خانم "). $name;
                 }

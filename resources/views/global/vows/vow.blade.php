@@ -94,7 +94,7 @@
                                     <div class="col-md-12 ">
                                         <div class="form-group">
                                             <label>{{__('messages.phone_op')}}</label>
-                                            <input type="number" class="form-control" value="{{isset($user['phone'])?$user['phone']:""}}" name="phone">
+                                            <input type="tel" pattern="09[0-9]{9}" class="form-control" value="{{isset($user['phone'])?$user['phone']:""}}" name="phone">
                                         </div>
                                     </div>
                                     <div class="col-md-12 ">

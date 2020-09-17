@@ -14,6 +14,7 @@ use App\users_address_extra_info;
 use Carbon\Carbon;
 use function GuzzleHttp\Psr7\str;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Validator;
 use App\charity_period;
@@ -644,19 +645,22 @@ class global_controller extends Controller
         }
     }
 
-    public function login_link($slug)
+    public function login_link($slug,Request $request)
     {
         $ct = charity_periods_transaction::where('slug',$slug)
             ->where('payment_date','>=',date("Y-m-d H:i:s",strtotime(date('Y-m-d H:i:s')."-31 days")))
             ->first();
         if (!$ct){
+            Log::warning("someone try to login via quick pay link ip = ".$request->ip());
             return redirect(route('home_main'));
         }
         else{
         $user = User::findOrFail($ct['user_id']);
         $user->login_token = Str::random(60);
         $user->Save();
-        return redirect(route('app_profile')."?lt=".$user->login_token);
+            Log::notice("user ".$user['name']." login via quick pay link ip = ".$request->ip());
+
+            return redirect(route('app_profile')."?lt=".$user->login_token);
         }
     }
 

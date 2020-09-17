@@ -39,9 +39,10 @@ class CreateNextDateIfInactive extends Command
      */
     public function handle()
     {
-        Log::info("Charity routine updater Run At" . date("Y-m-d H:i:s"));
 
         $charity = charity_period::where('status',"!=","active")->get();
+        Log::info("Charity routine updater Run for ".count($charity)." item");
+
         foreach ($charity as $item) {
             updateNextRoutine($item['id']);
         }
