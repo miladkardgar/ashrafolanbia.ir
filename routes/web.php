@@ -300,6 +300,14 @@ Route::group(
             Route::post('delete_payment_title\{id}', 'panel\mobile_app_controller@delete_payment_title')->name('mobile.delete_payment_title');
 
         });
+        Route::prefix('notifications')->group(function () {
+            Route::get('list', 'panel\notificationController@list')->name('notifications.list');
+            Route::get('new', 'panel\notificationController@new')->name('notifications.new');
+            Route::get('edit/{id}', 'panel\notificationController@edit')->name('notifications.edit');
+            Route::post('save', 'panel\notificationController@save')->name('notifications.save');
+            Route::post('update/{id}', 'panel\notificationController@update')->name('notifications.update');
+            Route::delete('delete/{id}', 'panel\notificationController@delete')->name('notifications.delete');
+        });
 
 
         Route::prefix('ajax')->group(function () {

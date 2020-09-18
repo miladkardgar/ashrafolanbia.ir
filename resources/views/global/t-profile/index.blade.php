@@ -35,20 +35,21 @@
         </ul>
     </div>
 
-{{--    <div class="mrn-notifications-box-green">--}}
-{{--        <h4 class="notifications"><i class="fa fa-bell-o"></i>  اطلاعیه </h4>--}}
+    @forelse($notifications as $notification)
+    <div class="mrn-notifications-box-green">
+        <h4 class="notifications"><i class="fa fa-bell-o"></i>  {{$notification['title']}} </h4>
 
-{{--        <ul class="list-unstyled">--}}
-{{--            <li class="announce-read">--}}
-{{--                <div class="notifications-content">--}}
-{{--                    <p>--}}
-{{--                        فراخوان کمک برای ساخت 8 مدرسه در مناطق زلزله زده--}}
-{{--                    </p>--}}
+        <ul class="list-unstyled">
+            <li class="announce-read">
+                <div class="notifications-content">
+                    {!! $notification['body'] !!}
+                </div>
+            </li>
+        </ul>
+    </div>
+    @empty
 
-{{--                </div>--}}
-{{--            </li>--}}
-{{--        </ul>--}}
-{{--    </div>--}}
+    @endforelse
 @if(isset($period))
     <div class="mrn-notifications-box">
         <h2 class="notifications"> کمک ماهانه</h2>

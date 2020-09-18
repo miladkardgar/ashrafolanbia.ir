@@ -3,7 +3,7 @@
     <script src="{{ URL::asset('node_modules/pnotify/dist/iife/PNotify.js') }}"></script>
 @endsection
 @section('content')
-    <?php $active_sidbare = ['gallery', 'list_video_galleries']?>
+    <?php $active_sidbare = ['blog','gallery', 'list_video_galleries']?>
     <section>
         <div class="content">
             <div class="container-fluid">

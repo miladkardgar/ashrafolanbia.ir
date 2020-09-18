@@ -14,8 +14,8 @@
             }
         });
     }
-
 </script>
+
 <form method="POST" id="" class="" action="{{route('caravan_data')}}"
       autocomplete="off">
     @csrf
@@ -225,7 +225,6 @@
         $('#date_depart_{{$rand_id}}').MdPersianDateTimePicker({
             targetTextSelector: '#date_depart_{{$rand_id}}',
             enableTimePicker:true,
-
         });
         $('#date_entrance_{{$rand_id}}').MdPersianDateTimePicker({
             targetTextSelector: '#date_entrance_{{$rand_id}}',

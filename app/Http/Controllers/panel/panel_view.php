@@ -1402,6 +1402,7 @@ class panel_view extends Controller
 //        Log::info("test loging" . date("Y-m-d H:i:s"));
 
       Artisan::call('config:cache');
+      Artisan::call('view:cache');
 //        $date = date("Y-m-d");
 //        $path = storage_path('/logs/laravel-'.$date.'.log');
 //        if(file_exists($path)) {

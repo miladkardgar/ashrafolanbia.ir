@@ -216,7 +216,7 @@ return [
             ],
             'notifications' => [
                 'title' => 'words.notifications',
-                'link' => '',
+                'link' => 'notifications.list',
                 'icon' => 'icon-bubble-notification',
                 'permission' => '',
                 'badge' => '',
@@ -323,7 +323,7 @@ return [
         'child' => [
             'caravans_dashboard' => [
                 'title' => 'messages.dashboard',
-                'link' => 'gallery_add',
+                'link' => 'caravan_dashboard',
                 'icon' => '',
                 'permission' => '',
                 'badge' => '',

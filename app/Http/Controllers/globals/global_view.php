@@ -33,6 +33,7 @@ use App\gateway_transaction;
 use App\Http\HijriDate;
 use App\Mail\confirmEmail;
 use App\media;
+use App\notification;
 use App\order;
 use App\orders_item;
 use App\Scopes\nonGroupPayment;
@@ -906,8 +907,14 @@ class global_view extends Controller
                 ['status', '=', 'paid'],
                 ['user_id', '=', Auth::id()],
             ])->sum('amount');
-
-        return view('global.t-profile.index', compact('period', 'history', 'unpaidPeriodCount', 'paidPeriodAmount', 'paidPeriodCount'));
+        $notifications = notification::where('start',"<=",date("Y-m-d H:i:s"))
+            ->where('end',">=",date('Y-m-d H:i:s'))->get()->map(function ($notice){
+                return[
+                  'title'=>$notice->title,
+                  'body'=>$notice->body,
+                ];
+            });
+        return view('global.t-profile.index', compact('period', 'history', 'unpaidPeriodCount', 'paidPeriodAmount', 'paidPeriodCount','notifications'));
     }
 
     public function t_payment_history()
