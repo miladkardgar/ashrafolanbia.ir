@@ -103,6 +103,7 @@
                                             <input type="email" class="form-control" value="{{isset($user['email'])?$user['email']:""}}" name="email">
                                         </div>
                                     </div>
+                                    @if(isset($charity['fields']))
                                     @foreach($charity['fields'] as $fi)
                                         <div class="col-md-12">
                                             <div class="form-group">
@@ -129,7 +130,7 @@
                                             </div>
                                         </div>
                                     @endforeach
-
+                                    @endif
                                 </div>
                                 <div class="col-md-6">
                                 <div class="row">

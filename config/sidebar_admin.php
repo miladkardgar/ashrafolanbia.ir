@@ -9,7 +9,7 @@ return [
         'child' => []
     ],
     'blog' => [
-        'title' => 'messages.blog',
+        'title' => 'words.website',
         'link' => '',
         'icon' => 'icon-blogger',
         'permission' => 'manage_weblog',
@@ -107,6 +107,31 @@ return [
                     ],
                 ]
             ],
+            'gallery' => [
+                'title' => 'words.website_gallery',
+                'link' => '',
+                'icon' => 'icon-gallery',
+                'permission' => 'manage_gallery',
+                'badge' => '',
+                'child' => [
+                    'gallery_add' => [
+                        'title' => 'messages.photos',
+                        'link' => 'gallery_add',
+                        'icon' => '',
+                        'permission' => '',
+                        'badge' => '',
+                        'child' => []
+                    ],
+                    'list_video_galleries' => [
+                        'title' => 'messages.videos',
+                        'link' => 'list_video_galleries',
+                        'icon' => '',
+                        'permission' => '',
+                        'badge' => '',
+                        'child' => []
+                    ],
+                ],
+            ],
             'blog_images' => [
                 'title' => 'messages.blog_images',
                 'link' => '',
@@ -185,6 +210,14 @@ return [
                 'title' => 'messages.blog_slider',
                 'link' => 'blog_slider',
                 'icon' => '',
+                'permission' => '',
+                'badge' => '',
+                'child' => []
+            ],
+            'notifications' => [
+                'title' => 'words.notifications',
+                'link' => '',
+                'icon' => 'icon-bubble-notification',
                 'permission' => '',
                 'badge' => '',
                 'child' => []
@@ -274,31 +307,6 @@ return [
             'c_store_setting' => [
                 'title' => 'تنظیمات فروش تاج گل',
                 'link' => 'c_store.setting_show',
-                'icon' => '',
-                'permission' => '',
-                'badge' => '',
-                'child' => []
-            ],
-        ],
-    ],
-    'gallery' => [
-        'title' => 'messages.gallery',
-        'link' => '',
-        'icon' => 'icon-gallery',
-        'permission' => 'manage_gallery',
-        'badge' => '',
-        'child' => [
-            'gallery_add' => [
-                'title' => 'messages.photos',
-                'link' => 'gallery_add',
-                'icon' => '',
-                'permission' => '',
-                'badge' => '',
-                'child' => []
-            ],
-            'list_video_galleries' => [
-                'title' => 'messages.videos',
-                'link' => 'list_video_galleries',
                 'icon' => '',
                 'permission' => '',
                 'badge' => '',

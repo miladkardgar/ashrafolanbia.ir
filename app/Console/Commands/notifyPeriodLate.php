@@ -40,12 +40,13 @@ class notifyPeriodLate extends Command
      */
     public function handle()
     {
-        Log::info("routine late notify creation Run");
 
         $periodicTransaction = charity_periods_transaction::where('status','unpaid')
             ->where('payment_date','>=',date('Y-m-d',strtotime(date('Y-m-d')." -4 day")))
             ->where('payment_date','<',date('Y-m-d',strtotime(date('Y-m-d')." -3 day")))
             ->get();
+
+        Log::info("routine late notify creation Run for ".count($periodicTransaction)." items");
 
 
         foreach ($periodicTransaction as $value){
@@ -66,6 +67,8 @@ class notifyPeriodLate extends Command
             }
             if ($phone){
                 sendSms($phone,$smsText['text'].$short_link);
+            }else{
+                Log::warning("routine late notify sms didnt sent to user for transaction with id of ".$value['id']);
             }
         }
     }
