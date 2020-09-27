@@ -784,8 +784,14 @@ class global_view extends Controller
                     event(new c_storePaymentAlert($smsData));
                 }
             }
+            $name = "";
+            if (isset($charity) and isset($charity->name)){
+                $name = $charity->name;
+            }elseif (isset($user) and isset($user['id'])){
+                $name =get_name($user['id']);
+            }
             $messages['result'] = "success";
-            $messages['name'] = (isset($charity) and isset($charity->name)) ? $charity->name : get_name($user['id']);
+            $messages['name'] = $name;
             $messages['trackingCode'] = $request['transaction_id'];
             $messages['date'] = jdate("Y/m/d");
 

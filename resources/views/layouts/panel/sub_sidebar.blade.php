@@ -17,7 +17,7 @@
             <span>{{trans($child['title'])}}</span>
 
         @if(!empty($child['badge']) and ${$child['badge']}>0)}
-            <span class="badge badge-danger align-self-center ml-auto">{{$$child['badge']}}</span>
+            <span class="badge badge-danger align-self-center ml-auto">{{${$child['badge']} }}</span>
         @endif
         </a>
             @if(count($child['child'])>0)

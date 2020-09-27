@@ -126,6 +126,9 @@
                                                     @case(4)
                                                     <input type="time" {{$fi['require'] ?"required":""}} class="form-control" name="field[{{$fi['id']}}]">
                                                     @break
+                                                    @case(5)
+                                                    <input type="tel" pattern="09[0-9]{9}" {{$fi['require'] ?"required":""}} class="form-control" name="field[{{$fi['id']}}]">
+                                                    @break
                                                 @endswitch
                                             </div>
                                         </div>

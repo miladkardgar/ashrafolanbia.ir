@@ -224,6 +224,97 @@ return [
             ],
         ]
     ],
+    'charity' => [
+        'title' => 'messages.charity_titel',
+        'link' => '',
+        'icon' => 'icon-umbrella',
+        'permission' => 'manage_charity',
+        'badge' => 's_form_count',
+        'child' => [
+            'charity_period' => [
+                'title' => 'messages.periodic_payment',
+                'link' => '',
+                'icon' => '',
+                'permission' => 'charity_periodic',
+                'badge' => '',
+                'child' => [
+                    'charity_period_list' => [
+                        'title' => 'messages.period_payment_list',
+                        'link' => 'charity_period_list',
+                        'icon' => '',
+                        'permission' => '',
+                        'badge' => '',
+                        'child' => []
+                    ],
+                    'charity_period_status' => [
+                        'title' => 'messages.payment_status',
+                        'link' => 'charity_period_status',
+                        'icon' => '',
+                        'permission' => '',
+                        'badge' => '',
+                        'child' => []
+                    ],
+                ]
+            ],
+            'charity_list' => [
+                'title' => 'messages.other_payments',
+                'link' => 'charity_payment_list',
+                'icon' => '',
+                'permission' => 'charity_payment_list',
+                'badge' => '',
+                'child' => []
+            ],
+            'charity_champion_payments_list' => [
+                'title' => 'messages.champions_payments',
+                'link' => 'charity_champion_payments',
+                'icon' => '',
+                'permission' => 'charity_champion_payments',
+                'badge' => '',
+                'child' => []
+            ],
+            'support_form' => [
+                'title' => 'messages.support_forms_list',
+                'link' => 'sform_reports',
+                'icon' => '',
+                'permission' => 'charity_sform_reports',
+                'badge' => 's_form_count',
+                'child' => []
+            ],
+            'charity_report' => [
+                'title' => 'messages.reports',
+                'link' => 'charity_reports',
+                'icon' => '',
+                'permission' => 'charity_reports',
+                'badge' => '',
+                'child' => []
+            ],
+            'charity_setting' => [
+                'title' => 'messages.charity_setting',
+                'link' => '',
+                'icon' => '',
+                'permission' => 'charity_setting',
+                'badge' => '',
+                'child' => [
+                    'charity_payment_titles' => [
+                        'title' => 'messages.payment_titles',
+                        'link' => 'charity_payment_title',
+                        'icon' => '',
+                        'permission' => '',
+                        'badge' => '',
+                        'child' => []
+                    ],
+                    'charity_support_title' => [
+                        'title' => 'messages.charity_support_title',
+                        'link' => 'sForm.index',
+                        'icon' => '',
+                        'permission' => '',
+                        'badge' => '',
+                        'child' => []
+                    ],
+                ]
+            ],
+        ],
+    ],
     'store' => [
         'title' => 'messages.store',
         'link' => '',
@@ -380,94 +471,20 @@ return [
             ],
         ],
     ],
-    'charity' => [
-        'title' => 'messages.charity_titel',
+    'mobile-app' => [
+        'title' => 'messages.mobile-app',
         'link' => '',
-        'icon' => 'icon-umbrella',
-        'permission' => 'manage_charity',
-        'badge' => 's_form_count',
+        'icon' => 'icon-mobile',
+        'permission' => '',
+        'badge' => '',
         'child' => [
-            'charity_period' => [
-                'title' => 'messages.periodic_payment',
-                'link' => '',
+            'mobile-app-manage' => [
+                'title' => 'messages.mobile-app-manage',
+                'link' => 'mobile_app_index',
                 'icon' => '',
-                'permission' => 'charity_periodic',
-                'badge' => '',
-                'child' => [
-                    'charity_period_list' => [
-                        'title' => 'messages.period_payment_list',
-                        'link' => 'charity_period_list',
-                        'icon' => '',
-                        'permission' => '',
-                        'badge' => '',
-                        'child' => []
-                    ],
-                    'charity_period_status' => [
-                        'title' => 'messages.payment_status',
-                        'link' => 'charity_period_status',
-                        'icon' => '',
-                        'permission' => '',
-                        'badge' => '',
-                        'child' => []
-                    ],
-                ]
-            ],
-            'charity_list' => [
-                'title' => 'messages.other_payments',
-                'link' => 'charity_payment_list',
-                'icon' => '',
-                'permission' => 'charity_payment_list',
+                'permission' => '',
                 'badge' => '',
                 'child' => []
-            ],
-            'charity_champion_payments_list' => [
-                'title' => 'messages.champions_payments',
-                'link' => 'charity_champion_payments',
-                'icon' => '',
-                'permission' => 'charity_champion_payments',
-                'badge' => '',
-                'child' => []
-            ],
-            'support_form' => [
-                'title' => 'messages.support_forms_list',
-                'link' => 'sform_reports',
-                'icon' => '',
-                'permission' => 'charity_sform_reports',
-                'badge' => 's_form_count',
-                'child' => []
-            ],
-            'charity_report' => [
-                'title' => 'messages.reports',
-                'link' => 'charity_reports',
-                'icon' => '',
-                'permission' => 'charity_reports',
-                'badge' => '',
-                'child' => []
-            ],
-            'charity_setting' => [
-                'title' => 'messages.charity_setting',
-                'link' => '',
-                'icon' => '',
-                'permission' => 'charity_setting',
-                'badge' => '',
-                'child' => [
-                    'charity_payment_titles' => [
-                        'title' => 'messages.payment_titles',
-                        'link' => 'charity_payment_title',
-                        'icon' => '',
-                        'permission' => '',
-                        'badge' => '',
-                        'child' => []
-                    ],
-                    'charity_support_title' => [
-                        'title' => 'messages.charity_support_title',
-                        'link' => 'sForm.index',
-                        'icon' => '',
-                        'permission' => '',
-                        'badge' => '',
-                        'child' => []
-                    ],
-                ]
             ],
         ],
     ],
@@ -563,23 +580,6 @@ return [
             'setting_how_to_send' => [
                 'title' => 'messages.how_to_send',
                 'link' => 'setting_how_to_send',
-                'icon' => '',
-                'permission' => '',
-                'badge' => '',
-                'child' => []
-            ],
-        ],
-    ],
-    'mobile-app' => [
-        'title' => 'messages.mobile-app',
-        'link' => '',
-        'icon' => 'icon-mobile',
-        'permission' => '',
-        'badge' => '',
-        'child' => [
-            'mobile-app-manage' => [
-                'title' => 'messages.mobile-app-manage',
-                'link' => 'mobile_app_index',
                 'icon' => '',
                 'permission' => '',
                 'badge' => '',

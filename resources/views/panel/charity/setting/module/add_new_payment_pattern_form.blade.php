@@ -65,6 +65,7 @@
                                                     <option value="2" {{$field['type'] == 2 ?"selected":""}}>{{trans('messages.number')}}</option>
                                                     <option value="3" {{$field['type'] == 3 ?"selected":""}}>{{trans('messages.date_input')}}</option>
                                                     <option value="4" {{$field['type'] == 4 ?"selected":""}}>{{trans('messages.time_input')}}</option>
+                                                    <option value="5" {{$field['type'] == 5 ?"selected":""}}>{{trans('messages.phone')}}</option>
                                                 </select>
                                             </div>
                                             <div class="col-md-2">

@@ -181,7 +181,7 @@
 
                 <div class="row" style="bottom: 30px; background-color: #ff2e6c">
                     <div class="align-middle col-xs-3 col-sm-3 p-0" ><i
-                                style="font-size: 40px" class="fa fa-bell animated swing infinite"></i></div>
+                                style="font-size: 40px" class="fa fa-child animated swing infinite"></i></div>
 
                     <div class="col-xs-9 col-sm-9 float-left">
                         <a href="{{route('global_profile')}}" class="text-white" >

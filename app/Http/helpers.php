@@ -302,6 +302,7 @@ function private_file_saver($file_input, $module = "other", $title, $description
 function user_information($type)
 {
     $user = \Illuminate\Support\Facades\Auth::user();
+    if ($user){
     if ($type == 'full') {
         return $user->name;
     } elseif ($type == 'email') {
@@ -315,6 +316,9 @@ function user_information($type)
             return '/public/assets/panel/images/person.png';
         }
     }
+    }
+    else
+        return "***";
 }
 
 function get_cites($id = null)

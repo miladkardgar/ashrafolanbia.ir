@@ -437,7 +437,7 @@
                         </div>
                         <hr class="mt-0">
                         <div class="d-flex justify-content-center">
-                            <a href="{{route('home_main')}}" class="btn btn-success">برگشت به صفحه اصلی</a>
+                            <a href="{{route('global_profile')}}" class="btn btn-success">برگشت به صفحه اصلی</a>
                         </div>
                     </div>
                 </div>

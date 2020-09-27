@@ -73,8 +73,8 @@ $my_sidebar = config('sidebar_admin');
                                 {{(!$sidebar['child'] and in_array($key, $active_sidbare)) ? ' active' : '' }}">
                                 <a href="{{isset($sidebar['url']) ? $sidebar['url'] : ($sidebar['link']? route($sidebar['link']):"#")}}" class=" nav-link"><i class="{{$sidebar['icon']}}"></i>
                                     <span>{{trans($sidebar['title'])}}</span>
-                                    @if(!empty($sidebar['badge']) and ${$sidebar['badge']}>0)
-                                        <span class="badge badge-danger align-self-center ml-auto">{{$$sidebar['badge']}}</span>
+                                    @if(!empty($sidebar['badge']) and ${$sidebar['badge']} >0)
+                                        <span class="badge badge-danger align-self-center ml-auto">{{${$sidebar['badge']} }}</span>
                                     @endif
                                 </a>
                                     @if(!empty($sidebar['child']))
