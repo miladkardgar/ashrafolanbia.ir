@@ -944,6 +944,7 @@ class panel_view extends Controller
     public function charity_period_list(Request $request)
     {
         if ($request['excel']){
+
             $users = $this->charity_period_list_data($request,0);
 
             $export = new InvoicesExport_charity_routine([

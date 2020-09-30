@@ -150,13 +150,14 @@
                                     </li>
 
                                 </ul>
-
+                                @permission('charity_export_routine')
                                 <ul class="list-inline mb-0 ml-md-auto">
                                     <li class="list-inline-item">
                                         <a href="{{route('charity_period_list')."?excel=download"}}" class="btn btn-link text-default"><i
                                                     class="icon-file-excel mr-2"></i> دریافت گزارش کامل</a>
                                     </li>
                                 </ul>
+                                @endpermission
                             </div>
                         </form>
                     </div>

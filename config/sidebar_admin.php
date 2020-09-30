@@ -4,7 +4,7 @@ return [
         'title' => 'messages.dashboard',
         'link' => 'dashboard',
         'icon' => 'icon-home4',
-        'permission' => '',
+        'permission' => 'admin_panel',
         'badge' => '',
         'child' => []
     ],
@@ -26,7 +26,7 @@ return [
                         'title' => 'messages.post_list',
                         'link' => 'blogetc.admin.index',
                         'icon' => '',
-                        'permission' => '',
+                        'permission' => 'blog_list',
                         'badge' => '',
                         'child' => []
                     ],
@@ -34,7 +34,7 @@ return [
                         'title' => 'messages.post_add',
                         'link' => 'blogetc.admin.create_post',
                         'icon' => '',
-                        'permission' => '',
+                        'permission' => 'blog_add',
                         'badge' => '',
                         'child' => []
                     ]
@@ -51,7 +51,7 @@ return [
                         'title' => 'messages.all_blog_comments',
                         'link' => 'blogetc.admin.comments.index',
                         'icon' => '',
-                        'permission' => '',
+                        'permission' => 'blog_comment_list',
                         'badge' => '',
                         'child' => []
                     ],
@@ -59,7 +59,7 @@ return [
                         'title' => 'messages.pending_blog_comments',
                         'link' => 'blogetc.admin.comments.index',
                         'icon' => '',
-                        'permission' => '',
+                        'permission' => 'blog_comment_accept',
                         'badge' => 'comments_count',
                         'child' => []
                     ]
@@ -69,7 +69,7 @@ return [
                 'title' => 'messages.blog_categories',
                 'link' => '',
                 'icon' => '',
-                'permission' => '',
+                'permission' => 'blog_categories',
                 'badge' => '',
                 'child' => [
                     'all_blog_categories' => [
@@ -86,7 +86,7 @@ return [
                 'title' => 'messages.Specific_page',
                 'link' => '',
                 'icon' => '',
-                'permission' => '',
+                'permission' => 'blog_specific',
                 'badge' => '',
                 'child' => [
                     'list' => [
@@ -111,7 +111,7 @@ return [
                 'title' => 'words.website_gallery',
                 'link' => '',
                 'icon' => 'icon-gallery',
-                'permission' => 'manage_gallery',
+                'permission' => 'gallery_manage',
                 'badge' => '',
                 'child' => [
                     'gallery_add' => [
@@ -143,7 +143,7 @@ return [
                         'title' => 'messages.all_blog_images',
                         'link' => 'blogetc.admin.images.all',
                         'icon' => '',
-                        'permission' => '',
+                        'permission' => 'blog_images',
                         'badge' => '',
                         'child' => []
                     ],
@@ -151,7 +151,7 @@ return [
                         'title' => 'messages.add_blog_images',
                         'link' => 'blogetc.admin.images.upload',
                         'icon' => '',
-                        'permission' => '',
+                        'permission' => 'blog_image_add',
                         'badge' => '',
                         'child' => []
                     ],
@@ -161,7 +161,7 @@ return [
                 'title' => 'messages.blog_setting',
                 'link' => '',
                 'icon' => '',
-                'permission' => '',
+                'permission' => 'website_setting',
                 'badge' => '',
                 'child' => [
                     'display_statistics' => [
@@ -210,7 +210,7 @@ return [
                 'title' => 'messages.blog_slider',
                 'link' => 'blog_slider',
                 'icon' => '',
-                'permission' => '',
+                'permission' => 'website_slider',
                 'badge' => '',
                 'child' => []
             ],
@@ -218,7 +218,7 @@ return [
                 'title' => 'words.notifications',
                 'link' => 'notifications.list',
                 'icon' => 'icon-bubble-notification',
-                'permission' => '',
+                'permission' => 'website_notification',
                 'badge' => '',
                 'child' => []
             ],
@@ -376,14 +376,14 @@ return [
         'title' => 'تاج گل و استند',
         'link' => '',
         'icon' => 'icon-cart4',
-        'permission' => 'manage_store',
+        'permission' => '',
         'badge' => 'orders_count',
         'child' => [
             'c_store_orders' => [
                 'title' => 'سفارشات',
                 'link' => 'c_store.orders_list',
                 'icon' => '',
-                'permission' => '',
+                'permission' => 'manage_store',
                 'badge' => '',
                 'child' => []
             ],
@@ -391,7 +391,7 @@ return [
                 'title' => 'محصولات',
                 'link' => 'c_store.product_list',
                 'icon' => '',
-                'permission' => '',
+                'permission' => 'cstore_products',
                 'badge' => '',
                 'child' => []
             ],
@@ -399,7 +399,7 @@ return [
                 'title' => 'تنظیمات فروش تاج گل',
                 'link' => 'c_store.setting_show',
                 'icon' => '',
-                'permission' => '',
+                'permission' => 'cstore_setting',
                 'badge' => '',
                 'child' => []
             ],
@@ -416,7 +416,7 @@ return [
                 'title' => 'messages.dashboard',
                 'link' => 'caravan_dashboard',
                 'icon' => '',
-                'permission' => '',
+                'permission' => 'caravan_dashboard',
                 'badge' => '',
                 'child' => []
             ],
@@ -424,7 +424,7 @@ return [
                 'title' => 'messages.caravans_list',
                 'link' => 'caravans_list',
                 'icon' => '',
-                'permission' => '',
+                'permission' => 'caravan_list',
                 'badge' => '',
                 'child' => []
             ],
@@ -432,7 +432,7 @@ return [
                 'title' => 'messages.hosts_list',
                 'link' => 'hosts_list',
                 'icon' => '',
-                'permission' => '',
+                'permission' => 'caravan_host_list',
                 'badge' => '',
                 'child' => []
             ],
@@ -449,7 +449,7 @@ return [
                 'title' => 'messages.building_dashboard',
                 'link' => 'building_dashboard',
                 'icon' => '',
-                'permission' => '',
+                'permission' => 'rezvan_dashboard',
                 'badge' => '',
                 'child' => []
             ],
@@ -457,7 +457,7 @@ return [
                 'title' => 'messages.building_types',
                 'link' => 'building_types',
                 'icon' => '',
-                'permission' => '',
+                'permission' => 'rezvan_building_type',
                 'badge' => '',
                 'child' => []
             ],
@@ -465,7 +465,7 @@ return [
                 'title' => 'messages.building_archive',
                 'link' => 'building_archive',
                 'icon' => '',
-                'permission' => '',
+                'permission' => 'rezvan_archive',
                 'badge' => '',
                 'child' => []
             ],
@@ -475,7 +475,7 @@ return [
         'title' => 'messages.mobile-app',
         'link' => '',
         'icon' => 'icon-mobile',
-        'permission' => '',
+        'permission' => 'app_manage',
         'badge' => '',
         'child' => [
             'mobile-app-manage' => [
@@ -507,7 +507,7 @@ return [
                 'title' => 'messages.permissions_list',
                 'link' => 'permissions_list',
                 'icon' => '',
-                'permission' => '',
+                'permission' => 'permission_manager',
                 'badge' => '',
                 'child' => []
             ],
@@ -515,7 +515,7 @@ return [
                 'title' => 'messages.roles_list',
                 'link' => 'roles_list',
                 'icon' => '',
-                'permission' => '',
+                'permission' => 'permission_manager',
                 'badge' => '',
                 'child' => []
             ],
@@ -523,7 +523,7 @@ return [
                 'title' => 'messages.teams_list',
                 'link' => 'teams_list',
                 'icon' => '',
-                'permission' => '',
+                'permission' => 'permission_manager',
                 'badge' => '',
                 'child' => []
             ],
@@ -540,7 +540,7 @@ return [
                 'title' => 'messages.contact_to_we',
                 'link' => 'contact.index',
                 'icon' => '',
-                'permission' => '',
+                'permission' => 'setting_contact',
                 'badge' => 'contact_msgs',
                 'child' => []
             ],
@@ -548,7 +548,7 @@ return [
                 'title' => 'messages.notification_template',
                 'link' => 'notification_template.index',
                 'icon' => '',
-                'permission' => '',
+                'permission' => 'setting_messages',
                 'badge' => '',
                 'child' => []
             ],
@@ -557,7 +557,7 @@ return [
                 'link' => '',
                 'url' => '/panel/translations',
                 'icon' => '',
-                'permission' => '',
+                'permission' => 'setting_translation',
                 'badge' => '',
                 'child' => []
             ],
@@ -565,7 +565,7 @@ return [
                 'title' => 'messages.cities',
                 'link' => 'cities.index',
                 'icon' => '',
-                'permission' => '',
+                'permission' => 'setting_cities',
                 'badge' => '',
                 'child' => []
             ],
@@ -573,7 +573,7 @@ return [
                 'title' => 'messages.gateway_pay',
                 'link' => 'gateway_setting',
                 'icon' => '',
-                'permission' => '',
+                'permission' => 'setting_gateways',
                 'badge' => '',
                 'child' => []
             ],
@@ -581,7 +581,7 @@ return [
                 'title' => 'messages.how_to_send',
                 'link' => 'setting_how_to_send',
                 'icon' => '',
-                'permission' => '',
+                'permission' => 'setting_transport',
                 'badge' => '',
                 'child' => []
             ],
