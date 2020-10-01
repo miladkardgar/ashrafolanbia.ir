@@ -253,6 +253,10 @@ class user_manager extends Controller
                 $user->save();
             }
         }
+        if ($request['user_name']) {
+                $user->name = $request['user_name'];
+                $user->save();
+        }
         $user = User::find($request['user_id']);
         $user->disabled = $request['status'];
         $user->save();

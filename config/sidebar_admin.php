@@ -376,7 +376,7 @@ return [
         'title' => 'تاج گل و استند',
         'link' => '',
         'icon' => 'icon-cart4',
-        'permission' => '',
+        'permission' => 'manage_store',
         'badge' => 'orders_count',
         'child' => [
             'c_store_orders' => [

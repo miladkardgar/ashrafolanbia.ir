@@ -214,11 +214,13 @@
 
                                 <h6 class="font-weight-semibold mb-0">{{get_name($userInfo['id'])}}</h6>
                                  <span class=" d-block opac{-y-75">
+                @permission('manage_users')
 
                                     <a class="text-white-50" href="{{route('users_list_info_edit',[$userInfo['id']])}}" >
                                         ویرایش حساب کاربری
                                     <i class="icon-pencil5 text-white-50"></i>
                                     </a>
+                @endpermission
 
                                     </span>
 

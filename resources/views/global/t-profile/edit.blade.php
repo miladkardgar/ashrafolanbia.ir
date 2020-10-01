@@ -86,7 +86,7 @@
                             }
                             form_btn.prop('disabled', false).html(form_btn_old_msg);
                             setTimeout(function () {
-                                window.location.href = "{{route('global_profile')}}";
+                                window.location.href = "{{route('global_profile_completion')}}";
                             }, 1000)
                         }, error: function (error) {
                             console.log(error)
@@ -332,20 +332,12 @@
                     <div class="form-group">
                         <label for="form_national_code">{{__('messages.national_code')}} </label>
                         <input id="form_national_code" name="national_code" class="form-control"
-                               type="number" placeholder="{{__('messages.enter_national_code')}}"
+                               type="tel" placeholder="{{__('messages.enter_national_code')}}"
                                minlength="10" maxlength="10"
                                value="{{$userInfo['people']['national_code']}}">
                     </div>
                 </div>
-                <div class=" col-md-6">
-                    <div class="form-group">
-                        <label for="form_username">{{__('messages.username')}}
-                        </label>
-                        <input id="form_username" name="username" class="form-control "
-                               type="text" placeholder="{{__('messages.username')}}"
-                               value="{{$userInfo['name']}}">
-                    </div>
-                </div>
+
                 <div class=" col-md-6">
                     <div class="form-group">
                         <label for="form_email">{{__('messages.email')}}

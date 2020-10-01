@@ -128,6 +128,7 @@
     border-radius: 50%;
     border: 4px solid #fff;
     box-shadow: 0 6px 20px rgba(168, 172, 185, .3);
+    height: auto;
 }
 
 .mrn-user-info-name, .mrn-user-info-name strong {

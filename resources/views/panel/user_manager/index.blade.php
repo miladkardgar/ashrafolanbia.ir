@@ -195,6 +195,19 @@ $active_sidbare = ['user_manager', 'users_list']
                                             </div>
                                             <div class=" col-md-4">
                                                 <div class="form-group">
+                                                    <label for="Username">{{__('messages.username')}}
+                                                        <small></small>
+                                                    </label>
+                                                    <input id="Username" name="username" class="form-control"
+                                                           type="text"
+                                                           placeholder="{{__('messages.username')}}"
+                                                           required='required'
+                                                           minlength="2" maxlength="100"
+                                                           value="{{$userInfo['name']}}">
+                                                </div>
+                                            </div>
+                                            <div class=" col-md-4">
+                                                <div class="form-group">
                                                     <label for="form_national_code">{{__('messages.national_code')}} </label>
                                                     <input id="form_national_code" name="national_code"
                                                            class="form-control"

@@ -46,6 +46,14 @@ class User extends Authenticatable
         return $this->hasOne('App\Role', 'user_id', 'id')->pluck('role_id');
     }
 
+    public function permission_user()
+    {
+        return $this->hasMany('App\permission_user', 'user_id');
+    }
+    public function role_user()
+    {
+        return $this->hasMany('App\role_user', 'user_id');
+    }
     public function caravan()
     {
         return $this->hasMany('App\caravan', 'user_id');

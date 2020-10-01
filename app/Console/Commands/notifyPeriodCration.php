@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\charity_period;
 use App\charity_periods_transaction;
 use App\notification_template;
 use App\User;
@@ -43,8 +44,8 @@ class notifyPeriodCration extends Command
     {
 
         $periodicTransaction = charity_periods_transaction::where('status', 'unpaid')
-            ->where('payment_date', '>=', date('Y-m-d', strtotime(date('Y-m-d') . " -1 day")))
-            ->where('payment_date', '<', date('Y-m-d'))
+            ->where('payment_date', '>=', date('Y-m-d', strtotime(date('Y-m-d H:i:s') . " -1 day")))
+            ->where('payment_date', '<=', date('Y-m-d'))
             ->get();
         Log::info("routine notify creation Run for ".count($periodicTransaction)." transactions");
 
@@ -58,8 +59,8 @@ class notifyPeriodCration extends Command
                 if (isset($user->people) and $user->people->name and $user->people->family) {
                     $name = ($user->people->gender == 1 ? " آقای " : " خانم ") . $name;
                 }
-
-                $smsText = notification_messages('sms', 'reminder', ['name' => $name]);
+                $routine = charity_period::find($value['period_id']);
+                $smsText = notification_messages('sms', 'reminder', ['name' => $name,'routine' => config('charity.routine_types.'.$routine['period'].'.title')] );
 
 
                 $short_link = "";

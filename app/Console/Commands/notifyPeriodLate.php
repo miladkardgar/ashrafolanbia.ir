@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\charity_period;
 use App\charity_periods_transaction;
 use App\User;
 use Illuminate\Console\Command;
@@ -58,7 +59,9 @@ class notifyPeriodLate extends Command
                     $name = ($user->people->gender == 1 ? " آقای " :" خانم "). $name;
                 }
             }
-            $smsText = notification_messages('sms','reminderLate3',['name' => $name]);
+            $routine = charity_period::find($value['period_id']);
+
+            $smsText = notification_messages('sms','reminderLate3',['name' => $name,'routine' => config('charity.routine_types.'.$routine['period'].'.title')]);
 
             $short_link= "";
             if ($value['slug']){

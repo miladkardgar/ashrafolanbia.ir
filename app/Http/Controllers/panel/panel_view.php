@@ -149,11 +149,53 @@ class panel_view extends Controller
         return view('panel.dashboard', compact('info', 'legend', 'date', 'final', 'caravans', 'postCount', 'userCount', 'commentCount', 'caravansCount'));
     }
 
-    public function users_list()
+    public function users_list(Request $request)
     {
-        $users = User::with('people')->get();
-        $actvie_users = User::where('disabled',0)->count();
-        return view('panel.user_manager.users_list', compact('users','actvie_users'));
+        $user_query = User::query();
+        $query =null;
+        $type =null;
+        if ($request['type']){
+            switch ($request['type']){
+                case 'active':
+                    $type ='کاربران فعال';
+                    $user_query->where('disabled',0);
+                    break;
+                case 'inactive':
+                    $type ='کاربران غیرفعال';
+                    $user_query->where('disabled',1);
+                    break;
+                case 'admin':
+                    $type ='کاربران ادمین';
+                    $user_query->where(function ($q)use ($query){
+                        $q->whereHas('role_user')->orWhereHas('permission_user');});
+                    break;
+                default:
+
+            }
+
+        }
+        if ($request['q']){
+            $query = $request['q'];
+            $user_query->where(function ($q)use ($query){
+                $q->where('name','like','%'.$query.'%')
+                    ->orWhere('phone','like','%'.$query.'%')
+                    ->orWhere('email','like','%'.$query.'%')
+                    ->orWhereHas('people',function ($q)use ($query){
+                        $q->where('name','like','%'.$query.'%')
+                            ->orWhere('family','like','%'.$query.'%')
+                            ->orWhere('en_name','like','%'.$query.'%')
+                            ->orWhere('en_family','like','%'.$query.'%');
+                    });
+            });
+        }
+        $users = $user_query->with('people');
+        $users = $user_query->paginate(20);
+        $count = $user_query->count();
+
+        $active_users = User::where('disabled',0)->count();
+        $inactive_users = User::where('disabled',1)->count();
+        $admin_users = User::whereHas('role_user')->orWhereHas('permission_user')->count();
+        return view('panel.user_manager.users_list', compact('admin_users','users','count','type','active_users','inactive_users','query'));
     }
 
     public function permission_assign($permission_id)
@@ -1371,8 +1413,6 @@ class panel_view extends Controller
 
     public function test()
     {
-
-
 
 
 //        $value = charity_periods_transaction::where('status','unpaid')->where('user_id',1)->whereNotNull('slug')

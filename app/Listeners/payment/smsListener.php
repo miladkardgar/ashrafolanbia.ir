@@ -38,7 +38,6 @@ class smsListener
                     $newVariable = (isset($event->smsData[$variable]) ? $event->smsData[$variable] : " -- ");
                     $message = str_replace("{" . $variable . "}", $newVariable, $message);
                 }
-
                 sendSms($event->smsData['phone'], $message);
             } else {
                 Log::warning('cant sent sms after payment phone is empty');

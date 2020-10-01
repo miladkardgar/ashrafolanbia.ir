@@ -2,8 +2,36 @@
 @section('title',$charity['title']. " |")
 @section('css')
     <link rel="stylesheet" href="{{URL::asset('/public/assets/panel/css/iranBanks/ibl.css')}}">
+    <link
+            href="{{ URL::asset('/node_modules/md.bootstrappersiandatetimepicker/src/jquery.md.bootstrap.datetimepicker.style.css') }}"
+            rel="stylesheet" type="text/css">
+
+    <style>
+        input[type=number]::-webkit-inner-spin-button,
+        input[type=number]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+    </style>
 @stop
+@section('footer_js')
+    <script>
+
+        @foreach($charity['fields'] as $fi)
+        $('#p_datepicker_{{$fi["id"]}}').MdPersianDateTimePicker({
+            targetTextSelector: '#p_datepicker_{{$fi["id"]}}',
+            enableTimePicker: false,
+            disableBeforeToday: true,
+            englishNumber: true,
+            disabledDays: [6],
+        });
+        @endforeach
+    </script>
+@stop
+
 @section('js')
+    <script
+            src="{{ URL::asset('/node_modules/md.bootstrappersiandatetimepicker/src/jquery.md.bootstrap.datetimepicker.js') }}"></script>
     <script>
         $(document).ready(function () {
             $(document).on("change keyup", '.amount', function (event) {
@@ -12,7 +40,6 @@
                     return value
                         .replace(/\D/g, "")
                         .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-                        ;
                 });
             });
 
@@ -64,15 +91,7 @@
         })
     </script>
 @stop
-@section('css')
-    <style>
-        input[type=number]::-webkit-inner-spin-button,
-        input[type=number]::-webkit-outer-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
-    </style>
-@stop
+
 @section('content')
     <section>
         <div class="container">
@@ -121,7 +140,7 @@
                                                            name="field[{{$fi['id']}}]">
                                                     @break
                                                     @case(3)
-                                                    <input type="date" {{$fi['require'] ?"required":""}} class="form-control" name="field[{{$fi['id']}}]">
+                                                    <input type="text" id="p_datepicker_{{$fi['id']}}" {{$fi['require'] ?"required":""}} class="form-control" name="field[{{$fi['id']}}]">
                                                     @break
                                                     @case(4)
                                                     <input type="time" {{$fi['require'] ?"required":""}} class="form-control" name="field[{{$fi['id']}}]">

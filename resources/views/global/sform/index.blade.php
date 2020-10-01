@@ -1,7 +1,24 @@
 @extends('layouts.global.global_layout')
 @section('title',__('messages.donate'). " |")
 
+@section('footer_js')
+    <script>
+        @foreach($sform->fields->sortBy('order') as $field)
+        $('#p_datepicker_{{$field["id"]}}').MdPersianDateTimePicker({
+            targetTextSelector: '#p_datepicker_{{$field["id"]}}',
+            enableTimePicker: false,
+            disableBeforeToday: true,
+            englishNumber: true,
+            disabledDays: [6],
+        });
+        @endforeach
+    </script>
+@stop
+
 @section('js')
+    <script
+            src="{{ URL::asset('/node_modules/md.bootstrappersiandatetimepicker/src/jquery.md.bootstrap.datetimepicker.js') }}"></script>
+
     <script>
         $(document).ready(function () {
 
@@ -9,6 +26,9 @@
     </script>
 @stop
 @section('css')
+    <link
+            href="{{ URL::asset('/node_modules/md.bootstrappersiandatetimepicker/src/jquery.md.bootstrap.datetimepicker.style.css') }}"
+            rel="stylesheet" type="text/css">
     <style>
         input[type=number]::-webkit-inner-spin-button,
         input[type=number]::-webkit-outer-spin-button {
@@ -30,33 +50,44 @@
                             <input type="hidden" name="title" value="{{$sform['title']}}">
                             <div class="row">
                                 @foreach($sform->fields->sortBy('order') as $field)
-                                <div class="col-md-6 col-xs-12">
-                                    <div class="form-group">
-                                        <label>{{$field['title']}}<span class="text-danger">{{$field['required'] ?"*":""}}</span> </label>
-                                        @switch($field['type'])
-                                            @case(0)
-                                            <input type="text" class="form-control" {{$field['required'] ?"required":""}} name="{{$field['id']}}">
-                                            @break
-                                            @case(1)
-                                            <textarea name="{{$field['id']}}" {{$field['required'] ?"required":""}} class="form-control"
-                                                      id="field[{{$field['id']}}]" cols="30" rows="3"></textarea>
-                                            @break
-                                            @case(2)
-                                            <input type="number" {{$field['required'] ?"required":""}} class="form-control"
-                                                   name="{{$field['id']}}">
-                                            @break
-                                            @case(3)
-                                            <input type="date" {{$field['required'] ?"required":""}} class="form-control" name="{{$field['id']}}">
-                                            @break
-                                            @case(4)
-                                            <input type="time" {{$field['required'] ?"required":""}} class="form-control" name="{{$field['id']}}">
-                                            @break
-                                            @case(5)
-                                            <input type="tel" pattern="09[0-9]{9}" {{$field['required'] ?"required":""}} class="form-control" name="{{$field['id']}}">
-                                            @break
-                                        @endswitch
+                                    <div class="col-md-6 col-xs-12">
+                                        <div class="form-group">
+                                            <label>{{$field['title']}}<span
+                                                        class="text-danger">{{$field['required'] ?"*":""}}</span>
+                                            </label>
+                                            @switch($field['type'])
+                                                @case(0)
+                                                <input type="text" class="form-control"
+                                                       {{$field['required'] ?"required":""}} name="{{$field['id']}}">
+                                                @break
+                                                @case(1)
+                                                <textarea name="{{$field['id']}}"
+                                                          {{$field['required'] ?"required":""}} class="form-control"
+                                                          id="field[{{$field['id']}}]" cols="30" rows="3"></textarea>
+                                                @break
+                                                @case(2)
+                                                <input type="number"
+                                                       {{$field['required'] ?"required":""}} class="form-control"
+                                                       name="{{$field['id']}}">
+                                                @break
+                                                @case(3)
+                                                <input type="text" id="p_datepicker_{{$field['id']}}"
+                                                       {{$field['required'] ?"required":""}} class="form-control"
+                                                       name="{{$field['id']}}">
+                                                @break
+                                                @case(4)
+                                                <input type="time"
+                                                       {{$field['required'] ?"required":""}} class="form-control"
+                                                       name="{{$field['id']}}">
+                                                @break
+                                                @case(5)
+                                                <input type="tel" pattern="09[0-9]{9}"
+                                                       {{$field['required'] ?"required":""}} class="form-control"
+                                                       name="{{$field['id']}}">
+                                                @break
+                                            @endswitch
+                                        </div>
                                     </div>
-                                </div>
                                 @endforeach
                             </div>
                             <div class="col-md-12">
@@ -69,20 +100,20 @@
                     </div>
                     <div class="col-xs-12 col-sm-4 col-md-4">
                         @if($sform['img'])
-                        <img src="{{$sform['img']}}">
+                            <img src="{{$sform['img']}}">
                         @endif
                         <h3 class="mt-0 line-bottom">{{__('messages.cooperation')}}</h3>
-                            <div class="testimonial style1 ">
-                                <div class="item">
+                        <div class="testimonial style1 ">
+                            <div class="item">
 
-                                    <div class="icon-box iconbox-border iconbox-theme-colored p-10">
-                                        <p>
-                                        <div class="m-30 text-justify">{!! $sform['description'] !!}</div>
-                                        </p>
-                                    </div>
+                                <div class="icon-box iconbox-border iconbox-theme-colored p-10">
+                                    <p>
+                                    <div class="m-30 text-justify">{!! $sform['description'] !!}</div>
+                                    </p>
                                 </div>
-
                             </div>
+
+                        </div>
 
                     </div>
                 </div>
