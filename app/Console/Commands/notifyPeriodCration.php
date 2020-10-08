@@ -44,8 +44,9 @@ class notifyPeriodCration extends Command
     {
 
         $periodicTransaction = charity_periods_transaction::where('status', 'unpaid')
-            ->where('payment_date', '>=', date('Y-m-d', strtotime(date('Y-m-d H:i:s') . " -1 day")))
-            ->where('payment_date', '<=', date('Y-m-d'))
+//            ->where('payment_date', '>=', date('Y-m-d', strtotime(date('Y-m-d H:i:s') . " -1 day")))
+//            ->where('payment_date', '<=', date('Y-m-d'))
+            ->where('payment_date', '=', date('Y-m-d'))
             ->get();
         Log::info("routine notify creation Run for ".count($periodicTransaction)." transactions");
 

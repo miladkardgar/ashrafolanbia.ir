@@ -77,7 +77,7 @@
                                 <div class="col-9">
                                     <form method="POST" id="" class="form-ajax-submit" action="{{route('assign_permission_to_user')}}">
                                         @csrf
-                                        <input type="hidden" name="user_id" value="{{$user['id']}}">
+                                        <input type="hidden" name="user_id" value="{{$user['id']}}" >
                                         <div class="card border-1 border-blue-400">
                                             <div class="card-header alpha-blue text-blue-800 border-bottom-blue header-elements-inline justify-content-between">
                                                 <span class="card-title">{{__('messages.permission_user_has')}}</span>
@@ -95,6 +95,7 @@
                                                                     <h6 class="card-title bold"><b>{{$category}}</b></h6>
                                                                 </div>
                                                                 <div class="card-body border-0">
+
                                                                     @foreach($permissions as $permission)
                                                                         <div class="custom-control custom-checkbox ">
                                                                             <input type="checkbox" class="custom-control-input " name="permissions_id[]"

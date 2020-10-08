@@ -29,7 +29,7 @@ class user_manager extends Controller
             'name' => $request->username,
             'email' => $request->email,
             'phone' => $request->phone,
-            'disabled' => 1,
+            'disabled' => 0,
 //            'last_modifier' =>  $currentUser->id,
             'password' => bcrypt($request->password),
         ]);

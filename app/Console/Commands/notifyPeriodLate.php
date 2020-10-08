@@ -43,8 +43,9 @@ class notifyPeriodLate extends Command
     {
 
         $periodicTransaction = charity_periods_transaction::where('status','unpaid')
-            ->where('payment_date','>=',date('Y-m-d',strtotime(date('Y-m-d')." -4 day")))
-            ->where('payment_date','<',date('Y-m-d',strtotime(date('Y-m-d')." -3 day")))
+//            ->where('payment_date','>=',date('Y-m-d',strtotime(date('Y-m-d')." -4 day")))
+//            ->where('payment_date','<',date('Y-m-d',strtotime(date('Y-m-d')." -3 day")))
+            ->where('payment_date','=',date('Y-m-d',strtotime(date('Y-m-d')." -3 day")))
             ->get();
 
         Log::info("routine late notify creation Run for ".count($periodicTransaction)." items");

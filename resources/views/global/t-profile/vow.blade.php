@@ -110,7 +110,7 @@
                 @csrf
                 <div class="row" >
                     <div class="form-group col-md-6 ">
-                        <label for="amount" class="">مبلغ:</label>
+                        <label for="amount" class="">مبلغ: <span class="text-muted">(ریال)</span></label>
                         <input id="amount" name="amount" class="form-control amount left"
                                value="{{$routine ? number_format($routine['amount']):number_format($pattern['min'])}}"
                                type="text" required="required" placeholder="مبلغ">
