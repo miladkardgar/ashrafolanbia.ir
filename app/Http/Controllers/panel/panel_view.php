@@ -27,6 +27,7 @@ use App\charity_transaction;
 use App\city;
 use App\Events\c_storePaymentAlert;
 use App\Events\payToCharityMoney;
+use App\Exports\InvoicesExport_charity_other_payments;
 use App\Exports\InvoicesExport_charity_routine;
 use App\gallery_category;
 use App\gateway;
@@ -152,39 +153,40 @@ class panel_view extends Controller
     public function users_list(Request $request)
     {
         $user_query = User::query();
-        $query =null;
-        $type =null;
-        if ($request['type']){
-            switch ($request['type']){
+        $query = null;
+        $type = null;
+        if ($request['type']) {
+            switch ($request['type']) {
                 case 'active':
-                    $type ='کاربران فعال';
-                    $user_query->where('disabled',0);
+                    $type = 'کاربران فعال';
+                    $user_query->where('disabled', 0);
                     break;
                 case 'inactive':
-                    $type ='کاربران غیرفعال';
-                    $user_query->where('disabled',1);
+                    $type = 'کاربران غیرفعال';
+                    $user_query->where('disabled', 1);
                     break;
                 case 'admin':
-                    $type ='کاربران ادمین';
-                    $user_query->where(function ($q)use ($query){
-                        $q->whereHas('role_user')->orWhereHas('permission_user');});
+                    $type = 'کاربران ادمین';
+                    $user_query->where(function ($q) use ($query) {
+                        $q->whereHas('role_user')->orWhereHas('permission_user');
+                    });
                     break;
                 default:
 
             }
 
         }
-        if ($request['q']){
+        if ($request['q']) {
             $query = $request['q'];
-            $user_query->where(function ($q)use ($query){
-                $q->where('name','like','%'.$query.'%')
-                    ->orWhere('phone','like','%'.$query.'%')
-                    ->orWhere('email','like','%'.$query.'%')
-                    ->orWhereHas('people',function ($q)use ($query){
-                        $q->where('name','like','%'.$query.'%')
-                            ->orWhere('family','like','%'.$query.'%')
-                            ->orWhere('en_name','like','%'.$query.'%')
-                            ->orWhere('en_family','like','%'.$query.'%');
+            $user_query->where(function ($q) use ($query) {
+                $q->where('name', 'like', '%' . $query . '%')
+                    ->orWhere('phone', 'like', '%' . $query . '%')
+                    ->orWhere('email', 'like', '%' . $query . '%')
+                    ->orWhereHas('people', function ($q) use ($query) {
+                        $q->where('name', 'like', '%' . $query . '%')
+                            ->orWhere('family', 'like', '%' . $query . '%')
+                            ->orWhere('en_name', 'like', '%' . $query . '%')
+                            ->orWhere('en_family', 'like', '%' . $query . '%');
                     });
             });
         }
@@ -192,10 +194,10 @@ class panel_view extends Controller
         $users = $user_query->paginate(20);
         $count = $user_query->count();
 
-        $active_users = User::where('disabled',0)->count();
-        $inactive_users = User::where('disabled',1)->count();
+        $active_users = User::where('disabled', 0)->count();
+        $inactive_users = User::where('disabled', 1)->count();
         $admin_users = User::whereHas('role_user')->orWhereHas('permission_user')->count();
-        return view('panel.user_manager.users_list', compact('admin_users','users','count','type','active_users','inactive_users','query'));
+        return view('panel.user_manager.users_list', compact('admin_users', 'users', 'count', 'type', 'active_users', 'inactive_users', 'query'));
     }
 
     public function permission_assign($permission_id)
@@ -320,7 +322,7 @@ class panel_view extends Controller
     public function permissions_team_list(Request $request)
     {
         $teamInfo = Team::find($request['team_id']);
-        $permissionRoles = Permission::with('roles')->get() ;
+        $permissionRoles = Permission::with('roles')->get();
         $teams_roles = [];
         $teamForeignKey = Config::get('laratrust.foreign_keys.team');
         foreach ($permissionRoles['roles'] as $role) {
@@ -668,30 +670,40 @@ class panel_view extends Controller
         }
         $selected_city = $request['city'];
         $projects = $projects_query->get();
-        $provinces = city::where('parent', '=', 0)->whereHas('province_project')->get()->map(function ($city){
+        $provinces = city::where('parent', '=', 0)->whereHas('province_project')->get()->map(function ($city) {
 
-            return[
-                'name'=>$city->name,
-                'id'=>$city->id,
-                'parent'=>$city->parent,
-                'openProjects'=>building_project::where('archived',0)->where(function ($q)use($city){$q->where('city_id',$city->id)->orWhere('city_id_2',$city->id)->orWhere('city_id_3',$city->id);})->count(),
-                'archivedProjects'=>building_project::where('archived',1)->where(function ($q)use($city){$q->where('city_id',$city->id)->orWhere('city_id_2',$city->id)->orWhere('city_id_3',$city->id);})->count(),
-                'cities'=>$this->cityLoop($city->id)
+            return [
+                'name' => $city->name,
+                'id' => $city->id,
+                'parent' => $city->parent,
+                'openProjects' => building_project::where('archived', 0)->where(function ($q) use ($city) {
+                    $q->where('city_id', $city->id)->orWhere('city_id_2', $city->id)->orWhere('city_id_3', $city->id);
+                })->count(),
+                'archivedProjects' => building_project::where('archived', 1)->where(function ($q) use ($city) {
+                    $q->where('city_id', $city->id)->orWhere('city_id_2', $city->id)->orWhere('city_id_3', $city->id);
+                })->count(),
+                'cities' => $this->cityLoop($city->id)
             ];
         });
         return view('panel.building.dashboard', compact('projects', 'lvl', 'provinces', 'selected_city'));
     }
-    private function cityLoop($cityId){
-        $subCities=city::where('parent',$cityId)->get();
-        $mapSubCities=[];
-        foreach ($subCities as $subCity){
-            $mapSubCities[]=[
-                'name'=>$subCity->name,
-                'id'=>$subCity->id,
-                'parent'=>$subCity->parent,
-                'openProjects'=>building_project::where('archived',0)->where(function ($q)use($subCity){$q->where('city_id',$subCity->id)->orWhere('city_id_2',$subCity->id)->orWhere('city_id_3',$subCity->id);})->count(),
-                'archivedProjects'=>building_project::where('archived',1)->where(function ($q)use($subCity){$q->where('city_id',$subCity->id)->orWhere('city_id_2',$subCity->id)->orWhere('city_id_3',$subCity->id);})->count(),
-                'cities'=>$this->cityLoop($subCity->id)
+
+    private function cityLoop($cityId)
+    {
+        $subCities = city::where('parent', $cityId)->get();
+        $mapSubCities = [];
+        foreach ($subCities as $subCity) {
+            $mapSubCities[] = [
+                'name' => $subCity->name,
+                'id' => $subCity->id,
+                'parent' => $subCity->parent,
+                'openProjects' => building_project::where('archived', 0)->where(function ($q) use ($subCity) {
+                    $q->where('city_id', $subCity->id)->orWhere('city_id_2', $subCity->id)->orWhere('city_id_3', $subCity->id);
+                })->count(),
+                'archivedProjects' => building_project::where('archived', 1)->where(function ($q) use ($subCity) {
+                    $q->where('city_id', $subCity->id)->orWhere('city_id_2', $subCity->id)->orWhere('city_id_3', $subCity->id);
+                })->count(),
+                'cities' => $this->cityLoop($subCity->id)
             ];
         }
         return $mapSubCities;
@@ -867,19 +879,20 @@ class panel_view extends Controller
     }
 
 
-    private function charity_period_list_data(Request $request,$paginate = 100){
+    private function charity_period_list_data(Request $request, $paginate = 100)
+    {
         $user_query = User::query();
         $user_query->with('routine');
-        if ($request['q']){
+        if ($request['q']) {
             $quesry = $request['q'];
-            $user_query->where(function ($q)use ($quesry){
-                $q->where('name','like','%'.$quesry.'%')
-                    ->orWhere('phone','like','%'.$quesry.'%')
-                    ->orWhere('email','like','%'.$quesry.'%');
+            $user_query->where(function ($q) use ($quesry) {
+                $q->where('name', 'like', '%' . $quesry . '%')
+                    ->orWhere('phone', 'like', '%' . $quesry . '%')
+                    ->orWhere('email', 'like', '%' . $quesry . '%');
             });
         }
-        if ($request['status']){
-            switch ($request['status']){
+        if ($request['status']) {
+            switch ($request['status']) {
                 case 'active':
                     $user_query->whereHas('routine');
                     break;
@@ -888,7 +901,7 @@ class panel_view extends Controller
                     break;
             }
         }
-        if ($request['sort']){
+        if ($request['sort']) {
             switch ($request['sort']) {
                 case 'date-a':
                     $user_query->join('charity_periods_transactions', function ($join) {
@@ -932,54 +945,56 @@ class panel_view extends Controller
                     break;
                 case 'amount-a':
                     $user_query->join('charity_periods', function ($join) {
-                        $join->on('charity_periods.user_id', '=', 'users.id')
-                            ->where('charity_periods.status', '=', 'active');
+                        $join->on('charity_periods.user_id', 'users.id')
+                            ->where('charity_periods.status', 'active')
+                            ->where('charity_periods.deleted_at', NULL);
                     });
                     $user_query->groupBy('users.id');
-                    $user_query->select((['users.*', 'charity_periods.amount as amount']));
+                    $user_query->select((['users.*', DB::raw('sum(charity_periods.amount) as amount')]));
                     $user_query->orderBy('amount', 'DESC');
                     break;
                 case 'amount-d':
                     $user_query->join('charity_periods', function ($join) {
-                        $join->on('charity_periods.user_id', '=', 'users.id')
-                            ->where('charity_periods.status', '=', 'active');
+                        $join->on('charity_periods.user_id', 'users.id')
+                            ->where('charity_periods.status', 'active')
+                            ->where('charity_periods.deleted_at', NULL);
                     });
                     $user_query->groupBy('users.id');
-                    $user_query->select((['users.*', 'charity_periods.amount as amount']));
+                    $user_query->select((['users.*', DB::raw('sum(charity_periods.amount) as amount')]));
                     $user_query->orderBy('amount', 'ASC');
                     break;
             }
         }
-        if ($paginate>0){
+        if ($paginate > 0) {
             $users = $user_query->paginate($paginate);
-        }else{
+        } else {
             $users = $user_query->get();
         }
 
 
-        $users->transform(function ($user){
+        $users->transform(function ($user) {
             $response = [
-                'id'=>$user->id,
-                'name'=>get_name($user->id),
-                'phone'=>$user->phone,
-                'routine_status'=>$user->routine ? true : false,
-                'routine_type'=>"",
-                'routine_amount'=>"",
-                'unpaid'=>$user->count,
-                'last_paid'=>"",
+                'id' => $user->id,
+                'name' => get_name($user->id),
+                'phone' => $user->phone,
+                'routine_status' => $user->routine ? true : false,
+                'routine_type' => "",
+                'routine_amount' => "",
+                'unpaid' => $user->count,
+                'last_paid' => "",
             ];
-            if ($user->routine){
-                $response['routine_type']=\config('charity.routine_types.'.$user->routine->period.'.title');
-                $response['routine_amount']=$user->routine->amount;
+            if ($user->routine) {
+                $response['routine_type'] = \config('charity.routine_types.' . $user->routine->period . '.title');
+                $response['routine_amount'] = $user->routine->amount;
             }
 
-            $unpaid_count =charity_periods_transaction::where('status','unpaid')->where('user_id',$user->id)->count();
-            if ($unpaid_count > 0){
-                $response['unpaid']=$unpaid_count;
+            $unpaid_count = charity_periods_transaction::where('status', 'unpaid')->where('user_id', $user->id)->count();
+            if ($unpaid_count > 0) {
+                $response['unpaid'] = $unpaid_count;
             }
-            $last_paid = $response['last_paid']=charity_periods_transaction::where('status','paid')->where('user_id',$user->id)->orderBy('pay_date','DESC')->first();
-            if ($last_paid){
-                $response['last_paid']=jdate('Y/m/d',strtotime($last_paid->pay_date));
+            $last_paid = $response['last_paid'] = charity_periods_transaction::where('status', 'paid')->where('user_id', $user->id)->orderBy('pay_date', 'DESC')->first();
+            if ($last_paid) {
+                $response['last_paid'] = jdate('Y/m/d', strtotime($last_paid->pay_date));
             }
 
             return $response;
@@ -987,25 +1002,26 @@ class panel_view extends Controller
 
         return $users;
     }
+
     public function charity_period_list(Request $request)
     {
-        if ($request['excel']){
+        if ($request['excel']) {
 
-            $users = $this->charity_period_list_data($request,0);
+            $users = $this->charity_period_list_data($request, 0);
 
             $export = new InvoicesExport_charity_routine([
                 'users' => $users,
             ]);
 
             return Excel::download($export, 'Report.xlsx');
-        }else{
-            $users = $this->charity_period_list_data($request,50);
+        } else {
+            $users = $this->charity_period_list_data($request, 50);
             $active_users = User::whereHas('routine')->count();
             $inactive_users = User::whereDoesntHave('routine')->count();
             $paid_routine = charity_periods_transaction::whereNotNull('pay_date')->count();
             $unpaid_routine = charity_periods_transaction::whereNull('pay_date')->count();
-            return view('panel.charity.period.list', compact('users','active_users'
-            ,'inactive_users','paid_routine','unpaid_routine'));
+            return view('panel.charity.period.list', compact('users', 'active_users'
+                , 'inactive_users', 'paid_routine', 'unpaid_routine'));
         }
 
     }
@@ -1052,10 +1068,83 @@ class panel_view extends Controller
         return view('panel.charity.setting.module.add_new_payment_pattern_form', compact('payment_pattern'));
     }
 
-    public function charity_payment_list()
+    public function charity_payment_list(Request $request)
     {
-        $otherPayments = charity_transaction::with('values', 'user', 'patern', 'title', 'tranInfo')->get();
-        return view('panel.charity.other_payment.list', compact('periods', 'payments', 'paymentsApprove', 'otherPayments'));
+        $avg_30 = charity_transaction::where('payment_date', '>=', date("Y-m-d 00:00:00", strtotime(date("Y-m-d H:i:s") . " -1 year")))->where('status', 'success')->count() / 12;
+        $last_30 = charity_transaction::where('payment_date', '>=', date("Y-m-d 00:00:00", strtotime(date("Y-m-d H:i:s") . " -30 days")))->where('status', 'success')->count();
+        $price_30 = charity_transaction::where('payment_date', '>=', date("Y-m-d 00:00:00", strtotime(date("Y-m-d H:i:s") . " -30 days")))->where('status', 'success')->sum('amount');
+        $faild_30 = charity_transaction::where('created_at', '>=', date("Y-m-d 00:00:00", strtotime(date("Y-m-d H:i:s") . " -30 days")))->where('status', "!=", 'success')->count();
+        $query="";
+        $status=null;
+        $sort=null;
+        $otherPayments_query = charity_transaction::query();
+        if ($request['q']) {
+            $query = $request['q'];
+            $otherPayments_query->where(function ($q) use ($query) {
+                $q->where('name', 'like', '%' . $query . '%')
+                    ->orWhere('phone', 'like', '%' . $query . '%')
+                    ->orWhere('email', 'like', '%' . $query . '%');
+            });
+        }
+        if ($request['sort']) {
+            switch ($request['sort']) {
+                case 'date-a':
+                    $sort="نزدیکترین تاریخ";
+                    $otherPayments_query->orderBy('payment_date', 'DESC');
+                    break;
+                case 'date-d':
+                    $sort="دورترین تاریخ";
+                    $otherPayments_query->orderBy('payment_date', 'ASC');
+                    break;
+                case 'amount-a':
+                    $sort="بیشترین مبلغ";
+                    $otherPayments_query->orderBy('amount', 'DESC');
+                    break;
+                case 'amount-d':
+                    $sort="کمترین مبلغ";
+                    $otherPayments_query->orderBy('amount', 'ASC');
+                    break;
+                default:
+                    $otherPayments_query->orderBy('created_at', 'DESC');
+
+            }
+        }
+        else{
+            $otherPayments_query->orderBy('created_at', 'DESC');
+
+        }
+        if ($request['status']) {
+            switch ($request['status']) {
+                case 'success':
+                    $status = "موفق";
+                    $otherPayments_query->where('status', 'success');
+                    break;
+                case 'pending':
+                    $status = "نامشخص";
+                    $otherPayments_query->where('status', 'pending');
+                    break;
+                case 'fail':
+                    $status = "ناموفق";
+                    $otherPayments_query->where('status', 'fail');
+                    break;
+            }
+        }
+
+        $otherPayments_query->with('values', 'user', 'patern', 'title', 'tranInfo');
+        $count = $otherPayments_query->count();
+
+        if ($request['excel']) {
+            $otherPayments = $otherPayments_query->get();
+
+            $export = new InvoicesExport_charity_other_payments([
+                'otherPayments' => $otherPayments,
+            ]);
+            return Excel::download($export, 'Report.xlsx');
+        } else {
+            $otherPayments = $otherPayments_query->paginate(50);
+
+            return view('panel.charity.other_payment.list', compact('avg_30', 'last_30', 'faild_30', 'price_30', 'otherPayments','query','count','status','sort'));
+        }
     }
 
 
@@ -1104,7 +1193,7 @@ class panel_view extends Controller
         $titles = charity_payment_title::get();
         $pat = charity_payment_patern::get();
         $gateway = json_decode($gateway, true);
-        return view('panel.charity.reports.report', compact('gateway', 'titles','pat'));
+        return view('panel.charity.reports.report', compact('gateway', 'titles', 'pat'));
     }
 //end charity module
 
@@ -1320,7 +1409,7 @@ class panel_view extends Controller
     {
 
         foreach ($request->all() as $item => $value) {
-            if ($item != '_token' && $item != '_method' && isset($value) && $value!='' && $item!="files") {
+            if ($item != '_token' && $item != '_method' && isset($value) && $value != '' && $item != "files") {
                 $k = '.social_media.' . $item . '.link';
                 self::updateConfig('blog_setting', $k, trim($value['link']));
             }
@@ -1347,6 +1436,7 @@ class panel_view extends Controller
         file_put_contents(config_path($configFile . '.php'), $output);
 
     }
+
     public function updateDate()
     {
         $d = array();
@@ -1398,21 +1488,21 @@ class panel_view extends Controller
 
     public function mobile_app_index()
     {
-        $notice = ApplicationSetting::where('key',"main_page_notification")->first();
+        $notice = ApplicationSetting::where('key', "main_page_notification")->first();
         $notification = json_decode($notice['value']);
 
-        $links = ApplicationSetting::where('key','main_page_links')->get()->map(function ($link){
+        $links = ApplicationSetting::where('key', 'main_page_links')->get()->map(function ($link) {
             $data = json_decode($link['value']);
             $image = \App\media::find($data->image);
 
-            return[
-                'id'=>$link->id,
-                'title'=>$data->title,
-                'link'=>$data->link,
-                'image'=>$image['url'],
+            return [
+                'id' => $link->id,
+                'title' => $data->title,
+                'link' => $data->link,
+                'image' => $image['url'],
             ];
         });
-        return view('panel.app.index',compact('notification','links'));
+        return view('panel.app.index', compact('notification', 'links'));
     }
 
     public function test()
@@ -1448,7 +1538,7 @@ class panel_view extends Controller
 
 //      Artisan::call('config:cache');
 
-      //        $date = date("Y-m-d");
+        //        $date = date("Y-m-d");
 //        $path = storage_path('/logs/laravel-'.$date.'.log');
 //        if(file_exists($path)) {
 //            // log files exist

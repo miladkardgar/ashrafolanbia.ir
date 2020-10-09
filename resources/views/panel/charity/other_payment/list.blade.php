@@ -68,7 +68,6 @@
         }();
         document.addEventListener('DOMContentLoaded', function () {
             DatatableBasic.init();
-            $("body").addClass('sidebar-xs')
         });
 
     </script>
@@ -82,6 +81,180 @@
     <section>
         <div class="content">
             <section>
+                <div class="row text-center">
+                    <div class="col-sm-6 col-xl-3">
+                        <div class="card card-body bg-success-400 has-bg-image">
+                            <div class="media">
+                                <div class="media-body text-left">
+                                    <h3 class="mb-0">{{number_format($last_30)}}  </h3>
+                                    <span class="text-uppercase font-size-xs">تعداد سی روز اخیر</span>
+                                </div>
+                                <div class="mr-3 align-self-center">
+                                    <i class="icon-users2 icon-3x opacity-75"></i>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-xl-3">
+
+                        <div class="card card-body bg-indigo-400 has-bg-image">
+                            <div class="media">
+                                <div class="media-body text-left">
+                                    <h3 class="mb-0">{{number_format($avg_30)}}  </h3>
+                                    <span class="text-uppercase font-size-xs">میانگین ماهانه سال</span>
+                                </div>
+                                <div class="mr-3 align-self-center">
+                                    <i class="icon-users4 icon-3x opacity-75"></i>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-xl-3">
+
+                        <div class="card card-body bg-info-400 has-bg-image">
+                            <div class="media">
+                                <div class="media-body text-left">
+                                    <h3 class="mb-0">{{number_format($price_30)}}  </h3>
+                                    <span class="text-uppercase font-size-xs">مبلغ یک ماه اخیر (ریال)</span>
+                                </div>
+                                <div class="mr-3 align-self-center">
+                                    <i class="icon-wallet icon-3x opacity-75"></i>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 col-xl-3">
+
+                        <div class="card card-body bg-danger-400 has-bg-image">
+                            <div class="media">
+                                <div class="media-body text-left">
+                                    <h3 class="mb-0">{{number_format($faild_30)}}  </h3>
+                                    <span class="text-uppercase font-size-xs">تعداد ناموفق یک ماه</span>
+                                </div>
+                                <div class="mr-3 align-self-center">
+                                    <i class="icon-cancel-circle2 icon-3x opacity-75"></i>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Search field -->
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="mb-3">جستجو پیشرفته</h5>
+
+                        <form action="#">
+                            <div class="input-group mb-3">
+                                <div class="form-group-feedback form-group-feedback-left">
+                                    <input type="text" id="t_search_q" class="form-control form-control-lg alpha-grey"
+                                           placeholder="نام یا شماره">
+                                    <div class="form-control-feedback form-control-feedback-lg">
+                                        <i class="icon-search4 text-muted"></i>
+                                    </div>
+                                </div>
+
+                                <div class="input-group-append">
+                                    <button type="button" id="t_search" class="btn btn-primary btn-lg">جستجو</button>
+                                </div>
+                            </div>
+
+                            <div class="d-md-flex align-items-md-center flex-md-wrap text-center text-md-left">
+                                <ul class="list-inline list-inline-condensed mb-0">
+
+                                    <li class="list-inline-item dropdown">
+                                        <a href="#" class="btn btn-link text-default dropdown-toggle"
+                                           data-toggle="dropdown">
+                                            <i class="icon-stack2 mr-2"></i>
+                                            مرتب سازی:
+                                        </a>
+
+                                        <div class="dropdown-menu">
+                                            <a href="#" data-param="sort"
+                                               data-value="date-a" class="dropdown-item t_filter">نزدیکترین تاریخ</a>
+                                            <a href="#" data-param="sort"
+                                               data-value="date-d" class="dropdown-item t_filter">دور ترین تاریخ</a>
+                                            <a href="#" data-param="sort"
+                                               data-value="amount-a" class="dropdown-item t_filter">بیشترین مبلغ</a>
+                                            <a href="#" data-param="sort"
+                                               data-value="amount-d" class="dropdown-item t_filter">کمترین مبلغ</a>
+                                        </div>
+                                    </li>
+                                    <li class="list-inline-item dropdown">
+                                        <a href="#" class="btn btn-link text-default dropdown-toggle"
+                                           data-toggle="dropdown">
+                                            <i class="icon-warning mr-2"></i>
+                                            وضعیت:
+                                        </a>
+
+                                        <div class="dropdown-menu">
+                                            <a href="#" data-param="status" data-value=""
+                                               class="dropdown-item t_filter">همه</a>
+                                            <a href="#" data-param="status"
+                                               data-value="success" class="dropdown-item t_filter">موفق</a>
+                                            <a href="#" data-param="status"
+                                               data-value="pending" class="dropdown-item t_filter">نامشخص</a>
+                                            <a href="#" data-param="status"
+                                               data-value="fail" class="dropdown-item t_filter">ناموفق</a>
+                                        </div>
+                                    </li>
+                                    @if($query)
+                                        <li class="list-inline-item">
+                                        نتایج جستجو:
+                                        <span class="badge badge-light">
+                                        {{$query}}
+                                        </span>
+                                        <p class="text-info">
+                                            {{number_format($count)}}
+                                            مورد یافت شد
+                                        </p>
+                                        </li>
+                                    @endif
+                                    @if($status)
+                                        <li class="list-inline-item ">
+                                            وضعیت پرداخت:
+                                            <span class="badge badge-info">
+                                        {{$status}}
+                                        </span>
+                                        </li>
+                                    @endif
+                                    @if($sort)
+                                        <li class="list-inline-item ">
+                                            مرتب بر اساس:
+                                            <span class="badge badge-danger">
+                                        {{$sort}}
+                                        </span>
+                                        </li>
+                                    @endif
+                                    @if($sort or $status or $query)
+
+                                    <li class="list-inline-item text-danger">
+                                        <a href="#" id="t_search_reset" class=" btn btn-link text-default text-danger"
+                                        >
+                                            <i class="icon-reset mr-2 "></i>
+                                            حذف فیلتر ها
+                                        </a>
+                                    </li>
+                                    @endif
+
+                                </ul>
+                                @permission('charity_export_routine')
+                                <ul class="list-inline mb-0 ml-md-auto">
+                                    <li class="list-inline-item">
+                                        <a href="{{route('charity_payment_list')."?excel=download"}}" class="btn btn-link text-default"><i
+                                                    class="icon-file-excel mr-2"></i> دریافت گزارش کامل</a>
+                                    </li>
+                                </ul>
+                                @endpermission
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <!-- /search field -->
                 <div class="card">
                     <div class="card-header">
                         <h6 class="card-title text-black">{{__('messages.Charity')}}
@@ -89,63 +262,48 @@
                         <hr>
                     </div>
 
-                    <div class="card-body">
-                        <table class="table datatable-payments2 table-striped">
-                            <thead>
-                            <tr>
-                                <th>{{__('messages.id')}}</th>
-                                <th>{{__('messages.name_family')}}</th>
-                                <th>{{__('messages.phone')}}</th>
-                                <th>{{__('messages.amount')}}</th>
-                                <th>{{{__('messages.payment_date')}}}</th>
-                                <th>{{__('messages.patern')}}</th>
-                                <th>{{__('messages.title')}}</th>
-                                <th>{{__('messages.status')}}</th>
-                                <th></th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <?php $i = 1; ?>
-                            @foreach($otherPayments as $payment)
-                                <tr>
-                                    <td>{{$payment['id']}}</td>
-                                    <td>{{$payment['user']['people']['name']}} {{$payment['user']['people']['family']}}</td>
-                                    <td>{{$payment['phone']}}</td>
-                                    <td>{{number_format($payment['amount'])}} {{__('messages.rial')}}</td>
-                                    <td>
-                                        @if($payment['payment_date'])
-                                            {{jdate("Y-m-d",strtotime($payment['payment_date']))}}
-                                        @endif
-                                    </td>
-                                    <td>{{$payment['patern']['title']}}</td>
-                                    <td>
-                                        {{$payment['title']['title']}}
-                                    </td>
-                                    <td>
-                                        @if(isset($payment['tranInfo'][0]) && $payment['tranInfo'][0]['status']=='SUCCEED')
-                                            <span
-                                                class="badge badge-success">{{__('messages.'.$payment['tranInfo'][0]['status'])}}</span>
-                                        @elseif(isset($payment['tranInfo'][0]) && $payment['tranInfo'][0]['status']=='FAILED')
-                                            <span
-                                                class="badge badge-danger">{{__('messages.'.$payment['tranInfo'][0]['status'])}}</span>
-                                        @else
-                                            <span class="badge badge-danger">{{__('messages.unknown')}}</span>
-                                        @endif
-                                    </td>
+                    <div class="card-body table-responsive">
+                        @include('panel.charity.other_payment.table')
+                        {{$otherPayments->appends(request()->except('page'))->links()}}
 
-                                    <td>
-                                        <a href="{{route('charity_payment_list_vow_show',['id'=>$payment['id']])}}"
-                                           data-toggle="tooltip" data-placement="top" title="{{__('messages.view')}}"
-                                           class="btn btn-outline-dark btn-sm"><i class="icon-eye"></i></a>
-                                    </td>
-                                </tr>
-                                <?php $i++; ?>
-                            @endforeach
-                            </tbody>
-                        </table>
                     </div>
                 </div>
             </section>
         </div>
     </section>
+@stop
+@section('footer_js')
+    <script>
+        $(document).on('click', '.t_filter', function () {
+            var url = new URL(window.location.href);
+
+            var search_params = url.searchParams;
+            let param = $(this).attr('data-param');
+            let value = $(this).attr('data-value');
+
+            search_params.set(param, value);
+            url.search = search_params.toString();
+            var new_url = url.toString();
+            window.location.replace(new_url);
+
+        });
+        $(document).on('click', '#t_search', function () {
+            var url = new URL(window.location.href);
+
+            var search_params = url.searchParams;
+            let param = 'q';
+            let value = document.getElementById('t_search_q').value;
+            search_params.set(param, value);
+            url.search = search_params.toString();
+            var new_url = url.toString();
+            window.location.replace(new_url);
+        });
+        $(document).on('click', '#t_search_reset', function () {
+            var url = new URL(window.location.href);
+            url.search = '';
+            var new_url = url.toString();
+            window.location.replace(new_url);
+        });
+
+    </script>
 @stop

@@ -23,7 +23,7 @@ class CreateCharityTransactionsTable extends Migration
             $table->string('email')->nullable();
             $table->integer('title_id')->nullable();
             $table->text('description')->nullable();
-            $table->string('amount');
+            $table->integer('amount');
             $table->integer('gateway_id');
             $table->string('status');
             $table->dateTime('payment_date')->nullable();

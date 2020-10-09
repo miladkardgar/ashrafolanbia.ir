@@ -85,15 +85,17 @@ class ForgotPasswordController extends Controller
     {
         $code = request()->input('code');
         $login = request()->input('name');
-        $password = request()->input('new_password');
-        $fieldType = $this->findUsername("name@domain.com");
+        $password = request()->input('password');
+        $fieldType = $this->findUsername($login);
 
         $user = User::where($fieldType,$login)->where('password_reset_code',$code)->first();
         if ($user){
             $user->password = Hash::make($password);
             $user->save();
+            return redirect(route('global_login_page'));
+        }else{
+            return redirect(route('password_reset'))->with('message','کد صحیح نیست، مجدد امتحان کنید.');
         }
 
-        return redirect(route('global_login_page'));
     }
 }

@@ -23,6 +23,7 @@
         "fideloper/proxy": "^4.0",
         "flynsarmy/db-blade-compiler": "^5.5",
         "intervention/image": "^2.4",
+        "jeremykenedy/laravel-logger": "^3.8",
         "kim/activity": "^1.1",
         "larabook/gateway": "^3.3",
         "laravel/framework": "5.8.*",
@@ -33,6 +34,7 @@
         "mews/captcha": "^3.0",
         "pishran/laravel-persian-slug": "^1.0",
         "santigarcor/laratrust": "5.0.*",
+        "spatie/activitylog": "^2.4",
         "unisharp/laravel-filemanager": "v2.0.0-alpha8",
         "webdevetc/blogetc": "dev-patch-1",
         "wpb/string-blade-compiler": "3.8"

@@ -18,7 +18,6 @@
     <section>
         <div class="content">
             <section>
-                <!-- Search field -->
                 <div class="row text-center">
                     <div class="col-sm-6 col-xl-3">
                         <div class="card card-body bg-success-400 has-bg-image">
@@ -36,7 +35,7 @@
                     </div>
                     <div class="col-sm-6 col-xl-3">
 
-                    <div class="card card-body bg-danger-400 has-bg-image">
+                        <div class="card card-body bg-danger-400 has-bg-image">
                             <div class="media">
                                 <div class="media-body text-left">
                                     <h3 class="mb-0">{{number_format($inactive_users)}}  </h3>
@@ -51,7 +50,7 @@
                     </div>
                     <div class="col-sm-6 col-xl-3">
 
-                    <div class="card card-body bg-info-400 has-bg-image">
+                        <div class="card card-body bg-info-400 has-bg-image">
                             <div class="media">
                                 <div class="media-body text-left">
                                     <h3 class="mb-0">{{number_format($paid_routine)}}  </h3>
@@ -66,7 +65,7 @@
                     </div>
                     <div class="col-sm-6 col-xl-3">
 
-                    <div class="card card-body bg-indigo-400 has-bg-image">
+                        <div class="card card-body bg-indigo-400 has-bg-image">
                             <div class="media">
                                 <div class="media-body text-left">
                                     <h3 class="mb-0">{{number_format($unpaid_routine)}}  </h3>
@@ -80,6 +79,8 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Search field -->
                 <div class="card">
                     <div class="card-body">
                         <h5 class="mb-3">جستجو پیشرفته</h5>
