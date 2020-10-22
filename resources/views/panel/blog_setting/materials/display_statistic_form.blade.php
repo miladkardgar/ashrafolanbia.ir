@@ -19,7 +19,6 @@
 
                 <div class="col-md-6">
                     <label for="title" class="col-form-label text-md-right">{{ __('messages.title')}}</label>
-
                     <input id="title" type="text" class="form-control" name="title"
                            value="{{!empty($value)?$value['title']:""}}" autocomplete="name" autofocus>
                 </div>

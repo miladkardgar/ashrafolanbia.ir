@@ -8,18 +8,18 @@
     <script>
         $(document).ready(function () {
 
-            CKEDITOR.replace('post_text', {
-                language: 'fa',
-                uiColor: '#9AB8F3',
-                filebrowserImageUploadUrl: '/laravel-filemanager/upload?type=Images&_token={{csrf_token()}}',
-                filebrowserBrowseUrl: '/laravel-filemanager?type=Files',
-                filebrowserUploadUrl: '/laravel-filemanager/upload?type=Files&_token={{csrf_token()}}'
-            });
-            $('#blog_posted_at_btn').MdPersianDateTimePicker({
-                targetTextSelector: '#blog_posted_at',
-                enableTimePicker: true,
-                englishNumber: true,
-            });
+                CKEDITOR.replace('post_text', {
+                    language: 'fa',
+                    uiColor: '#9AB8F3',
+                    filebrowserImageUploadUrl: '/laravel-filemanager/upload?type=Images&_token={{csrf_token()}}',
+                    filebrowserBrowseUrl: '/laravel-filemanager?type=Files',
+                    filebrowserUploadUrl: '/laravel-filemanager/upload?type=Files&_token={{csrf_token()}}'
+                });
+                $('#blog_posted_at_btn').MdPersianDateTimePicker({
+                    targetTextSelector: '#blog_posted_at',
+                    enableTimePicker: true,
+                    englishNumber: true,
+                });
 
             var FileUpload = function () {
                 var _componentFileUpload = function () {

@@ -47,7 +47,7 @@ class CreateCharityPeriod extends Command
 
         foreach ($charity as $item) {
 
-            $exists = charity_periods_transaction::where('period_id', $item['id'])
+            $exists = charity_periods_transaction::where('user_id', $item['user_id'])
                 ->where('payment_date', $item['next_date'])->exists();
             $description= '';
             if (array_key_exists($item->period,config('charity.routine_types'))){

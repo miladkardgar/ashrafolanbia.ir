@@ -172,11 +172,15 @@ class user_manager extends Controller
     {
         $this->validate($request, [
             'user_id' => 'required|exists:users,id',
-            'permissions_id' => 'required',
         ]);
         $user = User::find($request['user_id']);
         $all_permissions = Permission::pluck('id')->toArray();
+        if (!isset($request['permissions_id'])){
+            $user->detachPermissions($all_permissions);
+            return back_normal($request);
+        }
         $detached_permissions = array_diff($all_permissions, $request['permissions_id']);
+
         $user->detachPermissions($detached_permissions);
         foreach ($request['permissions_id'] as $permission_id) {
             $Permission = Permission::find($permission_id);

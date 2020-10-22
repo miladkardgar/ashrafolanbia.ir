@@ -382,7 +382,6 @@ class global_view extends Controller
 
     public function vow_payment(Request $request)
     {
-
         if (!is_null($request['amount'])) {
             $request['amount'] = str_replace(',', '', $request['amount']);
         }
@@ -448,7 +447,7 @@ class global_view extends Controller
             ->withoutGlobalScope(nonGroupPayment::class)->findOrFail($request['id']);
         $user = User::with('people')->find($charityIn['user_id']);
         $name = $user['people']['name'] . " " . $user['people']['family'];
-        $gateways = gateway::with('bank')->get();
+        $gateways = gateway::with('bank')->where('online', 1)->get();
 
         return view('global.vows.cart', compact('charityIn', 'gateways', 'name'));
 
@@ -598,7 +597,8 @@ class global_view extends Controller
                     echo $e->getMessage();
                 }
             } elseif ($gatewayInfo['function_name'] == "MelliGateway") {
-                try {
+
+//                try {
                     $gateway = \Larabookir\Gateway\Gateway::make(new Sadad());
 
                     $gateway->setCallback(route('callback', ['gateway' => 'sadad']));
@@ -609,11 +609,12 @@ class global_view extends Controller
                     $info->trans_id = $transID;
                     $info->gateway_id = $gatewayInfo['id'];
                     $info->save();
+
                     return $gateway->redirect();
 
-                } catch (\Exception $e) {
-                    echo $e->getMessage();
-                }
+//                } catch (\Exception $e) {
+//                    echo $e->getMessage();
+//                }
             }
         } else {
             return back_normal($request, ['message' => trans('errors.payment_not_valid')]);
@@ -958,8 +959,6 @@ class global_view extends Controller
 
     public function t_routine_vow()
     {
-
-
         $routine = charity_period::where('user_id', Auth::id())->first();
         $routine_types = config('charity.routine_types');
         $pattern = charity_payment_patern::where('periodic', '1')->first();
@@ -1512,5 +1511,21 @@ class global_view extends Controller
         }
 
         return $this->payment('c_store', $cs_order['id'], $request);
+    }
+
+    public function ack_phone_page()
+    {
+        try{
+        $user = Auth::user();
+        if ($user or !$user['phone_verified_at']){
+            $userInfo = $user;
+            return view('global.materials.ack_phone_page', compact('userInfo'));
+
+        }else{
+            return redirect(route('global_profile'));
+        }
+        }catch (\Exception $e){
+            return redirect(route('global_profile'));
+        }
     }
 }

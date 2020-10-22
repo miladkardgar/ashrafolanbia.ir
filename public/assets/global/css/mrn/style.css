@@ -224,8 +224,9 @@ li.mrn-account-navigation-link.is-active {
 .mrn-status-user-widget ul li {
     float: right;
     width: 25%;
-    padding: 0 15px 0 0;
+    padding: 0 15px 15px 15px;
 }
+
 
 .mrn-status-user-widget ul li.w-50 {
     width: 50% !important;
@@ -262,7 +263,7 @@ li.mrn-account-navigation-link.is-active {
 
 
 .mrn-status-user-widget ul li:first-child {
-    padding-right: 0;
+    /*padding-right: 0;*/
 }
 
 .mrn-status-user-widget ul li.all_bills .key_wrapper {
@@ -282,21 +283,47 @@ li.mrn-account-navigation-link.is-active {
 }
 
 .radio-tabs label {
-    height: 75px;
+    /*height: 75px;*/
     float: right;
     width: 100%;
-    color: #666;
-    background-color: white;
-    border: 1px solid rgba(0, 0, 0, 0.82);
     -webkit-border-radius: 3px;
     -moz-border-radius: 3px;
     border-radius: 3px;
-    padding: 0 15px;
+    padding: 0 15px 15px 15px;
+    cursor: pointer;
+}
+.radio-tabs label.purple {
+    color: #ffffff;
+    background-color: #a02882;
+    border: 1px solid rgba(160, 40, 130, 0.82);
+
+}
+.radio-tabs label.orange{
+    color: #000000;
+    background-color: #ffdf56;
+    border: 1px solid rgba(255, 194, 62, 0.82);
+
+}
+.radio-tabs label.teal{
+    color: #ffffff;
+    background-color: #0092a4;
+    border: 1px solid #008c9a;
+
+}
+.radio-tabs label.green{
+    color: #ffffff;
+    background-color: #92be43;
+    border: 1px solid #92be43;
+
 }
 
 .radio-tabs input[type="radio"]:checked + label {
-    background: rgba(0, 204, 255, 0.27) !important;
-    border: 1px solid #3768b2;
+    /*background: rgba(0, 204, 255, 0.27) !important;*/
+    /*border: 1px solid #3768b2;*/
+    -webkit-box-shadow: 0 6px 10px rgba(51, 55, 68, 0.85);
+    box-shadow: 0 6px 10px rgba(59, 61, 70, 0.87);
+    transition: box-shadow 0.3s ease-in-out;
+
 }
 
 

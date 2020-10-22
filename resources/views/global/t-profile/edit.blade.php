@@ -310,7 +310,7 @@
             <div class="row">
                 <div class=" col-md-6">
                     <div class="form-group">
-                        <label for="form_name">{{__('messages.name')}}
+                        <label for="form_name">{{__('نام')}}
                             <small>*</small>
                         </label>
                         <input id="form_name" name="name" class="form-control" type="text"
@@ -363,7 +363,7 @@
                 </div>
                 <div class=" col-md-6">
                     <div class="form-group">
-                        <label for="form_mobile">{{__('messages.mobile')}}
+                        <label for="form_mobile">{{__('شماره موبایل')}}
                             @if($userInfo['phone_verified_at'])
                             <span class="fa fa-check-circle-o" title="شماره تایید شده" style="color: #21bf26"> شماره تایید شده </span>
                             @endif

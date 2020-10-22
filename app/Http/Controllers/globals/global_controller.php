@@ -58,6 +58,7 @@ class global_controller extends Controller
 
         event(new userRegisterEvent($user));
         $message = trans("messages.user_created");
+//        return redirect(route("global_ack_phone_page"));
         return back_normal($request, $message);
     }
 
@@ -292,11 +293,15 @@ class global_controller extends Controller
         }
         $availableTypes = config('charity.routine_types');
         $pattern = charity_payment_patern::where('periodic','1')->first();
-
         $this->validate($request,
             [
                 'amount' => 'required|min:'.$pattern['min'].'|max:'.$pattern['max'].'|numeric',
                 'type' => 'required|in:'.implode(',', array_keys($availableTypes)),
+            ],
+            [
+                'amount.min' =>  "مبلغ نباید از " . number_format($pattern['min']) . " ریال کمتر باشد",
+                'type.required' => 'انتخاب نوع تعهد الزامی است'
+
             ]);
 
         $vow_type =$availableTypes[$request['type']];
@@ -600,7 +605,11 @@ class global_controller extends Controller
                     $user->phone_verified_at = date("Y-m-d H:i:s");
                     $user->save();
                     User::where('phone',$user->phone)->where('id','!=',$user->id)->update(['phone_verified_at'=>null]);
-                    return back_normal($request,'شماره شما با موفقیت تایید شد.');
+                    if (!charity_period::where('user_id', $user->id)->exists()){
+                        return redirect(route('t_routine_vow'))->with('message', 'شماره شما با موفقیت تایید شد.');
+                    }else{
+                        return redirect(route('global_profile'))->with('message', 'شماره شما با موفقیت تایید شد.');
+                    }
                 } else {
                     return back_error($request, __('messages.code_invalid'));
                 }

@@ -891,8 +891,19 @@ class panel_view extends Controller
                     ->orWhere('email', 'like', '%' . $quesry . '%');
             });
         }
+//        if ($request['from']) {
+//            $from_date = shamsi_to_miladi(latin_num($request['from']));
+//            $user_query->where('created_at',">=",$from_date);
+//        }
+//        if ($request['to']) {
+//            $to_date = shamsi_to_miladi(latin_num($request['to']));
+//            $user_query->where('created_at',"<=",$to_date);
+//
+//        }
         if ($request['status']) {
             switch ($request['status']) {
+                case 'all':
+                    break;
                 case 'active':
                     $user_query->whereHas('routine');
                     break;
@@ -900,6 +911,8 @@ class panel_view extends Controller
                     $user_query->whereDoesntHave('routine');
                     break;
             }
+        }else{
+            $user_query->whereHas('routine');
         }
         if ($request['sort']) {
             switch ($request['sort']) {
@@ -943,6 +956,28 @@ class panel_view extends Controller
                     $user_query->select((['users.*', DB::raw('COUNT(charity_periods_transactions.id) as count')]));
                     $user_query->orderBy('count', 'DESC');
                     break;
+                case 'count-p-a':
+                    $user_query->join('charity_periods_transactions', function ($join) {
+                        $join->on('charity_periods_transactions.user_id', '=', 'users.id')
+                            ->where('charity_periods_transactions.status', '=', 'paid')
+                            ->where('charity_periods_transactions.deleted_at', '=', NULL)
+                            ->where('charity_periods_transactions.group_pay', '=', 0);
+                    });
+                    $user_query->groupBy('users.id');
+                    $user_query->select((['users.*', DB::raw('COUNT(charity_periods_transactions.id) as count')]));
+                    $user_query->orderBy('count', 'ASC');
+                    break;
+                case 'count-p-d':
+                    $user_query->join('charity_periods_transactions', function ($join) {
+                        $join->on('charity_periods_transactions.user_id', '=', 'users.id')
+                            ->where('charity_periods_transactions.status', '=', 'paid')
+                            ->where('charity_periods_transactions.deleted_at', '=', NULL)
+                            ->where('charity_periods_transactions.group_pay', '=', 0);
+                    });
+                    $user_query->groupBy('users.id');
+                    $user_query->select((['users.*', DB::raw('COUNT(charity_periods_transactions.id) as count')]));
+                    $user_query->orderBy('count', 'DESC');
+                    break;
                 case 'amount-a':
                     $user_query->join('charity_periods', function ($join) {
                         $join->on('charity_periods.user_id', 'users.id')
@@ -963,14 +998,22 @@ class panel_view extends Controller
                     $user_query->select((['users.*', DB::raw('sum(charity_periods.amount) as amount')]));
                     $user_query->orderBy('amount', 'ASC');
                     break;
+                case 'date-r-d':
+                    $user_query->orderBy('id','ASC');
+                    break;
+                default :
+                    $user_query->orderBy('id','DESC');
+                    break;
             }
+        }
+        else{
+            $user_query->orderBy('id','DESC');
         }
         if ($paginate > 0) {
             $users = $user_query->paginate($paginate);
         } else {
             $users = $user_query->get();
         }
-
 
         $users->transform(function ($user) {
             $response = [
@@ -981,7 +1024,9 @@ class panel_view extends Controller
                 'routine_type' => "",
                 'routine_amount' => "",
                 'unpaid' => $user->count,
+                'paid' => 0,
                 'last_paid' => "",
+                'created_at' => $user->created_at,
             ];
             if ($user->routine) {
                 $response['routine_type'] = \config('charity.routine_types.' . $user->routine->period . '.title');
@@ -989,14 +1034,15 @@ class panel_view extends Controller
             }
 
             $unpaid_count = charity_periods_transaction::where('status', 'unpaid')->where('user_id', $user->id)->count();
-            if ($unpaid_count > 0) {
                 $response['unpaid'] = $unpaid_count;
-            }
+
+            $paid_count = charity_periods_transaction::where('status', 'paid')->where('user_id', $user->id)->count();
+                $response['paid'] = $paid_count;
+
             $last_paid = $response['last_paid'] = charity_periods_transaction::where('status', 'paid')->where('user_id', $user->id)->orderBy('pay_date', 'DESC')->first();
             if ($last_paid) {
                 $response['last_paid'] = jdate('Y/m/d', strtotime($last_paid->pay_date));
             }
-
             return $response;
         });
 
@@ -1015,13 +1061,71 @@ class panel_view extends Controller
 
             return Excel::download($export, 'Report.xlsx');
         } else {
-            $users = $this->charity_period_list_data($request, 50);
+            $users = $this->charity_period_list_data($request, 100);
             $active_users = User::whereHas('routine')->count();
             $inactive_users = User::whereDoesntHave('routine')->count();
             $paid_routine = charity_periods_transaction::whereNotNull('pay_date')->count();
             $unpaid_routine = charity_periods_transaction::whereNull('pay_date')->count();
+
+            $query = "";
+            $sort = "";
+            $status = "";
+            if ($request['q']) {
+                $query = $request['q'];
+                }
+            if ($request['status']) {
+                switch ($request['status']) {
+                    case 'all':
+
+                        break;
+                    case 'active':
+                        $status= "دارای کمک ماهانه فعال";
+                        break;
+                    case 'inactive':
+                        $status = "بدون کمک ماهانه";
+                        break;
+                }
+            }
+            if ($request['sort']) {
+            switch ($request['sort']){
+                case "date-a":
+                    $sort = "نزدیکترین تاریخ پرداخت";
+                    break;
+                case "date-d":
+                    $sort = "دور ترین تاریخ پرداخت";
+                    break;
+                case "date-r-a":
+                    $sort = "نزدیکترین تاریخ عضویت";
+                    break;
+                case "date-r-d":
+                    $sort = "دور ترین تاریخ عضویت";
+                    break;
+                case "count-a":
+                    $sort = " بیشترین در انتظار پرداخت";
+                    break;
+                case "count-d":
+                    $sort = "  کمترین در انتظار پرداخت";
+                    break;
+                case "count-p-a":
+                    $sort = "  کمترین پرداخت شده";
+                    break;
+                case "count-p-d":
+                    $sort = "بیشترین پرداخت شده";
+                    break;
+                case "amount-a":
+                    $sort = "بیشترین مبلغ";
+                    break;
+                case "amount-d":
+                    $sort = "کمترین مبلغ";
+                    break;
+            }
+            }
+
+
+
+
             return view('panel.charity.period.list', compact('users', 'active_users'
-                , 'inactive_users', 'paid_routine', 'unpaid_routine'));
+                , 'inactive_users', 'paid_routine', 'unpaid_routine','query','sort','status'));
         }
 
     }
@@ -1536,7 +1640,7 @@ class panel_view extends Controller
 //        dd(env('DB_PASSWORD'));
 //        Log::info("test loging" . date("Y-m-d H:i:s"));
 
-//      Artisan::call('config:cache');
+      Artisan::call('config:cache');
 
         //        $date = date("Y-m-d");
 //        $path = storage_path('/logs/laravel-'.$date.'.log');

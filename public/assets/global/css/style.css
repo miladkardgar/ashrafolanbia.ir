@@ -97,6 +97,16 @@ input:-moz-placeholder {
     z-index: 120;
     background-color: #2e3e77;
 }
+
+.top-bar-warning {
+    position: relative;
+    font-size: 14px;
+    z-index: 120;
+    background-color: #ee0006;
+    color: rgb(255, 255, 255);
+
+}
+
 .top-bar-half{
     -webkit-box-flex: 0;
     -ms-flex: 0 0 50%;

@@ -146,7 +146,6 @@
                 <!-- Search field -->
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="mb-3">جستجو پیشرفته</h5>
 
                         <form action="#">
                             <div class="input-group mb-3">
@@ -159,7 +158,7 @@
                                 </div>
 
                                 <div class="input-group-append">
-                                    <button type="button" id="t_search" class="btn btn-primary btn-lg">جستجو</button>
+                                    <button type="button" id="t_search" class="btn btn-primary btn-lg">جستجو جامع </button>
                                 </div>
                             </div>
 

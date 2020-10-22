@@ -32,7 +32,7 @@
                             </div>
                             <input type="hidden" name="g-recaptcha-response">
                             <div class="form-group">
-                                <button class="btn btn-dark btn-lg btn-block mt-15" type="submit">{{__('messages.register')}}</button>
+                                <button class="btn btn-success btn-lg btn-block mt-15" type="submit">{{__('messages.register')}}</button>
                             </div>
                         </form>
                     </div>
@@ -43,7 +43,7 @@
 
 @endsection
 @section('footer_js')
-    <<script src="https://www.google.com/recaptcha/api.js?render={{env('SITE_KEY')}}&hl={{App()->getLocale()=="fa"?'fa':'en'}}"></script>
+    <script src="https://www.google.com/recaptcha/api.js?render={{env('SITE_KEY')}}&hl={{App()->getLocale()=="fa"?'fa':'en'}}"></script>
     <script>
         grecaptcha.ready(function () {
             grecaptcha.execute("{{env('SITE_KEY')}}", {action: 'contact'}).then(function (token) {
@@ -99,7 +99,7 @@
                         $(form_result_div).html(response.message).fadeIn('slow');
                         setTimeout(function(){ $(form_result_div).fadeOut('slow') }, 3000);
                         setTimeout(function(){
-                            location.href = '{{route('global_profile')}}'
+                            location.href = '{{route('global_ack_phone_page')}}'
                         }, 3000);
                     },
                     error:function (response){

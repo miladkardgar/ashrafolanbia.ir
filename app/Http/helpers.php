@@ -112,13 +112,23 @@ function get_team($team_id = null)
     return $team;
 }
 
-function get_name($user_id)
+function get_name($user_id,$with_prefix = false)
 {
     try {
 
         $user = \App\User::with('people')->findOrFail($user_id);
         if ($user->people) {
             $name = $user->people->name . " " . $user->people->family;
+            if($with_prefix){
+                switch ($user->people->gender){
+                    case 0:
+                        $name = " آقای " .$name;
+                        break;
+                    case 1:
+                        $name = " خانم " .$name;
+                        break;
+                }
+            }
             return $name;
         } else {
             if ($user->phone) {

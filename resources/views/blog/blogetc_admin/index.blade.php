@@ -140,7 +140,7 @@ $active_sidbare = ['blog', 'blog_posts', 'blog_posts_list']
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    @php $i=1+(isset($_REQUEST['page']) ? ($_REQUEST['page']-1) *100 :0); @endphp
+                                    @php $i=1+(isset($_REQUEST['page']) ? ($_REQUEST['page']-1) * $posts->perPage() :0); @endphp
                                     @forelse($posts as $post)
                                         <tr>
                                             <td>{{$i}}</td>

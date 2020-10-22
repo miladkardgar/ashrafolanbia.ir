@@ -92,7 +92,7 @@ class ForgotPasswordController extends Controller
         if ($user){
             $user->password = Hash::make($password);
             $user->save();
-            return redirect(route('global_login_page'));
+            return redirect(route('global_login_page'))->with('message','رمز عبور شما با موفقیت تغییر کرد.');
         }else{
             return redirect(route('password_reset'))->with('message','کد صحیح نیست، مجدد امتحان کنید.');
         }

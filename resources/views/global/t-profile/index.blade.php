@@ -70,6 +70,7 @@
                     <span class="notif-date">
                         مبلغ:
                         <span>{{number_format($period['amount'])}}</span>
+                        ریال
                     </span>
                     <h3>نوبت بعدی پرداخت:
                     <span class="text-black-50">{{jdate('l',strtotime($period['next_date']))}}  {{miladi_to_shamsi_date($period['next_date']) }} </span>
@@ -83,17 +84,17 @@
     </div>
 @else
     <div class="mrn-notifications-box">
-        <h2 class="notifications">تعهد پرداخت مستمر شما فعال نیست</h2>
+        <h2 class="notifications">کمک ماهانه یا هفتگی شما فعال نیست</h2>
 
         <ul class="list-unstyled">
             <li class="announce-read">
                 <div class="notifications-content">
                     <span class="notif-date">
-                        شما میتوانید با ثبت تعهد پرداخت منظم ما را در برنامه ریزی برای کمک موثرتر به خانواده های نیازمند یاری کنید.
+                        شما میتوانید با ثبت کمک ماهانه یا هفتگی ما را در برنامه ریزی برای کمک موثرتر به خانواده های نیازمند یاری کنید.
                     </span>
 
                     <p>شما میتوانید از <a href="{{route('t_routine_vow')}}"><span
-                                    style="color: #0000ff;">اینجا</span> </a> کمک دوره ای خود را فعال کنید.</p>
+                                    style="color: #0000ff;">اینجا</span> </a> کمک ماهانه یا هفتگی خود را فعال کنید.</p>
                     <p style="text-align: center;">
                     </p></div>
             </li>

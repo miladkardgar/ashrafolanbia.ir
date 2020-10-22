@@ -15,8 +15,34 @@
         background:url('') transparent no-repeat scroll center center;
     }
 </style>
-<?php $locals = get_all_locals(); ?>
+<?php $locals = get_all_locals();
+$user = \Illuminate\Support\Facades\Auth::user();
+$active_period = true;
+if($user){
+    $active_period = \App\charity_period::where('user_id', $user['id'])->exists();
+}
+?>
+@if($user and !$active_period)
+<div class="top-bar-warning">
+    <div class="container">
+        <div class="row top-bar-row fixed-top">
+            <div class="col-md-12 text-center">
+                <a href="{{route('t_routine_vow')}}" class="">
 
+                <h3 class="text-white">
+                    نیکوکار گرامی
+                    <b>
+                    {{get_name($user['id'])}}
+                    </b>
+                     لطفا در صورت تمایل کمک ماهانه یا هفتگی خود را فعال نمایید.
+                    (کلیک کنید)
+                </h3>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+@endif
 <div class="top-bar top-bar-color-light">
     <div class="container">
         <div class="row top-bar-row">

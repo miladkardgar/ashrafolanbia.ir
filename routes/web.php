@@ -585,6 +585,7 @@ Route::group(
     Route::post('logout', 'Auth\LoginController@logout')->name('logout');
     Route::get('login', 'globals\global_view@login_page')->name('global_login_page');
     Route::get('register', 'globals\global_view@register_page')->name('global_register_page');
+    Route::get('ack-phone', 'globals\global_view@ack_phone_page')->name('global_ack_phone_page');
 
 //    Route::get('auth/reset', 'globals\global_view@reset_password')->name('global_reset_password');
 //    Route::post('auth/reset', 'globals\global_controller@reset_password')->name('global_password_reset');
