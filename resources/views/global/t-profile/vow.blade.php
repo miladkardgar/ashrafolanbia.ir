@@ -55,7 +55,7 @@
     @endif
     <div class="mrn-notifications-box" id="routine-form-area">
         <h2 class="notifications">{{$routine ? "ویرایش کمک هفتگی یا ماهانه":"ایجاد کمک هفتگی یا ماهانه"}}</h2>
-        <h4>موعد کمک ماهانه یا هفتگی خود را انتخاب کنید:</h4>
+        <h4>لطفا موعد کمک ماهانه یا هفتگی خود را انتخاب کنید:</h4>
 
 
             <div class="">
@@ -81,7 +81,9 @@
 
 
                                         @if($routine and $routine['period'] == $key)
-                                            <span class="text-info font-size-sm">(فعال)</span>
+                                            <div class="row">
+                                            <span class="text-white font-size-sm" style="font-weight: bold">(فعال)</span>
+                                            </div>
                                         @endif
 
                                     </h4>
@@ -187,7 +189,7 @@
                     <div class="notifications-content">
                         <div class="row">
                             <p>
-                                شما میتوانید کمک ماهانه یه هفتگی خود را غیر فعال کنید و هر زمان که تمایل داشتید مجددا آن را فعال کنید.
+                                شما میتوانید کمک ماهانه یا هفتگی خود را غیر فعال کنید و هر زمان که تمایل داشتید مجددا آن را فعال کنید.
                             </p>
                             <button class="button mrn-button-danger pull-left btn-delete mrn-button-sm" type="button">
                                 غیر فعال کردن
@@ -250,7 +252,7 @@
             $(document).on('submit', '.routine-form', function (e) {
                 e.preventDefault();
                 Swal.fire({
-                    title: 'تغییر وضعیت کمک ماهانه یه هفتگی',
+                    title: 'تغییر وضعیت کمک ماهانه یا هفتگی',
                     text: "آیا از ثبت اطلاعات اطمینان دارید؟",
                     type: 'warning',
                     showCancelButton: true,

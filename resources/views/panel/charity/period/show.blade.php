@@ -96,7 +96,7 @@
         $(document).on('submit', '#routine-form', function (e) {
             e.preventDefault();
             Swal.fire({
-                title: 'تغییر وضعیت تعهد',
+                title: 'تغییر وضعیت کمک ماهانه/هفتگی',
                 text: "آیا از ثبت اطلاعات اطمینان دارید؟",
                 type: 'warning',
                 showCancelButton: true,
@@ -113,8 +113,8 @@
         })
         $(document).on('click', '#remove_routine', function () {
             Swal.fire({
-                title: 'غیر فعال کردن تعهد',
-                text: "آیا از غیر فعال کردن تعهد اطمینان دارید؟",
+                title: 'غیر فعال کردن کمک ماهانه/هفتگی',
+                text: "آیا از غیر فعال کردن کمک ماهانه/هفتگی اطمینان دارید؟",
                 type: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#ff2e3c',
@@ -238,7 +238,7 @@
                                     <li class="nav-item">
                                         <a href="#routine" class="nav-link" data-toggle="tab">
                                             <i class="icon-heart5 animated animated-hover"></i>
-                                            ویرایش تعهد
+                                            ویرایش کمک ماهانه/هفتگی
                                             <span class="font-size-sm font-weight-normal opacity-75 ml-auto">{{$routine? "فعال":"غیرفعال"}}</span>
                                         </a>
                                     </li>
@@ -252,7 +252,7 @@
                                     <li class="nav-item">
                                         <a href="#history" class="nav-link" data-toggle="tab">
                                             <i class="icon-graph"></i>
-                                            سوابق پرداخت تعهد
+                                            سوابق پرداخت کمک ماهانه /هفتگی
                                         </a>
                                     </li>
                                     <li class="nav-item">
@@ -411,14 +411,14 @@
                                 <div class="row">
                                     <div class="col-md-4">
                                         <div class="d-sm-flex flex-sm-wrap mb-3">
-                                            <div class="font-weight-semibold">{{__('وضعیت تعهد')}}:</div>
+                                            <div class="font-weight-semibold">{{__('messages.routine_status')}}:</div>
                                             <div class="pl-2 mt-2 mt-sm-0 font-weight-bold text-left"><a
                                                         href="#">{{$routine? "فعال":"غیرفعال"}}</a>
                                             </div>
                                         </div>
                                         @if($routine)
                                         <div class="d-sm-flex flex-sm-wrap mb-3">
-                                            <div class="font-weight-semibold">{{__('نوع تعهد')}}:</div>
+                                            <div class="font-weight-semibold">{{__('messages.routine_type')}}:</div>
                                             <div class="pl-2 mt-2 mt-sm-0 text-left"><a
                                                         href="#">{{__("words.monthly_".$routine['period'])}}</a>
                                             </div>
@@ -472,14 +472,14 @@
                                 <div class="row">
                                     <div class="col-md-4">
                                         <div class="d-sm-flex flex-sm-wrap mb-3">
-                                            <div class="font-weight-semibold">{{__('وضعیت تعهد')}}:</div>
+                                            <div class="font-weight-semibold">{{__('وضعیت کمک ماهانه/هفتگی')}}:</div>
                                             <div class="pl-2 mt-2 mt-sm-0 font-weight-bold text-left"><a
                                                         href="#">{{$routine? "فعال":"غیرفعال"}}</a>
                                             </div>
                                         </div>
                                         @if($routine)
                                             <div class="d-sm-flex flex-sm-wrap mb-3">
-                                                <div class="font-weight-semibold">{{__('نوع تعهد')}}:</div>
+                                                <div class="font-weight-semibold">{{__('نوع کمک ماهانه/هفتگی')}}:</div>
                                                 <div class="pl-2 mt-2 mt-sm-0 text-left"><a
                                                             href="#">{{__("words.monthly_".$routine['period'])}}</a>
                                                 </div>
@@ -525,7 +525,7 @@
 
                                     <div class="card-body">
 
-                                        <h4>تغییر در وضعیت تعهد کاربر:</h4>
+                                        <h4>تغییر در وضعیت کمک ماهانه/هفتگی کاربر:</h4>
 
                                         <form method="post" id="routine-form" action="{{route('users_routine_update')}}"
                                               class="clearfix">
@@ -603,20 +603,20 @@
                             <div class="col-md-6">
                                 <div class="card">
                                     <div class="card-body">
-                                        <h4 class="notifications">غیر فعال کردن تعهد</h4>
+                                        <h4 class="notifications">غیر فعال کردن کمک ماهانه/هفتگی</h4>
 
                                         <ul class="list-unstyled">
                                             <li class="announce-read">
                                                 <div class="notifications-content">
                                                     <div class="row">
                                                         <p class="">
-                                                            با غیر فعال شدن تعهد پرداخت کاربر، دیگر تعهد جدید ایجاد نمیگردد.
+                                                            با غیر فعال شدن کمک ماهانه/هفتگی پرداخت کاربر، دیگر کمک ماهانه/هفتگی جدید ایجاد نمیگردد.
                                                         </p>
                                                         <br>
 
                                                     </div>
                                                     <button id="remove_routine" class="btn btn-danger" type="button"
-                                                    >غیر فعال کردن تعهد
+                                                    >غیر فعال کردن کمک ماهانه/هفتگی
                                                     </button>
                                                 </div>
                                             </li>

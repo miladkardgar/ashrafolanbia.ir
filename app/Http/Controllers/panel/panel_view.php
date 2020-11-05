@@ -1062,6 +1062,7 @@ class panel_view extends Controller
             return Excel::download($export, 'Report.xlsx');
         } else {
             $users = $this->charity_period_list_data($request, 100);
+            $count = $users->total();
             $active_users = User::whereHas('routine')->count();
             $inactive_users = User::whereDoesntHave('routine')->count();
             $paid_routine = charity_periods_transaction::whereNotNull('pay_date')->count();
@@ -1121,11 +1122,8 @@ class panel_view extends Controller
             }
             }
 
-
-
-
             return view('panel.charity.period.list', compact('users', 'active_users'
-                , 'inactive_users', 'paid_routine', 'unpaid_routine','query','sort','status'));
+                , 'inactive_users', 'paid_routine', 'unpaid_routine','query','sort','status','count'));
         }
 
     }
@@ -1611,45 +1609,7 @@ class panel_view extends Controller
 
     public function test()
     {
-
-
-//        $value = charity_periods_transaction::where('status','unpaid')->where('user_id',1)->whereNotNull('slug')
-//            ->first();
-//            $phone = get_user($value['user_id'])['phone'];
-//        $user = User::find($value['user_id']);
-//        $name = get_name($value['user_id']);
-//        if ($user->people){
-//            if ($user->people->name and $user->people->family){
-//                $name = ($user->people->gender == 1 ? " آقای " :" خانم "). $name;
-//            }
-//        }
-//        $smsText = notification_messages('sms','reminder',['name' => $name]);
-//
-//
-//        $short_link= "";
-//            if ($value['slug']){
-//                $short_link.="\r\n";
-//                $short_link.=' لینک پرداخت سریع: ';
-//                $short_link.="\r\n";
-//                $short_link.=config('app.short_url')."/i/".$value['slug'];
-//            }
-//            if ($phone){
-//                sendSms($phone, $smsText['text'] . $short_link);
-//            }
-
-//        dd(env('DB_PASSWORD'));
-//        Log::info("test loging" . date("Y-m-d H:i:s"));
-
-      Artisan::call('config:cache');
-
-        //        $date = date("Y-m-d");
-//        $path = storage_path('/logs/laravel-'.$date.'.log');
-//        if(file_exists($path)) {
-//            // log files exist
-//            $mails = config('logging.mails');
-//            Mail::to($mails)->send(new \App\Mail\system_log_report_mail($date,$path,$date."-report.log",".log"));
-//        return 'sent';
-//        }
-//        return 'not sent';
+        Artisan::call('dump-autoload');
+        echo 'dump-autoload complete';
     }
 }

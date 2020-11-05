@@ -367,7 +367,7 @@ class global_view extends Controller
 
     public function vow_view($id, Request $request)
     {
-        $charity = charity_payment_patern::with('fields')->find($request['id']);
+        $charity = charity_payment_patern::with('fields')->findOrFail($request['id']);
         $titles = charity_payment_title::where('ch_pay_pattern_id', $id)->get();
         $gateways = gateway::with('bank')->where('online', 1)->get();
         $user = null;
@@ -395,7 +395,7 @@ class global_view extends Controller
         $user_id = 0;
         if (Auth::id()) {
             $user_id = Auth::id();
-        } else {
+        } elseif($request['phone']) {
             $user = User::where('phone', $request['phone'])->first();
             if ($user) {
                 $user_id = $user['id'];
@@ -598,11 +598,12 @@ class global_view extends Controller
                 }
             } elseif ($gatewayInfo['function_name'] == "MelliGateway") {
 
-//                try {
+                try {
                     $gateway = \Larabookir\Gateway\Gateway::make(new Sadad());
 
                     $gateway->setCallback(route('callback', ['gateway' => 'sadad']));
                     $gateway->price($info['amount'])->moduleSet($type)->moduleIDSet($info['id'])->ready();
+
                     $refId = $gateway->refId();
                     $transID = $gateway->transactionId();
 
@@ -612,9 +613,10 @@ class global_view extends Controller
 
                     return $gateway->redirect();
 
-//                } catch (\Exception $e) {
-//                    echo $e->getMessage();
-//                }
+                } catch (\Exception $e) {
+
+                    echo $e->getMessage();
+                }
             }
         } else {
             return back_normal($request, ['message' => trans('errors.payment_not_valid')]);

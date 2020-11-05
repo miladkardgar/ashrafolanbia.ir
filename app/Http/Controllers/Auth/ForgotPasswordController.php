@@ -94,7 +94,7 @@ class ForgotPasswordController extends Controller
             $user->save();
             return redirect(route('global_login_page'))->with('message','رمز عبور شما با موفقیت تغییر کرد.');
         }else{
-            return redirect(route('password_reset'))->with('message','کد صحیح نیست، مجدد امتحان کنید.');
+            return redirect(route('password_reset_request'))->with('message','کد صحیح نیست، مجدد امتحان کنید.');
         }
 
     }

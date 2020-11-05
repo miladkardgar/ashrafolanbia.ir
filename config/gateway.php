@@ -45,10 +45,10 @@ return [
     // Sadad gateway
     //--------------------------------
     'sadad' => [
-        'merchant' => '',
-        'transactionKey' => '',
-        'terminalId' => 000000000,
-        'callback-url' => '/'
+        'merchant' => '000000140329876',
+        'transactionKey' => 'RnszP6AYaaZCF4PoGnsCTQAOhAmMdYWZ',
+        'terminalId' => '24042986',
+        'callback-url' => '/callback/sadad'
     ],
 
     //--------------------------------

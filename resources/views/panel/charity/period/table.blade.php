@@ -3,10 +3,10 @@
     <thead>
     <tr>
         <th>ردیف</th>
-        <th>{{__('messages.name')}}</th>
+        <th>{{__('messages.name_family')}}</th>
         <th>{{__('messages.phone')}}</th>
         <th>{{__('تاریخ عضویت')}}</th>
-        <th>{{__('وضعیت تعهد')}}</th>
+        <th>{{__('messages.routine_status')}}</th>
         <th>{{__('کمک ماهانه/هفتگی')}}</th>
         <th>{{__('messages.amount')}} (ریال) </th>
         <th>{{__('پرداخت شده')}}</th>

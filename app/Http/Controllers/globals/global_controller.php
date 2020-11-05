@@ -300,7 +300,7 @@ class global_controller extends Controller
             ],
             [
                 'amount.min' =>  "مبلغ نباید از " . number_format($pattern['min']) . " ریال کمتر باشد",
-                'type.required' => 'انتخاب نوع تعهد الزامی است'
+                'type.required' => 'انتخاب نوع کمک ماهانه/هفتگی الزامی است'
 
             ]);
 
@@ -346,6 +346,10 @@ class global_controller extends Controller
 
 
         if (strtotime($info['next_date']) <= time() and !charity_periods_transaction::where('user_id',Auth::id())->where('payment_date',$info['next_date'])->exists()) {
+            $random = Str::random(6);
+            while (charity_periods_transaction::where('slug', $random)->exists()) {
+                $random = Str::random(7);
+            }
             charity_periods_transaction::create(
                 [
                     'user_id' => Auth::id(),
@@ -354,6 +358,7 @@ class global_controller extends Controller
                     'amount' => $info['amount'],
                     'description' => $availableTypes[$request['type']]['title']." " . $info['id'],
                     'status' => "unpaid",
+                    'slug' => $random,
                 ]
             );
             $update = updateNextRoutine($info['id']);
@@ -367,10 +372,10 @@ class global_controller extends Controller
     {
         try {
             if (!charity_period::where('user_id', Auth::id())->exists()){
-                return back_normal($request, ['message' => "تعهد پرداخت شما فعال نیست.", "code" => 400]);
+                return back_normal($request, ['message' => "کمک ماهانه/هفتگی پرداخت شما فعال نیست.", "code" => 400]);
             }
             charity_period::where('user_id', Auth::id())->delete();
-            return back_normal($request, ['message' => "تعهد پرداخت غیرفعال شد", "code" => 200]);
+            return back_normal($request, ['message' => "کمک ماهانه/هفتگی پرداخت غیرفعال شد", "code" => 200]);
         }
         catch (\Throwable $exception){
             $message[] = trans("messages.period_not_found");
@@ -560,13 +565,15 @@ class global_controller extends Controller
         $message = '';
         if ($con) {
             if ($person = person::where('user_id', '=', Auth::id())->first()) {
+
                 $person->name = $request['name'];
                 $person->family = $request['family'];
+                $person->gender = $request['gender'];
+
                 $person->national_code = $request['national_code'];
                 if ($request['phone']) {
                     $person->phone = $request['phone'];
                 }
-                $person->gender = $request['gender'];
                 $person->birth_date = $request['birthday'];
                 if ($request['email']) {
                     $person->email = $request['email'];

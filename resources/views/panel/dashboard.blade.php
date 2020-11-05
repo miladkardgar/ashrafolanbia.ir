@@ -334,6 +334,7 @@
 
     </script>
 @stop
+
 @section('content')
     <div class="content-wrapper">
         <div class="sidebar-user-material category-content" id="dashboardCon"
@@ -345,108 +346,119 @@
                 <h6 class="text-center text-white p-20">{{__('messages.ashraf')}}</h6>
             </div>
             <div class="row m-1">
-                <div class="col-12 col-sm-3 col-xl-3">
-                    <div class="card card-body bg-primary-400 has-bg-image">
-                        <div class="media">
-                            <div class="mr-3 align-self-center">
-                                <i class="icon-blog icon-3x opacity-75"></i>
-                            </div>
-                            <div class="media-body text-right">
-                                <h3 class="mb-0">{{number_format($postCount)}}</h3>
-                                <span class="text-uppercase font-size-xs">{{__('messages.blog_posts')}}</span>
+                @permission('blog_list')
+                    <div class="col-12 col-sm-3 col-xl-3">
+                        <div class="card card-body bg-primary-400 has-bg-image">
+                            <div class="media">
+                                <div class="mr-3 align-self-center">
+                                    <i class="icon-blog icon-3x opacity-75"></i>
+                                </div>
+                                <div class="media-body text-right">
+                                    <h3 class="mb-0">{{number_format($postCount)}}</h3>
+                                    <span class="text-uppercase font-size-xs">{{__('messages.blog_posts')}}</span>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-12 col-sm-3 col-xl-3">
-                    <div class="card card-body bg-danger-400 has-bg-image">
-                        <div class="media">
-                            <div class="mr-3 align-self-center">
-                                <i class="icon-users icon-3x opacity-75"></i>
-                            </div>
+                @endpermission
+                @permission('manage_users')
+                    <div class="col-12 col-sm-3 col-xl-3">
 
-                            <div class="media-body text-right">
-                                <h3 class="mb-0">{{number_format($userCount)}}</h3>
-                                <span class="text-uppercase font-size-xs">{{__('messages.users')}}</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 col-sm-3 col-xl-3">
-                    <div class="card card-body bg-indigo has-bg-image">
-                        <div class="media">
-                            <div class="mr-3 align-self-center">
-                                <i class="icon-paypal icon-3x opacity-75"></i>
-                            </div>
+                        <div class="card card-body bg-danger-400 has-bg-image">
+                            <div class="media">
+                                <div class="mr-3 align-self-center">
+                                    <i class="icon-users icon-3x opacity-75"></i>
+                                </div>
 
-                            <div class="media-body text-right">
-                                <h3 class="mb-0">{{number_format($commentCount)}}</h3>
-                                <span class="text-uppercase font-size-xs">{{__('messages.comment')}}</span>
+                                <div class="media-body text-right">
+                                    <h3 class="mb-0">{{number_format($userCount)}}</h3>
+                                    <span class="text-uppercase font-size-xs">{{__('messages.users')}}</span>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-12 col-sm-3 col-xl-3">
-                    <div class="card card-body bg-light has-bg-image">
-                        <div class="media">
-                            <div class="mr-3 align-self-center">
-                                <i class="icon-pointer icon-3x opacity-75"></i>
-                            </div>
+                @endpermission
+                @permission('blog_comment_list')
+                    <div class="col-12 col-sm-3 col-xl-3">
+                        <div class="card card-body bg-indigo has-bg-image">
+                            <div class="media">
+                                <div class="mr-3 align-self-center">
+                                    <i class="icon-paypal icon-3x opacity-75"></i>
+                                </div>
 
-                            <div class="media-body text-right">
-                                <h3 class="mb-0">{{number_format($caravansCount)}}</h3>
-                                <span class="text-uppercase font-size-xs">{{__('messages.caravan')}}</span>
+                                <div class="media-body text-right">
+                                    <h3 class="mb-0">{{number_format($commentCount)}}</h3>
+                                    <span class="text-uppercase font-size-xs">{{__('messages.comment')}}</span>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                @endpermission
+                @permission('manage_carevan')
+                    <div class="col-12 col-sm-3 col-xl-3">
+                        <div class="card card-body bg-light has-bg-image">
+                            <div class="media">
+                                <div class="mr-3 align-self-center">
+                                    <i class="icon-pointer icon-3x opacity-75"></i>
+                                </div>
+
+                                <div class="media-body text-right">
+                                    <h3 class="mb-0">{{number_format($caravansCount)}}</h3>
+                                    <span class="text-uppercase font-size-xs">{{__('messages.caravan')}}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @endpermission
             </div>
         </div>
         <div class="row pt-2 m-1">
             @permission('manage_weblog')
-                <a href="{{route('blogetc.admin.create_post')}}" class="btn btn-light btn-float m-0 col-md-2 col-6 col-sm-4">
-                    <i class="icon-file-plus icon-2x"></i>
-                    <span>{{__('messages.post_add')}}</span>
-                </a>
+            <a href="{{route('blogetc.admin.create_post')}}"
+               class="btn btn-light btn-float m-0 col-md-2 col-6 col-sm-4">
+                <i class="icon-file-plus icon-2x"></i>
+                <span>{{__('messages.post_add')}}</span>
+            </a>
             @endpermission
-                @permission('manage_weblog')
+            @permission('manage_weblog')
 
-                <a href="{{route('blogetc.admin.index')}}" class="btn btn-light btn-float m-0 col-md-2 col-6 col-sm-4">
-                    <i class="icon-blogger text-blue-400 icon-2x"></i>
-                    <span>{{__('messages.post_list')}}</span>
-                </a>
-                @endpermission
-                @permission('manage_carevan')
+            <a href="{{route('blogetc.admin.index')}}" class="btn btn-light btn-float m-0 col-md-2 col-6 col-sm-4">
+                <i class="icon-blogger text-blue-400 icon-2x"></i>
+                <span>{{__('messages.post_list')}}</span>
+            </a>
+            @endpermission
+            @permission('manage_carevan')
 
-                <a href="{{route('caravans_list')}}" class="btn btn-light btn-float m-0 col-md-2 col-6 col-sm-4">
-                    <i class="icon-train2 text-danger-400 icon-2x"></i>
-                    <span>{{__('messages.caravans_list')}}</span>
-                </a>
-                @endpermission
-                @permission('manage_rezvan')
+            <a href="{{route('caravans_list')}}" class="btn btn-light btn-float m-0 col-md-2 col-6 col-sm-4">
+                <i class="icon-train2 text-danger-400 icon-2x"></i>
+                <span>{{__('messages.caravans_list')}}</span>
+            </a>
+            @endpermission
+            @permission('manage_rezvan')
 
-                <a href="{{route('building_dashboard')}}" class="btn btn-light btn-float m-0 col-md-2 col-6 col-sm-4">
-                    <i class="icon-quill4 text-violet-400 icon-2x"></i>
-                    <span>{{__('messages.building_projects')}}</span>
-                </a>
-                @endpermission
-                @permission('charity_periodic')
+            <a href="{{route('building_dashboard')}}" class="btn btn-light btn-float m-0 col-md-2 col-6 col-sm-4">
+                <i class="icon-quill4 text-violet-400 icon-2x"></i>
+                <span>{{__('messages.building_projects')}}</span>
+            </a>
+            @endpermission
+            @permission('charity_periodic')
 
-                <a href="{{route('charity_period_list')}}" class="btn btn-light btn-float m-0 col-md-2 col-6 col-sm-4">
-                    <i class="icon-chart text-brown-400 icon-2x"></i>
-                    <span>{{__('messages.periodic_payment')}}</span>
-                </a>
-                @endpermission
-                @permission('charity_payment_list')
+            <a href="{{route('charity_period_list')}}" class="btn btn-light btn-float m-0 col-md-2 col-6 col-sm-4">
+                <i class="icon-chart text-brown-400 icon-2x"></i>
+                <span>{{__('messages.periodic_payment')}}</span>
+            </a>
+            @endpermission
+            @permission('charity_payment_list')
 
-                <a href="{{route('charity_payment_list')}}" class="btn btn-light btn-float m-0 col-md-2 col-6 col-sm-4">
-                    <i class="icon-paypal text-primary icon-2x"></i>
-                    <span>{{__('messages.other_payments')}}</span>
-                </a>
-                @endpermission
+            <a href="{{route('charity_payment_list')}}" class="btn btn-light btn-float m-0 col-md-2 col-6 col-sm-4">
+                <i class="icon-paypal text-primary icon-2x"></i>
+                <span>{{__('messages.other_payments')}}</span>
+            </a>
+            @endpermission
 
         </div>
         <div class="row pt-2 m-1">
+            @permission('charity_payment_list')
             <div class="col-12 col-md-6 border-dark border-rounded rounded">
                 <div class="card">
                     <div class="card-header header-elements-inline">
@@ -459,6 +471,8 @@
                     </div>
                 </div>
             </div>
+            @endpermission
+            @permission('manage_carevan')
             <div class="col-12 col-md-6 border-dark border-rounded rounded">
 
                 <div class="card">
@@ -475,6 +489,8 @@
                     </div>
                 </div>
             </div>
+            @endpermission
+
         </div>
     </div>
 @endsection

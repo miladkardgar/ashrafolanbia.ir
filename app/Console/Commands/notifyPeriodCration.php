@@ -48,8 +48,8 @@ class notifyPeriodCration extends Command
 //            ->where('payment_date', '<=', date('Y-m-d'))
             ->where('payment_date', '=', date('Y-m-d'))
             ->get();
-        Log::info("routine notify creation Run for ".count($periodicTransaction)." transactions");
-
+        $phones = "";
+        Log::info("routine notify sending start");
 
         foreach ($periodicTransaction as $value) {
             $user = User::find($value['user_id']);
@@ -74,10 +74,22 @@ class notifyPeriodCration extends Command
 
                 if ($user['phone']) {
                     sendSms($user['phone'], $smsText['text'] . $short_link);
+                    $phones = $phones ." ".$user['phone'];
                 }
-            }else{
+            }
+            elseif (!$user){
+                charity_periods_transaction::where('user_id',$value['user_id'])->delete();
+                charity_period::where('user_id',$value['user_id'])->delete();
+            }
+            elseif (!isset($user['phone'])){
+                Log::warning("user id:".$user['id']." has no phone");
+            }
+            else{
                 Log::warning("routine notify sms didnt sent to user for transaction with id of ".$value['id']);
             }
         }
+        Log::info("routine notify sending Run for ".count($periodicTransaction)." phones:".$phones." with message: ".$smsText['text']);
+
+
     }
 }

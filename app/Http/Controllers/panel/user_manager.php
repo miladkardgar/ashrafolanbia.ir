@@ -20,8 +20,8 @@ class user_manager extends Controller
     {
 //        $currentUser = Auth::user();
         $this->validate($request, [
-            'email' => 'required_without_all:phone|nullable|unique:users',
-            'phone' => 'required_without_all:email|nullable|numeric|regex:/(09)[0-9]{9}/|unique:users',
+//            'email' => 'required_without_all:phone|nullable|unique:users',
+            'phone' => 'required|nullable|numeric|regex:/(09)[0-9]{9}/|unique:users',
             'password' => 'required|confirmed|min:6',
         ]);
 

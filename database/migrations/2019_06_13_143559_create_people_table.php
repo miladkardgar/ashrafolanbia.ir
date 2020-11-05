@@ -32,7 +32,7 @@ class CreatePeopleTable extends Migration
             $table->string('national_code')->nullable();
             $table->string('sh_code')->nullable();
             $table->string('madadjoo_id')->nullable();
-            $table->boolean('gender'); // 0=> male 1=>female
+            $table->boolean('gender')->nullable(); // 0=> male 1=>female
             $table->boolean('validate')->default('0'); // 0=> not  1=>validate
             $table->timestamps();
         });

@@ -464,10 +464,10 @@ class charity extends Controller
 
         try {
             if (!charity_period::where('user_id', $request['user_id'])->exists()){
-                return back_normal($request, ['message' => "تعهد پرداخت کاربر فعال نیست.", "code" => 400]);
+                return back_normal($request, ['message' => "کمک ماهانه/هفتگی پرداخت کاربر فعال نیست.", "code" => 400]);
             }
             charity_period::where('user_id', $request['user_id'])->delete();
-            return back_normal($request, ['message' => "تعهد پرداخت غیرفعال شد", "code" => 200]);
+            return back_normal($request, ['message' => "کمک ماهانه/هفتگی پرداخت غیرفعال شد", "code" => 200]);
         }
         catch (\Throwable $exception){
             $message[] = trans("messages.period_not_found");

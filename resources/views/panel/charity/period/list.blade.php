@@ -87,7 +87,7 @@
                             <div class="media">
                                 <div class="media-body text-left">
                                     <h3 class="mb-0">{{number_format($paid_routine)}}  </h3>
-                                    <span class="text-uppercase font-size-xs"> تعهد پرداخت شده</span>
+                                    <span class="text-uppercase font-size-xs"> کمک ماهانه/هفتگی پرداخت شده</span>
                                 </div>
                                 <div class="mr-3 align-self-center">
                                     <i class="icon-checkmark-circle icon-3x opacity-75"></i>
@@ -104,7 +104,7 @@
                             <div class="media">
                                 <div class="media-body text-left">
                                     <h3 class="mb-0">{{number_format($unpaid_routine)}}  </h3>
-                                    <span class="text-uppercase font-size-xs"> تعهد پرداخت نشده</span>
+                                    <span class="text-uppercase font-size-xs"> کمک ماهانه/هفتگی پرداخت نشده</span>
                                 </div>
                                 <div class="mr-3 align-self-center">
                                     <i class="icon-hour-glass icon-3x opacity-75"></i>
