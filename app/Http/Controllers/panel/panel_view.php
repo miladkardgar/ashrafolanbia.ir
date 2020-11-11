@@ -24,6 +24,7 @@ use App\charity_payment_title;
 use App\charity_period;
 use App\charity_periods_transaction;
 use App\charity_transaction;
+use App\charityPaymentPT;
 use App\city;
 use App\Events\c_storePaymentAlert;
 use App\Events\payToCharityMoney;
@@ -911,7 +912,7 @@ class panel_view extends Controller
                     $user_query->whereDoesntHave('routine');
                     break;
             }
-        }else{
+        } else {
             $user_query->whereHas('routine');
         }
         if ($request['sort']) {
@@ -999,15 +1000,14 @@ class panel_view extends Controller
                     $user_query->orderBy('amount', 'ASC');
                     break;
                 case 'date-r-d':
-                    $user_query->orderBy('id','ASC');
+                    $user_query->orderBy('id', 'ASC');
                     break;
                 default :
-                    $user_query->orderBy('id','DESC');
+                    $user_query->orderBy('id', 'DESC');
                     break;
             }
-        }
-        else{
-            $user_query->orderBy('id','DESC');
+        } else {
+            $user_query->orderBy('id', 'DESC');
         }
         if ($paginate > 0) {
             $users = $user_query->paginate($paginate);
@@ -1034,10 +1034,10 @@ class panel_view extends Controller
             }
 
             $unpaid_count = charity_periods_transaction::where('status', 'unpaid')->where('user_id', $user->id)->count();
-                $response['unpaid'] = $unpaid_count;
+            $response['unpaid'] = $unpaid_count;
 
             $paid_count = charity_periods_transaction::where('status', 'paid')->where('user_id', $user->id)->count();
-                $response['paid'] = $paid_count;
+            $response['paid'] = $paid_count;
 
             $last_paid = $response['last_paid'] = charity_periods_transaction::where('status', 'paid')->where('user_id', $user->id)->orderBy('pay_date', 'DESC')->first();
             if ($last_paid) {
@@ -1073,14 +1073,14 @@ class panel_view extends Controller
             $status = "";
             if ($request['q']) {
                 $query = $request['q'];
-                }
+            }
             if ($request['status']) {
                 switch ($request['status']) {
                     case 'all':
 
                         break;
                     case 'active':
-                        $status= "دارای کمک ماهانه فعال";
+                        $status = "دارای کمک ماهانه فعال";
                         break;
                     case 'inactive':
                         $status = "بدون کمک ماهانه";
@@ -1088,42 +1088,42 @@ class panel_view extends Controller
                 }
             }
             if ($request['sort']) {
-            switch ($request['sort']){
-                case "date-a":
-                    $sort = "نزدیکترین تاریخ پرداخت";
-                    break;
-                case "date-d":
-                    $sort = "دور ترین تاریخ پرداخت";
-                    break;
-                case "date-r-a":
-                    $sort = "نزدیکترین تاریخ عضویت";
-                    break;
-                case "date-r-d":
-                    $sort = "دور ترین تاریخ عضویت";
-                    break;
-                case "count-a":
-                    $sort = " بیشترین در انتظار پرداخت";
-                    break;
-                case "count-d":
-                    $sort = "  کمترین در انتظار پرداخت";
-                    break;
-                case "count-p-a":
-                    $sort = "  کمترین پرداخت شده";
-                    break;
-                case "count-p-d":
-                    $sort = "بیشترین پرداخت شده";
-                    break;
-                case "amount-a":
-                    $sort = "بیشترین مبلغ";
-                    break;
-                case "amount-d":
-                    $sort = "کمترین مبلغ";
-                    break;
-            }
+                switch ($request['sort']) {
+                    case "date-a":
+                        $sort = "نزدیکترین تاریخ پرداخت";
+                        break;
+                    case "date-d":
+                        $sort = "دور ترین تاریخ پرداخت";
+                        break;
+                    case "date-r-a":
+                        $sort = "نزدیکترین تاریخ عضویت";
+                        break;
+                    case "date-r-d":
+                        $sort = "دور ترین تاریخ عضویت";
+                        break;
+                    case "count-a":
+                        $sort = " بیشترین در انتظار پرداخت";
+                        break;
+                    case "count-d":
+                        $sort = "  کمترین در انتظار پرداخت";
+                        break;
+                    case "count-p-a":
+                        $sort = "  کمترین پرداخت شده";
+                        break;
+                    case "count-p-d":
+                        $sort = "بیشترین پرداخت شده";
+                        break;
+                    case "amount-a":
+                        $sort = "بیشترین مبلغ";
+                        break;
+                    case "amount-d":
+                        $sort = "کمترین مبلغ";
+                        break;
+                }
             }
 
             return view('panel.charity.period.list', compact('users', 'active_users'
-                , 'inactive_users', 'paid_routine', 'unpaid_routine','query','sort','status','count'));
+                , 'inactive_users', 'paid_routine', 'unpaid_routine', 'query', 'sort', 'status', 'count'));
         }
 
     }
@@ -1163,22 +1163,28 @@ class panel_view extends Controller
 
     public function charity_payment_pattern_add($payment_pattern_id = null)
     {
+
         $payment_pattern = null;
         if ($payment_pattern_id) {
             $payment_pattern = charity_payment_patern::with('fields')->find($payment_pattern_id);
         }
-        return view('panel.charity.setting.module.add_new_payment_pattern_form', compact('payment_pattern'));
+        $titles = $payment_pattern->titles()->get()->mapWithKeys(function ($title) {
+            return [
+                $title['id'] => $title['id']
+            ];
+        })->toArray();
+        return view('panel.charity.setting.module.add_new_payment_pattern_form', compact('payment_pattern', 'titles'));
     }
 
     public function charity_payment_list(Request $request)
     {
-        $avg_30 = charity_transaction::where('payment_date', '>=', date("Y-m-d 00:00:00", strtotime(date("Y-m-d H:i:s") . " -1 year")))->where('status', 'success')->count() / 12;
-        $last_30 = charity_transaction::where('payment_date', '>=', date("Y-m-d 00:00:00", strtotime(date("Y-m-d H:i:s") . " -30 days")))->where('status', 'success')->count();
-        $price_30 = charity_transaction::where('payment_date', '>=', date("Y-m-d 00:00:00", strtotime(date("Y-m-d H:i:s") . " -30 days")))->where('status', 'success')->sum('amount');
-        $faild_30 = charity_transaction::where('created_at', '>=', date("Y-m-d 00:00:00", strtotime(date("Y-m-d H:i:s") . " -30 days")))->where('status', "!=", 'success')->count();
-        $query="";
-        $status=null;
-        $sort=null;
+        $avg_30 = charity_transaction::where('payment_date', '>=', date("Y-m-d", strtotime(date("Y-m-d H:i:s") . " -1 year")))->where('status', 'success')->count() / 12;
+        $last_30 = charity_transaction::where('payment_date', '>=', date("Y-m-d", strtotime(date("Y-m-d H:i:s") . " -30 days")))->where('status', 'success')->count();
+        $price_30 = charity_transaction::where('payment_date', '>=', date("Y-m-d", strtotime(date("Y-m-d H:i:s") . " -30 days")))->where('status', 'success')->sum('amount');
+        $faild_30 = charity_transaction::where('created_at', '>=', date("Y-m-d", strtotime(date("Y-m-d H:i:s") . " -30 days")))->where('status', "!=", 'success')->count();
+        $query = "";
+        $status = null;
+        $sort = null;
         $otherPayments_query = charity_transaction::query();
         if ($request['q']) {
             $query = $request['q'];
@@ -1191,27 +1197,26 @@ class panel_view extends Controller
         if ($request['sort']) {
             switch ($request['sort']) {
                 case 'date-a':
-                    $sort="نزدیکترین تاریخ";
+                    $sort = "نزدیکترین تاریخ";
                     $otherPayments_query->orderBy('payment_date', 'DESC');
                     break;
                 case 'date-d':
-                    $sort="دورترین تاریخ";
+                    $sort = "دورترین تاریخ";
                     $otherPayments_query->orderBy('payment_date', 'ASC');
                     break;
                 case 'amount-a':
-                    $sort="بیشترین مبلغ";
+                    $sort = "بیشترین مبلغ";
                     $otherPayments_query->orderBy('amount', 'DESC');
                     break;
                 case 'amount-d':
-                    $sort="کمترین مبلغ";
+                    $sort = "کمترین مبلغ";
                     $otherPayments_query->orderBy('amount', 'ASC');
                     break;
                 default:
                     $otherPayments_query->orderBy('created_at', 'DESC');
 
             }
-        }
-        else{
+        } else {
             $otherPayments_query->orderBy('created_at', 'DESC');
 
         }
@@ -1245,7 +1250,7 @@ class panel_view extends Controller
         } else {
             $otherPayments = $otherPayments_query->paginate(50);
 
-            return view('panel.charity.other_payment.list', compact('avg_30', 'last_30', 'faild_30', 'price_30', 'otherPayments','query','count','status','sort'));
+            return view('panel.charity.other_payment.list', compact('avg_30', 'last_30', 'faild_30', 'price_30', 'otherPayments', 'query', 'count', 'status', 'sort'));
         }
     }
 
@@ -1288,7 +1293,7 @@ class panel_view extends Controller
         return view('panel.charity.champion.show', compact('info'));
     }
 
-    public function charity_reports()
+    public function charity_reportsDEPRICATED()
     {
 
         $gateway = DB::table('gateway_transactions')->select(DB::raw('port'))->groupBy('port')->get();
@@ -1297,6 +1302,87 @@ class panel_view extends Controller
         $gateway = json_decode($gateway, true);
         return view('panel.charity.reports.report', compact('gateway', 'titles', 'pat'));
     }
+
+    public function charity_reports(Request $request)
+    {
+        $selected_titles = charity_payment_title::get()->mapWithKeys(function ($title) {
+            return [$title['id'] => $title['id']];
+        })->toArray();
+
+
+        $start_date = date("Y-m-d", strtotime(date('Y-m-d') . " -1 month"));
+        $end_date = date("Y-m-d");
+        $with_fails = $request->with_fails;
+        if ($request->start_date) {
+            $start_date = shamsi_to_miladi($request->start_date);
+        }
+        if ($request->end_date) {
+            $end_date = shamsi_to_miladi($request->end_date);
+        }
+        if ($request->titles) {
+            $selected_titles = $request->titles;
+        }
+        $sum_data = $this->get_charity_sum_report($start_date,$end_date,$selected_titles);
+        $bank_balances = $this->get_bank_sum_report($start_date,$end_date,$selected_titles);
+        $charity_titles = $this->get_title_sum_report($start_date,$end_date);
+        $other_vow_query = charity_transaction::query();
+        $other_vow_query->whereIn('charity_field_id',$selected_titles);
+        $other_vow_query->whereNotIn('charity_id', [3]);
+        $other_vow_query->with('patern', 'title');
+        $other_vow_query->whereBetween('payment_date', [$start_date, $end_date]);
+        if (!$with_fails){
+            $other_vow_query->where('status', 'success');
+        }
+        $other_vows = $other_vow_query->paginate('33    ');
+        $other_vows->getCollection();
+        $other_vows->transform(function ($vow){
+
+            $vow->gateway = gateway::find($vow['gateway_id'])['title'];
+            $vow->status = __('messages.' . $vow['status']);
+            $vow->payDate = miladi_to_shamsi_date($vow['payment_date']);
+            return $vow;
+        });
+        return view('panel.charity.reports.megaReport',
+            compact('charity_titles', 'with_fails', 'selected_titles', 'start_date',
+                'end_date','sum_data','bank_balances','other_vows')
+        );
+    }
+
+    private function get_charity_sum_report($start_date, $end_date,$titles)
+    {
+        $system_vow = charity_transaction::whereIn('charity_field_id',$titles)->where('charity_id', 2)->whereBetween('payment_date', [$start_date, $end_date])->where('status', 'success')->sum('amount');
+        $other_vow = charity_transaction::whereIn('charity_field_id',$titles)->whereNotIn('charity_id', [1,2,3])->whereBetween('payment_date', [$start_date, $end_date])->where('status', 'success')->sum('amount');
+        $routine_vow = charity_periods_transaction::whereBetween('pay_date', [$start_date, $end_date])->where('group_pay', 0)->where('status', 'paid')->sum('amount');
+        return [
+            "system_vow" => $system_vow,
+            "other_vow" => $other_vow,
+            "routine_vow" => $routine_vow,
+        ];
+    }
+    private function get_bank_sum_report($start_date, $end_date,$titles)
+    {
+        $gateways = gateway::get()->transform(function ($gateway)use ($start_date, $end_date,$titles){
+            $charity_vow = charity_transaction::whereIn('charity_field_id',$titles)->where('gateway_id',$gateway['id'])->whereNotIn('charity_id', [1,3])->whereBetween('payment_date', [$start_date, $end_date])->where('status', 'success')->sum('amount');
+            $routine_vow = charity_periods_transaction::where('gateway_id',$gateway['id'])->whereBetween('pay_date', [$start_date, $end_date])->where('group_pay', 0)->where('status', 'paid')->sum('amount');
+
+            $gateway->balance = $charity_vow + $routine_vow;
+            return $gateway;
+        });
+        return $gateways;
+    }
+
+    private function get_title_sum_report($start_date, $end_date)
+    {
+        $charity_titles = charity_payment_title::get()->transform(function ($title)use ($start_date,$end_date){
+            $charity_vow = charity_transaction::where('charity_field_id',$title['id'])->whereNotIn('charity_id', [3])->whereBetween('payment_date', [$start_date, $end_date])->where('status', 'success')->sum('amount');
+            $routine_vow = 0;
+            $title->balance = $charity_vow + $routine_vow;
+            return $title;
+        });
+
+        return $charity_titles;
+    }
+
 //end charity module
 
 
@@ -1609,7 +1695,15 @@ class panel_view extends Controller
 
     public function test()
     {
-        Artisan::call('dump-autoload');
-        echo 'dump-autoload complete';
+        Artisan::call('view:cache');
+
+//        $titles = charity_payment_title::get();
+//        foreach ($titles as $title){
+//            $tp = new charityPaymentPT();
+//            $tp->pattern_id =$title->ch_pay_pattern_id;
+//            $tp->title_id =$title->id;
+//            $tp->save();
+//        }
+//        dd('d');
     }
 }

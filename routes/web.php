@@ -608,6 +608,9 @@ Route::group(
 
     Route::get('logout', 'Auth\LoginController@logout');
     Route::get('/', 'globals\global_view@index')->name('home_main');
+    //develop
+    Route::get('/develop-index', 'globals\global_view@develop_index')->name('develop_index');
+    //end develop
     Route::get('/home', 'HomeController@index')->name('home_page');
 
 

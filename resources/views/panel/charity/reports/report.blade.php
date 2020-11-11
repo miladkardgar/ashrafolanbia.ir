@@ -118,14 +118,14 @@
                                     <div class="form-group">
                                         <label for="to">{{__('messages.to')}}</label>
                                         <div class="input-group">
-                                            <input type="text" class="form-control" readonly="readonly" id="end_date"
-                                                   name="end_date"
-                                                   required="required"
-                                                   value="{{jdate("Y-m-d 23:59:59",time())}}">
-                                            <button class="btn btn-outline-dark btn-sm" type="button" id="end_date_btn">
-                                                <i class="icon-calendar"></i>
-                                            </button>
-                                        </div>
+                                        <input type="text" class="form-control" readonly="readonly" id="end_date"
+                                               name="end_date"
+                                               required="required"
+                                               value="{{jdate("Y-m-d 23:59:59",time())}}">
+                                        <button class="btn btn-outline-dark btn-sm" type="button" id="end_date_btn">
+                                            <i class="icon-calendar"></i>
+                                        </button>
+                                    </div>
                                     </div>
                                 </div>
                             </div>

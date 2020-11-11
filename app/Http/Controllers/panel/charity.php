@@ -11,6 +11,7 @@ use App\charity_payment_title;
 use App\charity_period;
 use App\charity_periods_transaction;
 use App\charity_transaction;
+use App\charityPaymentPT;
 use App\gateway_transaction;
 use App\User;
 use Illuminate\Http\Request;
@@ -103,7 +104,15 @@ class charity extends Controller
                 }
             }
         }
-
+        charityPaymentPT::where('pattern_id',$payment_pattern['id'])->delete();
+        if ($request['charity_title']) {
+            foreach ($request['charity_title'] as $key => $value) {
+                charityPaymentPT::create([
+                    'pattern_id' => $payment_pattern['id'],
+                    'title_id' => $value
+                ]);
+            };
+        };
         return back_normal($request);
     }
 

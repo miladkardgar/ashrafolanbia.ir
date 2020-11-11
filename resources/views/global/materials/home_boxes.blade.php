@@ -1,5 +1,5 @@
 <!-- Section: home-boxes -->
-<section class="">
+<section class="hidden-lg">
     <div class="container pt-10 pb-10">
         <div class="section-content">
             <div class="row equal-height-inner home-boxes">
@@ -7,8 +7,7 @@
                     <div class="col-sm-6 col-xs-6 col-md-3 p-0 sm-height-auto wow fadeInUp" data-wow-duration="1.2s" data-wow-delay="0.3s">
                         <a href="{{json_decode($adv_card['value'],true)['link']}}" >
                         <div class="sm-height-auto p-5 rounded">
-
-                            <img class="img-absolute-parent" src="{{URL::asset(json_decode($adv_card['value'],true)['image'])}}">
+                            <img class="img-absolute-parent" src="{{URL::asset(json_decode($adv_card['value'],true)['image'])}}" style="border-radius: 8px">
                         </div>
                         </a>
                     </div>

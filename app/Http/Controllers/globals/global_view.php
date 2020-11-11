@@ -68,6 +68,10 @@ class global_view extends Controller
     {
         return view('global.index');
     }
+    public function develop_index()
+    {
+        return view('global.develop_index');
+    }
 
     public function faq()
     {
