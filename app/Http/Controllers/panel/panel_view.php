@@ -878,6 +878,11 @@ class panel_view extends Controller
         $banks = bank::groupBy('name')->get();
         return view('panel.charity.setting.payment_titles', compact('periodic_title', 'system_title', 'other_titles', 'deleted_titles', 'champion_titles', 'banks', 'champions'));
     }
+    public function charity_payment_title_titles()
+    {
+        $titles = charity_payment_title::all();
+        return view('panel.charity.setting.titles',compact('titles'));
+    }
 
 
     private function charity_period_list_data(Request $request, $paginate = 100)
@@ -1305,7 +1310,7 @@ class panel_view extends Controller
 
     public function charity_reports(Request $request)
     {
-        $selected_titles = charity_payment_title::get()->mapWithKeys(function ($title) {
+        $selected_titles = charity_payment_title::limit(1)->get()->mapWithKeys(function ($title) {
             return [$title['id'] => $title['id']];
         })->toArray();
 
@@ -1326,21 +1331,22 @@ class panel_view extends Controller
         $bank_balances = $this->get_bank_sum_report($start_date,$end_date,$selected_titles);
         $charity_titles = $this->get_title_sum_report($start_date,$end_date);
         $other_vow_query = charity_transaction::query();
-        $other_vow_query->whereIn('charity_field_id',$selected_titles);
+        $other_vow_query->whereIn('title_id',$selected_titles);
         $other_vow_query->whereNotIn('charity_id', [3]);
         $other_vow_query->with('patern', 'title');
         $other_vow_query->whereBetween('payment_date', [$start_date, $end_date]);
         if (!$with_fails){
             $other_vow_query->where('status', 'success');
         }
-        $other_vows = $other_vow_query->paginate('33    ');
+        $other_vows = $other_vow_query->orderBy('id','desc')->paginate('33');
         $other_vows->getCollection();
         $other_vows->transform(function ($vow){
 
-            $vow->gateway = gateway::find($vow['gateway_id'])['title'];
-            $vow->status = __('messages.' . $vow['status']);
-            $vow->payDate = miladi_to_shamsi_date($vow['payment_date']);
-            return $vow;
+        $vow->gateway = gateway::find($vow['gateway_id'])['title'];
+        $vow->status = __('messages.' . $vow['status']);
+        $vow->payDate = miladi_to_shamsi_date($vow['payment_date']);
+
+        return $vow;
         });
         return view('panel.charity.reports.megaReport',
             compact('charity_titles', 'with_fails', 'selected_titles', 'start_date',
@@ -1350,9 +1356,9 @@ class panel_view extends Controller
 
     private function get_charity_sum_report($start_date, $end_date,$titles)
     {
-        $system_vow = charity_transaction::whereIn('charity_field_id',$titles)->where('charity_id', 2)->whereBetween('payment_date', [$start_date, $end_date])->where('status', 'success')->sum('amount');
-        $other_vow = charity_transaction::whereIn('charity_field_id',$titles)->whereNotIn('charity_id', [1,2,3])->whereBetween('payment_date', [$start_date, $end_date])->where('status', 'success')->sum('amount');
-        $routine_vow = charity_periods_transaction::whereBetween('pay_date', [$start_date, $end_date])->where('group_pay', 0)->where('status', 'paid')->sum('amount');
+        $system_vow = charity_transaction::whereIn('title_id',$titles)->where('charity_id', 2)->whereBetween('payment_date', [$start_date, $end_date])->where('status', 'success')->sum('amount');
+        $other_vow = charity_transaction::whereIn('title_id',$titles)->whereNotIn('charity_id', [1,2,3])->whereBetween('payment_date', [$start_date, $end_date])->where('status', 'success')->sum('amount');
+        $routine_vow = charity_periods_transaction::whereIn('title_id',$titles)->whereBetween('pay_date', [$start_date, $end_date])->where('group_pay', 0)->where('status', 'paid')->sum('amount');
         return [
             "system_vow" => $system_vow,
             "other_vow" => $other_vow,
@@ -1362,8 +1368,8 @@ class panel_view extends Controller
     private function get_bank_sum_report($start_date, $end_date,$titles)
     {
         $gateways = gateway::get()->transform(function ($gateway)use ($start_date, $end_date,$titles){
-            $charity_vow = charity_transaction::whereIn('charity_field_id',$titles)->where('gateway_id',$gateway['id'])->whereNotIn('charity_id', [1,3])->whereBetween('payment_date', [$start_date, $end_date])->where('status', 'success')->sum('amount');
-            $routine_vow = charity_periods_transaction::where('gateway_id',$gateway['id'])->whereBetween('pay_date', [$start_date, $end_date])->where('group_pay', 0)->where('status', 'paid')->sum('amount');
+            $charity_vow = charity_transaction::whereIn('title_id',$titles)->where('gateway_id',$gateway['id'])->whereNotIn('charity_id', [1,3])->whereBetween('payment_date', [$start_date, $end_date])->where('status', 'success')->sum('amount');
+            $routine_vow = charity_periods_transaction::whereIn('title_id',$titles)->where('gateway_id',$gateway['id'])->whereBetween('pay_date', [$start_date, $end_date])->where('group_pay', 0)->where('status', 'paid')->sum('amount');
 
             $gateway->balance = $charity_vow + $routine_vow;
             return $gateway;
@@ -1374,7 +1380,7 @@ class panel_view extends Controller
     private function get_title_sum_report($start_date, $end_date)
     {
         $charity_titles = charity_payment_title::get()->transform(function ($title)use ($start_date,$end_date){
-            $charity_vow = charity_transaction::where('charity_field_id',$title['id'])->whereNotIn('charity_id', [3])->whereBetween('payment_date', [$start_date, $end_date])->where('status', 'success')->sum('amount');
+            $charity_vow = charity_transaction::where('title_id',$title['id'])->whereNotIn('charity_id', [3])->whereBetween('payment_date', [$start_date, $end_date])->where('status', 'success')->sum('amount');
             $routine_vow = 0;
             $title->balance = $charity_vow + $routine_vow;
             return $title;
@@ -1695,7 +1701,7 @@ class panel_view extends Controller
 
     public function test()
     {
-        Artisan::call('view:cache');
+        Artisan::call('config:cache');
 
 //        $titles = charity_payment_title::get();
 //        foreach ($titles as $title){

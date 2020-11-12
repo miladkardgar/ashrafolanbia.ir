@@ -72,6 +72,14 @@
                         <span>{{number_format($period['amount'])}}</span>
                         ریال
                     </span>
+                    <br>
+
+                    <span class="notif-date">
+                        بابت:
+                        </span>
+                    <span>{{$period['title']['title']}}</span>
+                    <br>
+
                     <h3>نوبت بعدی پرداخت:
                     <span class="text-black-50">{{jdate('l',strtotime($period['next_date']))}}  {{miladi_to_shamsi_date($period['next_date']) }} </span>
                     </h3>

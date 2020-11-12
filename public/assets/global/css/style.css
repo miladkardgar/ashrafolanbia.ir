@@ -64,7 +64,7 @@ input:-moz-placeholder {
 }
 /* width */
 ::-webkit-scrollbar {
-    width: 6px;
+    width: 12px;
 }
 
 /* Track */

@@ -297,10 +297,12 @@ class global_controller extends Controller
             [
                 'amount' => 'required|min:'.$pattern['min'].'|max:'.$pattern['max'].'|numeric',
                 'type' => 'required|in:'.implode(',', array_keys($availableTypes)),
+                'payment_title' => 'required',
             ],
             [
                 'amount.min' =>  "مبلغ نباید از " . number_format($pattern['min']) . " ریال کمتر باشد",
-                'type.required' => 'انتخاب نوع کمک ماهانه/هفتگی الزامی است'
+                'type.required' => 'انتخاب نوع کمک ماهانه/هفتگی الزامی است',
+                'payment_title.required' => 'انتخاب مورد مصرف کمک ماهانه/هفتگی الزامی است'
 
             ]);
 
@@ -334,6 +336,7 @@ class global_controller extends Controller
             [
                 'user_id' => Auth::id(),
                 'amount' => $request['amount'],
+                'title_id' => $request['payment_title'],
                 'start_date' => $date,
                 'next_date' => $date,
                 'period' => $request['type'],
@@ -354,6 +357,7 @@ class global_controller extends Controller
                 [
                     'user_id' => Auth::id(),
                     'period_id' => $info['id'],
+                    'title_id' => $info['title_id'],
                     'payment_date' => $info['next_date'],
                     'amount' => $info['amount'],
                     'description' => $availableTypes[$request['type']]['title']." " . $info['id'],
@@ -399,6 +403,7 @@ class global_controller extends Controller
                     [
                         'user_id' => $item['user_id'],
                         'period_id' => $item['id'],
+                        'title_id' => $item['title_id'],
                         'payment_date' => $item['next_date'],
                         'amount' => $item['amount'],
                         'description' => "پرداخت دوره ای شماره " . $item['id'],

@@ -15,5 +15,9 @@ class charity_period extends Model
     {
         return $this->hasOne('App\User','id','user_id')->with('people');
     }
+    public function title()
+    {
+        return $this->belongsTo('App\charity_payment_title','title_id');
+    }
 
 }

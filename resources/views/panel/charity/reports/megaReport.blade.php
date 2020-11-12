@@ -38,7 +38,11 @@
             href="{{ URL::asset('/node_modules/md.bootstrappersiandatetimepicker/src/jquery.md.bootstrap.datetimepicker.style.css') }}"
             rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="{{URL::asset('/public/assets/panel/css/iranBanks/ibl.css')}}">
-
+    <style>
+        .ibl64{
+            border-radius: 50%;
+        }
+    </style>
 @stop
 @section('content')
 
@@ -232,7 +236,7 @@
 
                     <div class="card">
                         <div class="card-header header-elements-inline">
-                            <h6 class="card-title">سایر عناوین پرداخت:</h6>
+                            <h6 class="card-title">پرداختی بابت:</h6>
                             <div class="header-elements">
                                 <span class="font-weight-bold text-danger-600 ml-2">{{number_format($sum_data['other_vow'])}}</span>
                             </div>

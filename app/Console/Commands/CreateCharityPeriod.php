@@ -66,6 +66,7 @@ class CreateCharityPeriod extends Command
                         [
                             'user_id' => $item['user_id'],
                             'period_id' => $item['id'],
+                            'title_id' => $item['title_id'],
                             'payment_date' => $item['next_date'],
                             'amount' => $item['amount'],
                             'description' => $item['id'] . " " . ($description ? $description : "پرداخت دوره ای "),

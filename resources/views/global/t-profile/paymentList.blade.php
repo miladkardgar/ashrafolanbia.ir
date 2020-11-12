@@ -39,7 +39,7 @@
                     {{miladi_to_shamsi_date($item['pay_date'])}}
                 @endif
             </td>
-            <td class="text-center"> ایتام و محرومین</td>
+            <td class="text-center">{{$item['title']['title']}}</td>
 
             <td class="text-center">{{$item->description}}</td>
             <td class="text-center">

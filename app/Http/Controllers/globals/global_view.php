@@ -371,8 +371,7 @@ class global_view extends Controller
 
     public function vow_view($id, Request $request)
     {
-        $charity = charity_payment_patern::with('fields')->findOrFail($request['id']);
-        $titles = charity_payment_title::where('ch_pay_pattern_id', $id)->get();
+        $charity = charity_payment_patern::with('fields','titles')->findOrFail($request['id']);
         $gateways = gateway::with('bank')->where('online', 1)->get();
         $user = null;
         if (Auth::user()) {
@@ -381,7 +380,7 @@ class global_view extends Controller
             $user['email'] = Auth::user()->email;
         }
 
-        return view('global.vows.vow', compact('charity', 'gateways', 'titles', 'user'));
+        return view('global.vows.vow', compact('charity', 'gateways', 'user'));
     }
 
     public function vow_payment(Request $request)
@@ -459,8 +458,7 @@ class global_view extends Controller
 
     public function vow_donate()
     {
-        $title = charity_payment_title::where('ch_pay_pattern_id', 2)->get();
-        $patern = charity_payment_patern::find(2);
+        $patern = charity_payment_patern::with('titles')->find(2);
         $gateways = gateway::with('bank')->where('online', 1)->get();
         $user = null;
         if (Auth::user()) {
@@ -469,7 +467,7 @@ class global_view extends Controller
             $user['email'] = Auth::user()->email;
         }
 
-        return view('global.vows.donate', compact('title', 'patern', 'gateways', 'user'));
+        return view('global.vows.donate', compact( 'patern', 'gateways', 'user'));
     }
 
     public function vow_period()
@@ -966,9 +964,10 @@ class global_view extends Controller
     public function t_routine_vow()
     {
         $routine = charity_period::where('user_id', Auth::id())->first();
+        $routine_pattern = charity_payment_patern::where('system',1)->where('periodic',1)->first();
         $routine_types = config('charity.routine_types');
         $pattern = charity_payment_patern::where('periodic', '1')->first();
-        return view('global.t-profile.vow', compact('routine', 'pattern', 'routine_types'));
+        return view('global.t-profile.vow', compact('routine', 'pattern', 'routine_types','routine_pattern'));
     }
 
     public function t_routine_payment(Request $request)

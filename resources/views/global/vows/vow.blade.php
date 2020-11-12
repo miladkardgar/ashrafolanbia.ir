@@ -157,9 +157,9 @@
                                 <div class="col-md-6">
                                 <div class="row">
 
-                                    @if(count($titles)>0)
+                                    @if(count($charity->titles)>0)
 
-                                        @foreach($titles as $key => $title)
+                                        @foreach($charity->titles as $key => $title)
                                             <div class="col-md-6 col-xs-6" >
                                                 <div class="radio" style="text-align: right;">
                                                     <label>
@@ -175,7 +175,7 @@
 
                                     @endif
 
-<br>
+                                    <br>
                                     <div class="col-md-12">
                                         <div class="form-group">
                                             <label for="amount">{{__('messages.amount')}} <small>({{__('messages.rial')}})</small></label>

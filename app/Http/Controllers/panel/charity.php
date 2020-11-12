@@ -22,21 +22,16 @@ use Illuminate\Support\Facades\Hash;
 
 class charity extends Controller
 {
-    public function charity_payment_title_add($payment_pattern_id = null, Request $request)
+    public function charity_payment_title_add( Request $request)
     {
         $this->validate($request, [
-            'payment_pattern_id' => 'required|exists:charity_payment_paterns,id',
-            'payment_title_id' => 'nullable|exists:charity_payment_titles,id',
+//            'payment_pattern_id' => 'nullable|exists:charity_payment_paterns,id',
+//            'payment_title_id' => 'nullable|exists:charity_payment_titles,id',
             'title' => 'required|max:150',
         ]);
-        if ($request['payment_title_id']) {
-            $payment_title = charity_payment_title::find($request['payment_title_id']);
-        } else {
-            $payment_title = new charity_payment_title();
-            $payment_title->ch_pay_pattern_id = $request['payment_pattern_id'];
-        }
+
+        $payment_title = new charity_payment_title();
         $payment_title->title = $request['title'];
-//        $payment_title->type="online";
         $payment_title->save();
         return back_normal($request);
     }
@@ -58,7 +53,9 @@ class charity extends Controller
         $this->validate($request, [
             'payment_pattern_id' => 'nullable|exists:charity_payment_paterns,id',
             'title' => 'required|max:150',
+            'charity_title' => 'required',
         ]);
+
         $min = 0;
         $max = 0;
         if ($request['min']) {

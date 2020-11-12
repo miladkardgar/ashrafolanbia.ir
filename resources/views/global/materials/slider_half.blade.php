@@ -20,7 +20,7 @@
         ];
 
         var jssor_1_options = {
-            $SlideDuration: 6000,
+            $SlideDuration: 2000,
             $FillMode: 2,                                      //[Optional] The way to fill image in slide, 0 stretch, 1 contain (keep aspect ratio and put all inside slide), 2 cover (keep aspect ratio and cover whole slide), 4 actuall size, 5 contain for large image and actual size for small image, default value is 0
             $AutoPlay: true,                                   //[Optional] Whether to auto play, to enable slideshow, this option must be set to true, default value is false
             $DragOrientation: 3,                               //[Optional] Orientation to drag slide, 0 no drag, 1 horizental, 2 vertical, 3 either, default value is 1 (Note that the $DragOrientation should be the same as $PlayOrientation when $DisplayPieces is greater than 1, or parking position is not 0)
@@ -153,11 +153,11 @@
 </style>
 
 
-<div class="container pt-10 pb-10 mb-10" >
+<div class="container pt-20 pb-10 mb-10" >
     <div class="col-md-8 mt-5 p-0">
         <div id="jssor_1"
              style="    -webkit-box-shadow: 0 6px 20px rgba(168, 172, 185, .3);
-    box-shadow: 0 6px 20px rgba(168, 172, 185, .3);border-radius: 25px;background-color: #80808026;position:relative;margin:0 auto;top:0px;left:0px;width:1800px;height:900px;overflow:hidden;visibility:hidden;">
+    box-shadow: 0 6px 20px rgba(168, 172, 185, .3);border-radius: 15px;background-color: #80808026;position:relative;margin:0 auto;top:0px;left:0px;width:1800px;height:1000px;overflow:hidden;visibility:hidden;">
             <!-- Loading Screen -->
             <div data-u="loading" class="jssorl-009-spin"
                  style="position:inherit;top:0px;left:0px;width:100%!important;height:100%;text-align:center;background-color:rgba(0,0,0,0.7);">
@@ -165,7 +165,7 @@
                      src="{{url('public/assets/panel/images/spin.svg')}}"/>
             </div>
 
-            <div data-u="slides" style="cursor:default;position:relative;top:0px;left:0px;width:1820px;height:900px;overflow:hidden;">
+            <div data-u="slides" style="cursor:default;position:relative;top:0px;left:0px;width:1820px;height:1000px;overflow:hidden;">
             @forelse($sliders as $key=>$slider)
                 <!-- SLIDE {{$key}} -->
                     <div data-p="{{$key}}" >

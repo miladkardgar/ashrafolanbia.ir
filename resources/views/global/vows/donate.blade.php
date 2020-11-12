@@ -133,14 +133,48 @@
                                                    placeholder="{{__('messages.amount_rial')}}">
                                         </div>
                                     </div>
+
+                                    @if(isset($patern->fields))
+                                        @foreach($patern->fields as $fi)
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label>{{$fi['label']}}<span class="text-danger">{{$fi['require'] ?"*":""}}</span></label>
+                                                    @switch($fi['type'])
+                                                        @case(0)
+                                                        <input type="text" class="form-control" {{$fi['require'] ?"required":""}} name="field[{{$fi['id']}}]">
+                                                        @break
+                                                        @case(1)
+                                                        <textarea name="field[{{$fi['id']}}]" {{$fi['require'] ?"required":""}} class="form-control"
+                                                                  id="field[{{$fi['id']}}]" cols="30" rows="3"></textarea>
+                                                        @break
+                                                        @case(2)
+                                                        <input type="number" {{$fi['require'] ?"required":""}} class="form-control"
+                                                               name="field[{{$fi['id']}}]">
+                                                        @break
+                                                        @case(3)
+                                                        <input type="text" id="p_datepicker_{{$fi['id']}}" {{$fi['require'] ?"required":""}} class="form-control" name="field[{{$fi['id']}}]">
+                                                        @break
+                                                        @case(4)
+                                                        <input type="time" {{$fi['require'] ?"required":""}} class="form-control" name="field[{{$fi['id']}}]">
+                                                        @break
+                                                        @case(5)
+                                                        <input type="tel" pattern="09[0-9]{9}" {{$fi['require'] ?"required":""}} class="form-control" name="field[{{$fi['id']}}]">
+                                                        @break
+                                                    @endswitch
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    @endif
+
+
                                 </div>
                                 <div class="col-md-6 ">
                                     <div class="col-md-12 ">
                                         <div class="form-group">
                                             <label>{{__('messages.for')}}</label>
                                             <select name="title" class="form-control" id="title">
-                                                @foreach($title as $titl)
-                                                    <option value="{{$titl['id']}}">{{$titl['title']}}</option>
+                                                @foreach($patern->titles as $title)
+                                                    <option value="{{$title['id']}}">{{$title['title']}}</option>
                                                 @endforeach
                                             </select>
                                         </div>

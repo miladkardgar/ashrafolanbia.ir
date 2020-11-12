@@ -303,6 +303,14 @@ return [
                         'badge' => '',
                         'child' => []
                     ],
+                    'charity_titles' => [
+                        'title' => 'بابت پرداخت ها',
+                        'link' => 'charity_payment_title.titles',
+                        'icon' => '',
+                        'permission' => '',
+                        'badge' => '',
+                        'child' => []
+                    ],
                     'charity_support_title' => [
                         'title' => 'messages.charity_support_title',
                         'link' => 'sForm.index',

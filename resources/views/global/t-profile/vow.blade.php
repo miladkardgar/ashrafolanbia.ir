@@ -27,6 +27,13 @@
                         <span>{{number_format($routine['amount'])}}</span>
                         ریال
                         <br>
+                        <span class="notif-date">
+                        بابت:
+                        </span>
+                        <span>{{$routine['title']['title']}}</span>
+                        <br>
+
+
                         <span class="text-theme-colored">
 
                         <a href="#routine-form-area" class="text-info">ویرایش <i class="fa fa-pencil"></i> </a>
@@ -162,6 +169,20 @@
                                             </select>
                                         </div>
                                     </div>
+                                    @if($routine_pattern->titles)
+                                    <div class="row">
+                                        <div class="form-group col-md-6">
+                                            <label>{{__('messages.for')}}</label>
+                                            <select name="payment_title" class="form-control" id="title">
+                                                @foreach($routine_pattern->titles as $title)
+                                                    <option
+                                                            {{(isset($routine) and $routine->title_id == $title['id'])?"selected":""}}
+                                                            value="{{$title['id']}}">{{$title['title']}}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    @endif
                                 </div>
                                 <div class="modal-footer">
                                     <button class="button mrn-button pull-right" name="submit-btn" type="submit"
