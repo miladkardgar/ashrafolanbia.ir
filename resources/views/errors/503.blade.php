@@ -1,4 +1,4 @@
-@extends('errors::minimal')
+@extends('errors::illustrated-layout')
 
 @section('title', __('سرویس در دسترس نیست |'))
 @section('code', '503')

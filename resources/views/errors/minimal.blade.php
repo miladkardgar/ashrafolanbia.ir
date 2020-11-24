@@ -11,6 +11,7 @@
                 <div class="inner-content text-center">
                     <h1 class="heading text-info">@yield('code')</h1>
                     <p class="subheading text-muted">@yield('message')</p>
+                    <img src="/public/images/spotlight.png" alt="error">
                 </div>
             </div>
         </div>
