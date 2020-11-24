@@ -61,144 +61,7 @@
         </div>
     @endif
     <div class="mrn-notifications-box" id="routine-form-area">
-        <h2 class="notifications">{{$routine ? "ویرایش کمک هفتگی یا ماهانه":"ایجاد کمک هفتگی یا ماهانه"}}</h2>
-        <h4>لطفا موعد کمک ماهانه یا هفتگی خود را انتخاب کنید:</h4>
-
-
-            <div class="">
-                <div class="mrn-status-user-widget mt-2">
-                    <ul class="radio-tabs">
-                        @foreach($routine_types as $key => $routine_type)
-                            <li class="all_bills w-50">
-                                <input type="radio"
-                                       data-target="#routine-modal-{{$key}}" data-toggle="modal"
-                                       {{($routine and $routine['period']==$key) ?"checked":""}}
-                                       id="radio-{{$key}}"
-                                       data-notice="notice-{{$key}}"
-                                       data-day="{{$routine_type['week_day']}}"
-                                       class="radio-type "
-                                       value="{{$key}}"
-                                       name="type"
-
-                                />
-                                <label for="radio-{{$key}}" class="text-center {{$routine_type['color']}}">
-                                    <h4 style="margin-top: 1.5em">
-                                        <i class="fa fa-hand-pointer-o"></i>
-                                        {{$routine_type['text']}}
-
-
-                                        @if($routine and $routine['period'] == $key)
-                                            <div class="row">
-                                            <span class="text-white font-size-sm" style="font-weight: bold">(فعال)</span>
-                                            </div>
-                                        @endif
-
-                                    </h4>
-                                </label>
-
-                            </li>
-
-
-
-                        @endforeach
-                    </ul>
-                </div>
-            </div>
-            <div class="">
-                @foreach($routine_types as $key => $routine_type)
-
-                    <div id="routine-modal-{{$key}}" class="modal fade" role="dialog">
-                        <div class="modal-dialog">
-                            <!-- Modal content-->
-                            <form method="post" id="" action="{{route('add_charity_period')}}"
-                                  class="clearfix routine-form">
-                            <div class="modal-content">
-
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                    <h4 class="modal-title">{{$routine_type['title']}}</h4>
-                                </div>
-                                <div class="modal-body">
-
-                                    <div class="mrn-notifications-box-green vow-notice"
-                                         id="notice-{{$key}}">
-                                        <h4 class="notifications"><i
-                                                    class="fa fa-bell-o"></i> {{$routine_type['title']}} </h4>
-
-                                        <ul class="list-unstyled">
-                                            <li class="announce-read">
-                                                <div class="notifications-content">
-                                                    <p>
-                                                        {{$routine_type['description']}}
-                                                    </p>
-
-                                                </div>
-                                            </li>
-                                        </ul>
-                                    </div>
-
-                                    @csrf
-                                    <input type="hidden" name="type" value="{{$key}}">
-                                    <div class="row">
-                                        <div class="form-group col-md-6 ">
-                                            <label for="amount" class="">مبلغ: <span
-                                                        class="text-muted">(ریال)</span></label>
-                                            <input id="amount" name="amount" class="form-control amount left"
-                                                   value="{{$routine ? number_format($routine['amount']):""}}"
-                                                   type="text" required="required" placeholder="مبلغ" autocomplete="off">
-                                        </div>
-                                    </div>
-
-                                    <div class="row" id="day-of-month"
-                                         style=" {{$routine_type['week_day']<7  ?"display: none":"display: block"}}">
-                                        @php
-                                            if ($routine){
-                                                $day = latin_num(jdate('d',strtotime($routine['start_date'])));
-                                            }else{
-                                                $day = latin_num(jdate("d",time()));
-                                            }
-                                        @endphp
-                                        <div class="form-group col-md-6">
-                                            <label for="Day" class="">روز:</label>
-                                            <select name="day" id="Day" class="form-control">
-                                                <option value="" disabled class="">روز ماه:</option>
-                                                @for($d=1 ; $d<=29;$d++)
-                                                    <option {{$day == $d ? "selected":""}} value="{{$d}}"
-                                                            class="">{{$d}}</option>
-                                                @endfor
-                                            </select>
-                                        </div>
-                                    </div>
-                                    @if($routine_pattern->titles)
-                                    <div class="row">
-                                        <div class="form-group col-md-6">
-                                            <label>{{__('messages.for')}}</label>
-                                            <select name="payment_title" class="form-control" id="title">
-                                                @foreach($routine_pattern->titles as $title)
-                                                    <option
-                                                            {{(isset($routine) and $routine->title_id == $title['id'])?"selected":""}}
-                                                            value="{{$title['id']}}">{{$title['title']}}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                    @endif
-                                </div>
-                                <div class="modal-footer">
-                                    <button class="button mrn-button pull-right" name="submit-btn" type="submit"
-                                    >ثبت و ذخیره
-                                    </button>
-                                    <button type="button" class="button mrn-button-danger" data-dismiss="modal">بستن پنجره</button>
-                                </div>
-                            </div>
-                            </form>
-                        </div>
-                    </div>
-
-        @endforeach
-
-            </div>
-
+        @include('global.t-profile.activate_routine')
     </div>
 
     @if($routine)
@@ -210,7 +73,8 @@
                     <div class="notifications-content">
                         <div class="row">
                             <p>
-                                شما میتوانید کمک ماهانه یا هفتگی خود را غیر فعال کنید و هر زمان که تمایل داشتید مجددا آن را فعال کنید.
+                                شما میتوانید کمک ماهانه یا هفتگی خود را غیر فعال کنید و هر زمان که تمایل داشتید مجددا آن
+                                را فعال کنید.
                             </p>
                             <button class="button mrn-button-danger pull-left btn-delete mrn-button-sm" type="button">
                                 غیر فعال کردن

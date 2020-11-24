@@ -170,6 +170,12 @@
                     <div class="row text-center">
                         <div class="col-md-12">
                             <div class="card">
+                                <div class="card-header">
+                                    <a href="#" data-value="others" data-param="list_type" class="t_filter badge {{$list_type=='others'? "badge-info":""}} ">لیست پرداخت های موردی</a>
+                                    <a href="#" data-value="routine" data-param="list_type" class="t_filter badge {{$list_type=='routine'? "badge-info":""}}">لیست پرداخت های کمک ماهانه/هفتگی</a>
+
+                                </div>
+                                <div class="card-body">
                                 <table class="table datatable-basic">
                                     <thead>
                                     <tr>
@@ -184,12 +190,13 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    @foreach($other_vows as $row)
+
+                                    @foreach($vow_list as $row)
                                         @if(isset($row['id']))
                                             <tr>
                                                 <td>{{$row['id']}}</td>
                                                 <td>{{$row['gateway']}}</td>
-                                                <td class="{{$row['status'] != "موفق"?"text-danger":""}}">{{$row['status']}}</td>
+                                                <td class="{{($row['status'] != "موفق" and $row['status'] != "پرداخت شده") ? "text-danger":""}}">{{$row['status']}}</td>
                                                 <td><span dir="ltr">{{$row['payDate']}}</span></td>
                                                 <td>{{number_format($row['amount'])}}</td>
                                                 <td>{{$row['title']['title']}}</td>
@@ -200,8 +207,11 @@
                                     @endforeach
                                     </tbody>
                                 </table>
-                                {{$other_vows->appends(request()->except('page'))->links()}}
+                                </div>
+                                <div class="card-footer">
+                                    {{$vow_list->appends(request()->except('page'))->links()}}
 
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -281,4 +291,22 @@
             </div>
         </div>
     </section>
+@endsection
+
+@section('footer_js')
+    <script>
+        $(document).on('click', '.t_filter', function () {
+            var url = new URL(window.location.href);
+
+            var search_params = url.searchParams;
+            let param = $(this).attr('data-param');
+            let value = $(this).attr('data-value');
+
+            search_params.set(param, value);
+            url.search = search_params.toString();
+            var new_url = url.toString();
+            window.location.replace(new_url);
+
+        });
+    </script>
 @endsection

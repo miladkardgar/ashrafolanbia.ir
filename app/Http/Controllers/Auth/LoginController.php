@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\charity_period;
+use App\charity_periods_transaction;
 use App\Http\Controllers\Controller;
 use App\User;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Request;
 
 class LoginController extends Controller
@@ -76,6 +79,22 @@ class LoginController extends Controller
     {
         // Do your logic to flash data to session...
         session()->flash('message', __('messages.you_are_login'));
+
+        $user = Auth::user();
+        $active_routine = charity_period::where('user_id',$user['id'])->exists();
+        if (!$active_routine){
+            session()->flash('routine_is_not_active', true);
+        }
+        $unpaidExist = charity_periods_transaction::where( [
+            ['status', '=', 'unpaid'],
+            ['user_id', '=', $user['id']],
+        ])->exists();
+        if ($unpaidExist){
+            session()->flash('unpaid_exist_flash', true);
+            session()->push('unpaid_exist',true);
+        }else{
+            session()->push('unpaid_exist',false);
+        }
         // Return the results of the method we are overriding that we aliased.
         return $this->laravelRedirectPath();
     }

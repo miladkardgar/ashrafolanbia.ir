@@ -435,9 +435,9 @@
                                             </div>
                                         </div>
                                         <div class="d-sm-flex flex-sm-wrap mb-3">
-                                            <div class="font-weight-semibold">{{__('نوبت بعدی پرداخت')}}:</div>
+                                            <div class="font-weight-semibold">{{__('بابت')}}:</div>
                                             <div class="pl-2 mt-2 mt-sm-0 text-left"><a
-                                                        href="#">{{jdate('l',strtotime($routine['next_date']))}} {{miladi_to_shamsi_date($routine['next_date']) }}</a>
+                                                        href="#">{{$routine['title']['title']}} </a>
                                             </div>
                                         </div>
                                     </div>
@@ -448,7 +448,12 @@
                                                             href="#">{{number_format($routine['amount'])}}</a>
                                                 </div>
                                             </div>
-
+                                            <div class="d-sm-flex flex-sm-wrap mb-3">
+                                                <div class="font-weight-semibold">{{__('نوبت بعدی پرداخت')}}:</div>
+                                                <div class="pl-2 mt-2 mt-sm-0 text-left"><a
+                                                            href="#">{{jdate('l',strtotime($routine['next_date']))}} {{miladi_to_shamsi_date($routine['next_date']) }}</a>
+                                                </div>
+                                            </div>
                                         </div>
 
                                     @endif
@@ -496,9 +501,9 @@
                                                 </div>
                                             </div>
                                             <div class="d-sm-flex flex-sm-wrap mb-3">
-                                                <div class="font-weight-semibold">{{__('نوبت بعدی پرداخت')}}:</div>
+                                                <div class="font-weight-semibold">{{__('بابت')}}:</div>
                                                 <div class="pl-2 mt-2 mt-sm-0 text-left"><a
-                                                            href="#">{{jdate('l',strtotime($routine['next_date']))}} {{miladi_to_shamsi_date($routine['next_date']) }}</a>
+                                                            href="#">{{$routine['title']['title']}} </a>
                                                 </div>
                                             </div>
                                         </div>
@@ -509,7 +514,12 @@
                                                             href="#">{{number_format($routine['amount'])}}</a>
                                                 </div>
                                             </div>
-
+                                            <div class="d-sm-flex flex-sm-wrap mb-3">
+                                                <div class="font-weight-semibold">{{__('نوبت بعدی پرداخت')}}:</div>
+                                                <div class="pl-2 mt-2 mt-sm-0 text-left"><a
+                                                            href="#">{{jdate('l',strtotime($routine['next_date']))}} {{miladi_to_shamsi_date($routine['next_date']) }}</a>
+                                                </div>
+                                            </div>
                                         </div>
 
                                     @endif

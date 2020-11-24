@@ -127,7 +127,7 @@ class charity extends Controller
                 ['user_id', '=', $request['user_id']]
             ])
             ->with('gateway')->get();
-        $periodInfo = charity_period::find($request['id']);
+        $periodInfo = charity_period::findOrFail($request['id']);
 
 
         $routine = charity_period::where('user_id', $request['user_id'])->first();
@@ -164,7 +164,7 @@ class charity extends Controller
             ])->sum('amount');
         $pattern = charity_payment_patern::where('periodic','1')->first();
 
-        $userInfo = User::find($request['user_id']);
+        $userInfo = User::findOrFail($request['user_id']);
         $last_paid = $response['last_paid']=charity_periods_transaction::where('status','paid')->where('user_id',$request['user_id'])->orderBy('pay_date','DESC')->first();
 
         return view('panel.charity.period.show',

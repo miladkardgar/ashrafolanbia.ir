@@ -219,3 +219,4 @@
     <img src="{{asset('public/images/side-logo.png')}}" alt="" class="">
 {{--    <i class="fa fa-angle-up"></i>--}}
 </a>
+

@@ -1318,6 +1318,7 @@ class panel_view extends Controller
         $start_date = date("Y-m-d", strtotime(date('Y-m-d') . " -1 month"));
         $end_date = date("Y-m-d");
         $with_fails = $request->with_fails;
+        $list_type = 'others';
         if ($request->start_date) {
             $start_date = shamsi_to_miladi($request->start_date);
         }
@@ -1327,31 +1328,67 @@ class panel_view extends Controller
         if ($request->titles) {
             $selected_titles = $request->titles;
         }
+        if ($request->list_type) {
+            $list_type = $request->list_type;
+        }
         $sum_data = $this->get_charity_sum_report($start_date,$end_date,$selected_titles);
         $bank_balances = $this->get_bank_sum_report($start_date,$end_date,$selected_titles);
         $charity_titles = $this->get_title_sum_report($start_date,$end_date);
-        $other_vow_query = charity_transaction::query();
-        $other_vow_query->whereIn('title_id',$selected_titles);
-        $other_vow_query->whereNotIn('charity_id', [3]);
-        $other_vow_query->with('patern', 'title');
-        $other_vow_query->whereBetween('payment_date', [$start_date, $end_date]);
-        if (!$with_fails){
-            $other_vow_query->where('status', 'success');
-        }
-        $other_vows = $other_vow_query->orderBy('id','desc')->paginate('33');
-        $other_vows->getCollection();
-        $other_vows->transform(function ($vow){
 
-        $vow->gateway = gateway::find($vow['gateway_id'])['title'];
-        $vow->status = __('messages.' . $vow['status']);
-        $vow->payDate = miladi_to_shamsi_date($vow['payment_date']);
-
-        return $vow;
-        });
+        $vow_list = $this->get_charity_list_of_transactions($start_date,$end_date,$selected_titles,$with_fails,$list_type);
         return view('panel.charity.reports.megaReport',
             compact('charity_titles', 'with_fails', 'selected_titles', 'start_date',
-                'end_date','sum_data','bank_balances','other_vows')
+                'end_date','sum_data','bank_balances','vow_list','list_type')
         );
+    }
+
+    private function get_charity_list_of_transactions($start_date, $end_date,$titles,$with_fails,$type){
+        if ($type == 'routine') {
+            $routine_vow_query = charity_periods_transaction::query();
+            $routine_vow_query->where('group_pay', 0);
+            $routine_vow_query->where('status', 'paid');
+            $routine_vow_query->with('title');
+            $routine_vow_query->whereIn('title_id', $titles);
+            $routine_vow_query->whereBetween('pay_date', [$start_date, $end_date]);
+            $routine_vow = $routine_vow_query->orderBy('pay_date', 'desc')
+                ->paginate('33');
+            $routine_vow->getCollection();
+            $routine_vow->transform(function ($vow) {
+
+                $vow->gateway = gateway::find($vow['gateway_id'])['title'];
+                $vow->status = __('messages.' . $vow['status']);
+                $vow->payDate = miladi_to_shamsi_date($vow['pay_date']);
+                $vow->patern = ['title' => "کمک ماهانه/هفتگی"];
+
+                return $vow;
+            });
+            return $routine_vow;
+        }elseif ($type == 'others'){
+            $other_vow_query = charity_transaction::query();
+            $other_vow_query->whereIn('title_id',$titles);
+            $other_vow_query->whereNotIn('charity_id', [3]);
+            $other_vow_query->with('patern', 'title');
+            $other_vow_query->whereBetween('payment_date', [$start_date, $end_date]);
+            if (!$with_fails){
+                $other_vow_query->where('status', 'success');
+            }
+            $other_vows = $other_vow_query->orderBy('id','desc')
+                ->paginate('33');
+            $other_vows->getCollection();
+            $other_vows->transform(function ($vow){
+
+                $vow->gateway = gateway::find($vow['gateway_id'])['title'];
+                $vow->status = __('messages.' . $vow['status']);
+                $vow->payDate = miladi_to_shamsi_date($vow['payment_date']);
+
+                return $vow;
+            });
+
+            return $other_vows;
+        }else{
+            return [];
+        }
+
     }
 
     private function get_charity_sum_report($start_date, $end_date,$titles)

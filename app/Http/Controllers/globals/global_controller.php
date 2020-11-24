@@ -669,7 +669,7 @@ class global_controller extends Controller
         $user = User::findOrFail($ct['user_id']);
         $user->login_token = Str::random(60);
         $user->Save();
-            Log::notice("user ".$user['name']." login via quick pay link ip = ".$request->ip());
+            Log::notice("user with id ".$user['id']." login via quick pay link ip = ".$request->ip());
 
             return redirect(route('app_profile')."?lt=".$user->login_token);
         }

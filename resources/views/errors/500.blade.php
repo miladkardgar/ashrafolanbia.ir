@@ -1,5 +1,5 @@
 @extends('errors::minimal')
 
-@section('title', __('Server Error'))
+@section('title', __('مشکلی پیش آمده |'))
 @section('code', '500')
-@section('message', __('Server Error'))
+@section('message', __('متاسفانه مشکلی پیش آمده است'))
