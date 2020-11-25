@@ -81,9 +81,21 @@ class LoginController extends Controller
         session()->flash('message', __('messages.you_are_login'));
 
         $user = Auth::user();
-        $active_routine = charity_period::where('user_id',$user['id'])->exists();
+        $active_routine = charity_period::where('user_id',$user['id'])->first();
         if (!$active_routine){
             session()->flash('routine_is_not_active', true);
+        }elseif(strtotime($active_routine['increased_at']) < strtotime(date("Y-m-d H:i:s")." -1 year")){
+            if ((strtotime(date("Y-m-d H:i:s")." -1 year") - strtotime($active_routine['increased_at'])) < 864000)
+            {
+                session()->flash('ask_for_increase', true);
+            }elseif($active_routine['increase_asked']<3){
+                session()->flash('ask_for_increase', true);
+                $active_routine['increase_asked'] = $active_routine['increase_asked']+1;
+                $active_routine->save();
+            }else{
+                $active_routine['increased_at'] = date("Y-m-d H:i:s",strtotime($active_routine['increased_at']." +1 year"));
+                $active_routine->save();
+            }
         }
         $unpaidExist = charity_periods_transaction::where( [
             ['status', '=', 'unpaid'],

@@ -1633,8 +1633,7 @@ class panel_view extends Controller
         return view('panel.gallery.view', compact('medias', 'catInfo'));
     }
 
-//end store module
-
+    //end store module
 
     public function blog_setting_more_setting(Request $request)
     {
@@ -1738,15 +1737,11 @@ class panel_view extends Controller
 
     public function test()
     {
-        Artisan::call('config:cache');
-
-//        $titles = charity_payment_title::get();
-//        foreach ($titles as $title){
-//            $tp = new charityPaymentPT();
-//            $tp->pattern_id =$title->ch_pay_pattern_id;
-//            $tp->title_id =$title->id;
-//            $tp->save();
+//        $routines = charity_period::withTrashed()->get();
+//        foreach ($routines as $routine){
+//            $routine['increased_at'] = $routine['updated_at'];
+//            $routine->save();
 //        }
-//        dd('d');
+        return "done";
     }
 }

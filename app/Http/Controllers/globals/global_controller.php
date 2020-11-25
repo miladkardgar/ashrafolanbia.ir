@@ -328,7 +328,14 @@ class global_controller extends Controller
             $targetTimestamp = jmktime(2,0,0,$month,$day,$year);
 
         }
-        charity_period::where('user_id',Auth::user()['id'])->delete();
+        $old_routine = charity_period::where('user_id',Auth::user()['id'])->first();
+        $increased_at = date("Y-m-d H:i:s");
+        if ($old_routine){
+            if ($old_routine['amount'] >= $request['amount']){
+                $increased_at = $old_routine['increased_at'];
+            }
+            charity_period::where('user_id',Auth::user()['id'])->delete();
+        }
 
         $date = date("Y-m-d H:i:s",$targetTimestamp);
 
@@ -341,6 +348,7 @@ class global_controller extends Controller
                 'next_date' => $date,
                 'period' => $request['type'],
                 'description' => " ",
+                'increased_at' => $increased_at,
             ]
         );
         if ($day < latin_num(jdate('d'))){
