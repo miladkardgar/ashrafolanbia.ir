@@ -653,6 +653,7 @@ Route::group(
 
             Route::get('/profile', 'globals\global_view@t_profile')->name('global_profile');
             Route::get('/t_pay_history', 'globals\global_view@t_payment_history')->name('t_payment_history');
+            Route::get('/t_pay_history/receipt/{tracking_code}', 'globals\global_view@t_payment_history_receipt')->name('t_payment_history_receipt');
             Route::get('/addresses', 'globals\global_view@t_addresses')->name('t_addresses');
             Route::get('/change_password', 'globals\global_view@t_edit_profile')->name('global_profile_change_password');
 

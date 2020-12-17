@@ -92,7 +92,7 @@
                                     <?php  $count_ids = count(explode(',',str_replace(['[',']'],'',$charityIn['group_ids']))); ?>
                                     @if($count_ids >1)
                                         <div class="col-md-12  pt-20 text-center">
-                                            <h4>پرداخت {{$count_ids}} مورد کمک ماهانه </h4>
+                                            <h4>پرداخت {{$count_ids}} موعد تعهد </h4>
                                         </div>
 
                                     @endif

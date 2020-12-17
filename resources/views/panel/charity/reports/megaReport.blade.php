@@ -9,7 +9,7 @@
     <script
             src="{{ URL::asset('/node_modules/md.bootstrappersiandatetimepicker/src/jquery.md.bootstrap.datetimepicker.js') }}"></script>
     <script src="{{ URL::asset('/public/assets/panel/global_assets/js/plugins/forms/styling/uniform.min.js') }}"></script>
-    <script src="{{ URL::asset('/public/assets/panel/global_assets/js/plugins/forms/selects/bootstrap_multiselect.js') }}"></script>
+    <script src="{{ URL::asset('/public/assets/panel/global_assets/js/plugins/forms/selects/bootstrap_multiselect.js') }}?i=1"></script>
     <script>
         $(document).ready(function () {
             $("body").addClass('sidebar-xs')
@@ -27,7 +27,12 @@
 
             });
             $('.multiselect-nonselected-text').multiselect({
-                nonSelectedText: 'بابت پرداخت را انتخاب کنید'
+                nonSelectedText: 'بابت پرداخت را انتخاب کنید',
+                includeSelectAllOption: true
+            });
+            $('.multiselect-gateways-text').multiselect({
+                nonSelectedText: 'درگاه بانکی را انتخاب کنید',
+                includeSelectAllOption: true
             });
             $('.form-check-input-styled').uniform();
         });
@@ -57,7 +62,7 @@
 
                                     <form action="" method="get">
                                         <div class="row ">
-                                            <div class="col-md-9 mb-2">
+                                            <div class="col-md-4 mb-2">
                                                 <!-- Custom empty text -->
                                                 <div class="input-group">
                                                     <select name="titles[]" class="form-control multiselect-nonselected-text" multiple="multiple" data-fouc>
@@ -70,7 +75,23 @@
                                                 <!-- /custom empty -->
 
                                             </div>
-                                            <div class="col-md-3">
+                                            <div class="col-md-4 mb-2">
+                                                <!-- Custom empty text -->
+                                                <div class="input-group">
+                                                    <select name="gateways[]" class="form-control multiselect-gateways-text" multiple="multiple" data-fouc>
+                                                        <?php
+                                                        $gateways = \App\gateway::get();
+                                                        ?>
+                                                        @foreach($gateways as $gateways)
+                                                            <option {{in_array($gateways["id"],$selected_gateways)?"selected":""}} value="{{$gateways['id']}}">{{$gateways['title']}}</option>
+                                                        @endforeach
+
+                                                    </select>
+                                                </div>
+                                                <!-- /custom empty -->
+
+                                            </div>
+                                            <div class="col-md-4">
                                                 <div class="input-group m-1">
                                                     <div class="custom-control custom-checkbox">
                                                         <input name="with_fails" type="checkbox" class="custom-control-input" id="custom_checkbox_stacked_unchecked"
@@ -96,10 +117,18 @@
 
                                             </div>
                                             <div class="col-md-3">
+                                                <a href="#" data-value="1" data-param="excel" class="btn btn-outline-info t_filter font-size-lg  "><i class="icon-file-excel"></i> دانلود فايل  <i class="font-size-xs text-danger">حداكثر بازه 62 روزه</i></a>
+
+
+                                            </div>
+                                            <div class="col-md-3">
                                                 <button type="submit" class="form-control btn bg-teal" >
                                                     مشاهده
                                                 </button>
 
+                                            </div>
+                                            <div class="col-md-2">
+                                                <a href="{{route('charity_reports')}}" class="text-danger">حذف فیلتر ها</a>
                                             </div>
                                         </div>
                                     </form>
@@ -129,7 +158,7 @@
                                 <div class="media">
                                     <div class="media-body text-left">
                                         <h3 class="mb-0">{{number_format($sum_data['routine_vow'])}}  </h3>
-                                        <span class="text-uppercase font-size-xs">کمک ماهانه</span>
+                                        <span class="text-uppercase font-size-xs">کمک ماهانه/هفتگي</span>
                                     </div>
                                     <div class="mr-3 align-self-center">
                                         <i class="icon-heart6 icon-3x opacity-75"></i>
@@ -171,42 +200,13 @@
                         <div class="col-md-12">
                             <div class="card">
                                 <div class="card-header">
-                                    <a href="#" data-value="others" data-param="list_type" class="t_filter badge {{$list_type=='others'? "badge-info":""}} ">لیست پرداخت های موردی</a>
-                                    <a href="#" data-value="routine" data-param="list_type" class="t_filter badge {{$list_type=='routine'? "badge-info":""}}">لیست پرداخت های کمک ماهانه/هفتگی</a>
+                                    <a href="#" data-value="others" data-param="list_type" class="t_filter font-size-lg badge {{$list_type=='others'? "badge-info":""}} ">لیست ساير پرداخت ها</a>
+                                    <a href="#" data-value="routine" data-param="list_type" class="t_filter font-size-lg badge {{$list_type=='routine'? "badge-info":""}}">لیست پرداخت های کمک ماهانه/هفتگی</a>
 
                                 </div>
-                                <div class="card-body">
-                                <table class="table datatable-basic">
-                                    <thead>
-                                    <tr>
-                                        <th>{{__('messages.id')}}</th>
-                                        <th>{{__('messages.gateway')}}</th>
-                                        <th>{{__('messages.status')}}</th>
-                                        <th>{{__('messages.date')}}</th>
-                                        <th>{{__('messages.amount')}}</th>
-                                        <th>{{__('بابت')}}</th>
-                                        <th>{{__('سرفصل پرداخت')}}</th>
-                                        <th>{{__('messages.description')}}</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
 
-                                    @foreach($vow_list as $row)
-                                        @if(isset($row['id']))
-                                            <tr>
-                                                <td>{{$row['id']}}</td>
-                                                <td>{{$row['gateway']}}</td>
-                                                <td class="{{($row['status'] != "موفق" and $row['status'] != "پرداخت شده") ? "text-danger":""}}">{{$row['status']}}</td>
-                                                <td><span dir="ltr">{{$row['payDate']}}</span></td>
-                                                <td>{{number_format($row['amount'])}}</td>
-                                                <td>{{$row['title']['title']}}</td>
-                                                <td>{{$row['patern']['title']}}</td>
-                                                <td>{{$row['description']}}</td>
-                                            </tr>
-                                        @endif
-                                    @endforeach
-                                    </tbody>
-                                </table>
+                                <div class="card-body">
+                                    @include('panel.charity.reports.megaReportTable')
                                 </div>
                                 <div class="card-footer">
                                     {{$vow_list->appends(request()->except('page'))->links()}}
@@ -219,7 +219,7 @@
                 <div class="col-md-3">
                     <div class="card bg-white">
                         <div class="card-header">
-                            <h3>ورودی هر درگاه</h3>
+                            <h3>درگاه واریزی</h3>
 
                         </div>
                         <div class="card-body">
@@ -237,6 +237,7 @@
                                     <div class="media-body">
                                         <span class="font-weight-semibold">{{number_format($bank_balance->balance)}}</span> ریال
                                         <div class="text-muted">{{$bank_balance->title}}</div>
+
                                     </div>
                                 </li>
                                 @endforeach

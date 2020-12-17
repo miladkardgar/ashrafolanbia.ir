@@ -23,7 +23,7 @@
             <td>{{$user['name']}}</td>
             <td>{{$user['phone']}}</td>
             <td>{{jdate('Y/m/d',strtotime($user['created_at']))}}</td>
-            <td>{{$user['routine_status']?"فعال" :""}}</td>
+            <td>{{$user['routine_status']?"فعال" :"غيرفعال"}}</td>
             <td>{{$user['routine_type'] }}</td>
             <td>{{number_format(intval($user['routine_amount'])) }}</td>
             <td>{{$user['paid'] }}</td>

@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Schema;
 use WebDevEtc\BlogEtc\Models\BlogEtcCategory;
 use WebDevEtc\BlogEtc\Models\BlogEtcComment;
 use WebDevEtc\BlogEtc\Models\BlogEtcSpecificPages;
+use Illuminate\Database\Eloquent\Relations\Relation;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -36,6 +37,17 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+
+
+        Relation::morphMap([
+            'charity_donate' => 'App\charity_transaction',
+            'charity_vow' => 'App\charity_transaction',
+            'charity_period' => 'App\charity_periods_transaction',
+            'charity_champion' => 'App\champion_transaction',
+            'shop' => 'App\order',
+            'c_store' => 'App\c_store_order',
+        ]);
+
 
         \View::composer("*", function ($view) {
             $view->with([

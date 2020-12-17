@@ -32,12 +32,12 @@ class EventServiceProvider extends ServiceProvider
             ],
         payToCharityMoney::class =>
             [
-//                \App\Listeners\payment\mailListener::class,
+                \App\Listeners\payment\mailListener::class,
                 \App\Listeners\payment\smsListener::class,
             ],
         storePaymentConfirmation::class=>
             [
-//            \App\Listeners\store\mailListener::class,
+            \App\Listeners\store\mailListener::class,
                 \App\Listeners\store\smsListener::class,
             ],
         c_storePaymentAlert::class=>

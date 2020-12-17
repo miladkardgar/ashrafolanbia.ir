@@ -55,7 +55,6 @@
                         $.each(errors, function (index, value) {
                             PNotify.error({
                                 delay: 3000,
-                                title: '',
                                 text: value,
                             });
                         });

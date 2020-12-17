@@ -12,7 +12,9 @@
                     <span class="mrn-amount">
                         <a href="#" class="">
 <h4 class="text-info">
+    <a href="{{route('t_payment_history')}}" class="">
     پرداخت شده
+    </a>
                             &nbsp; <span class="fa fa-heart text-theme-colored"> </span>
 </h4>
                         </a></span>
@@ -52,7 +54,7 @@
     @endforelse
 @if(isset($period))
     <div class="mrn-notifications-box">
-        <h2 class="notifications"> کمک ماهانه</h2>
+        <h2 class="notifications text-success"> {{__('messages.routine_is_enable')}}  </h2>
 
         <ul class="list-unstyled">
             <li class="announce-read">
@@ -92,13 +94,13 @@
     </div>
 @else
     <div class="mrn-notifications-box">
-        <h2 class="notifications">کمک ماهانه یا هفتگی شما فعال نیست</h2>
+        <h2 class="notifications text-danger">{{__('messages.routine_is_disable')}}</h2>
 
         <ul class="list-unstyled">
             <li class="announce-read">
                 <div class="notifications-content">
                     <span class="notif-date">
-                        شما میتوانید با ثبت کمک ماهانه یا هفتگی ما را در برنامه ریزی برای کمک موثرتر به خانواده های نیازمند یاری کنید.
+                        {!! $pattern->description !!}
                     </span>
 
                     <p>شما میتوانید از <a href="{{route('t_routine_vow')}}"><span

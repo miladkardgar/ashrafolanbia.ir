@@ -180,7 +180,8 @@
     @if (Session::get('routine_is_not_active') or Session::get('unpaid_exist_flash') or Session::get('ask_for_increase') )
         @include('layouts.global.alert_modal',['unpaid' => $unpaidExist])
     @endif
-    @if(Session::get('unpaid_exist'))
+
+@if(Session::get('unpaid_exist'))
         <div id="mySidenav" class="sidenav">
 
                 <div class="row" style="bottom: 30px; background-color: #ff2e6c">

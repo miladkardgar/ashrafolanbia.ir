@@ -6,7 +6,7 @@
 
     @if($routine)
         <div class="mrn-notifications-box">
-            <h2 class="notifications"> کمک ماهانه یا هفتگی شما فعال است </h2>
+            <h2 class="notifications text-success">{{__('messages.routine_is_enable')}}</h2>
 
             <ul class="list-unstyled">
                 <li class="announce-read">
@@ -48,7 +48,8 @@
     @else
 
         <div class="mrn-notifications-box">
-            <h2 class="notifications">شما کمک ماهانه یا هفتگی فعال ندارید</h2>
+            <h2 class="notifications text-danger">{{__('messages.routine_is_disable')}}</h2>
+
             <ul class="list-unstyled">
                 <li class="announce-read">
                     <div class="notifications-content">

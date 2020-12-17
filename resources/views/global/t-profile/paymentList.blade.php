@@ -17,10 +17,12 @@
                 <th class="text-center"> </th>
                 <th class="text-center">موعد</th>
                 <th class="text-center">مبلغ (ریال)</th>
+                @if(isset($history[0]) and $history[0]['pay_date'])
                 <th class="text-center">تاریخ پرداخت</th>
+                @endif
+                <th class="text-center">دوره</th>
                 <th class="text-center">بابت</th>
-                <th class="text-center">شرح</th>
-                <th class="text-center">وضعیت</th>
+                <th class="text-center">کد رهگیری</th>
             </tr>
     @forelse($history as $item)
 
@@ -32,21 +34,26 @@
             </td>
             <td class="text-center">{{miladi_to_shamsi_date($item['payment_date'])}}</td>
             <td class="text-center"> {{number_format($item['amount'])}}</td>
+            @if($item['pay_date'])
 
             <td class="text-center">
-                @if($item['pay_date'])
-
                     {{miladi_to_shamsi_date($item['pay_date'])}}
-                @endif
             </td>
-            <td class="text-center">{{$item['title']['title']}}</td>
+            @endif
 
             <td class="text-center">{{$item->description}}</td>
+
+            <td class="text-center">{{$item['title']['title']}}</td>
+
             <td class="text-center">
                 @if(!$item['pay_date'])
                     <span class="text-danger">در انتظار پرداخت</span>
                 @else
-                    <span class="fa fa-check text-green"></span>
+                    <a target="_blank" href="{{route('t_payment_history_receipt',$item->transaction['tracking_code'])}}" class="text-info">
+                        <i class="fa fa-mouse-pointer"></i>
+                        {{$item->transaction['tracking_code']}}
+
+                    </a>
                 @endif
 
             </td>

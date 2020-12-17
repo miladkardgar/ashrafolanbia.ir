@@ -74,15 +74,18 @@
                             submit.removeAttr("disabled");
                             submit.html("{{__('messages.pay')}}")
                         }
-                    }, fail: function (response) {
-                        // var errors = response.responseJSON.errors;
-                        // $.each(errors, function (index, value) {
+                    }, error: function (response) {
+                        var errors = response.responseJSON.errors;
+                        $.each(errors, function (index, value) {
+                            for (var error in errors) {
+                                PNotify.error({
+                                    delay: 3000,
+                                    text: value,
+                                });
+                            }
 
-                            PNotify.error({
-                                delay: 3000,
-                                text: 'عملیات با خطا مواجه شد، لطفا درگاه دیگری را انتخاب کنید.',
-                            });
-                        // });
+
+                        });
                         submit.removeAttr("disabled");
                         submit.html("{{__('messages.pay')}}")
                     }
@@ -107,102 +110,125 @@
                                     <div class="col-md-12 ">
                                         <div class="form-group">
                                             <label>{{__('messages.name_op')}}</label>
-                                            <input type="text" class="form-control" value="{{isset($user['name'])?$user['name']:""}}" name="name">
+                                            <input type="text" class="form-control"
+                                                   value="{{isset($user['name'])?$user['name']:""}}" name="name">
                                         </div>
                                     </div>
                                     <div class="col-md-12 ">
                                         <div class="form-group">
                                             <label>{{__('messages.phone_op')}}</label>
-                                            <input type="tel" pattern="09[0-9]{9}" class="form-control" value="{{isset($user['phone'])?$user['phone']:""}}" name="phone">
+                                            <input type="tel" pattern="09[0-9]{9}" class="form-control"
+                                                   value="{{isset($user['phone'])?$user['phone']:""}}" name="phone">
                                         </div>
                                     </div>
                                     <div class="col-md-12 ">
                                         <div class="form-group">
                                             <label>{{__('messages.email_op')}}</label>
-                                            <input type="email" class="form-control" value="{{isset($user['email'])?$user['email']:""}}" name="email">
+                                            <input type="email" class="form-control"
+                                                   value="{{isset($user['email'])?$user['email']:""}}" name="email">
                                         </div>
                                     </div>
                                     @if(isset($charity['fields']))
-                                    @foreach($charity['fields'] as $fi)
-                                        <div class="col-md-12">
-                                            <div class="form-group">
-                                                <label>{{$fi['label']}}<span class="text-danger">{{$fi['require'] ?"*":""}}</span></label>
-                                                @switch($fi['type'])
-                                                    @case(0)
-                                                    <input type="text" class="form-control" {{$fi['require'] ?"required":""}} name="field[{{$fi['id']}}]">
-                                                    @break
-                                                    @case(1)
-                                                    <textarea name="field[{{$fi['id']}}]" {{$fi['require'] ?"required":""}} class="form-control"
-                                                              id="field[{{$fi['id']}}]" cols="30" rows="3"></textarea>
-                                                    @break
-                                                    @case(2)
-                                                    <input type="number" {{$fi['require'] ?"required":""}} class="form-control"
-                                                           name="field[{{$fi['id']}}]">
-                                                    @break
-                                                    @case(3)
-                                                    <input type="text" id="p_datepicker_{{$fi['id']}}" {{$fi['require'] ?"required":""}} class="form-control" name="field[{{$fi['id']}}]">
-                                                    @break
-                                                    @case(4)
-                                                    <input type="time" {{$fi['require'] ?"required":""}} class="form-control" name="field[{{$fi['id']}}]">
-                                                    @break
-                                                    @case(5)
-                                                    <input type="tel" pattern="09[0-9]{9}" {{$fi['require'] ?"required":""}} class="form-control" name="field[{{$fi['id']}}]">
-                                                    @break
-                                                @endswitch
+                                        @foreach($charity['fields'] as $fi)
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label>{{$fi['label']}}<span
+                                                                class="text-danger">{{$fi['require'] ?"*":""}}</span></label>
+                                                    @switch($fi['type'])
+                                                        @case(0)
+                                                        <input type="text" class="form-control"
+                                                               {{$fi['require'] ?"required":""}} name="field[{{$fi['id']}}]">
+                                                        @break
+                                                        @case(1)
+                                                        <textarea name="field[{{$fi['id']}}]"
+                                                                  {{$fi['require'] ?"required":""}} class="form-control"
+                                                                  id="field[{{$fi['id']}}]" cols="30"
+                                                                  rows="3"></textarea>
+                                                        @break
+                                                        @case(2)
+                                                        <input type="number"
+                                                               {{$fi['require'] ?"required":""}} class="form-control"
+                                                               name="field[{{$fi['id']}}]">
+                                                        @break
+                                                        @case(3)
+                                                        <input type="text" id="p_datepicker_{{$fi['id']}}"
+                                                               {{$fi['require'] ?"required":""}} class="form-control"
+                                                               name="field[{{$fi['id']}}]">
+                                                        @break
+                                                        @case(4)
+                                                        <input type="time"
+                                                               {{$fi['require'] ?"required":""}} class="form-control"
+                                                               name="field[{{$fi['id']}}]">
+                                                        @break
+                                                        @case(5)
+                                                        <input type="tel" pattern="09[0-9]{9}"
+                                                               {{$fi['require'] ?"required":""}} class="form-control"
+                                                               name="field[{{$fi['id']}}]">
+                                                        @break
+                                                    @endswitch
+                                                </div>
                                             </div>
-                                        </div>
-                                    @endforeach
+                                        @endforeach
                                     @endif
                                 </div>
                                 <div class="col-md-6">
-                                <div class="row">
+                                    <div class="row">
 
-                                    @if(count($charity->titles)>0)
+                                        @if(count($charity->titles)>0)
 
-                                        @foreach($charity->titles as $key => $title)
-                                            <div class="col-md-6 col-xs-6" >
-                                                <div class="radio" style="text-align: right;">
+                                            @foreach($charity->titles as $key => $title)
+                                                <div class="col-md-6 col-xs-6">
+                                                    <div class="radio" style="text-align: right;">
+                                                        <label>
+                                                            <input type="radio" name="title"
+                                                                   id="title_{{$title['id']}}"
+                                                                   value="{{$title['id']}}"
+                                                                    {{$key == 0 ?"checked='checked'" :""}} >
+                                                            <strong>
+                                                                <small>{{$title['title']}}</small>
+                                                            </strong>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            @endforeach
+
+                                        @endif
+
+                                        <br>
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label for="amount">{{__('messages.amount')}}
+                                                    <small>({{__('messages.rial')}})</small>
+                                                </label>
+                                                <input type="text" min="{{$charity['min']}}" max="{{$charity['max']}}"
+                                                       class="form-control amount" name="amount">
+                                            </div>
+                                        </div>
+                                        @foreach($gateways as $gateway)
+                                            <div class="col-md-4 col-xs-4">
+                                                <div class="radio text-center">
                                                     <label>
-                                                        <input type="radio" name="title"
-                                                               id="title_{{$title['id']}}"
-                                                               value="{{$title['id']}}"
-                                                              {{$key == 0 ?"checked='checked'" :""}} >
-                                                        <strong><small>{{$title['title']}}</small></strong>
+                                                        <strong>{!! $gateway['logo'] !!}</strong><br>
+                                                        <input type="radio" name="gateway"
+                                                               id="gateway_{{$gateway['id']}}"
+                                                               value="{{$gateway['id']}}"
+                                                               checked="checked">
+                                                        <strong>
+                                                            <small>{{$gateway['bank']['name']}}</small>
+                                                        </strong>
                                                     </label>
                                                 </div>
                                             </div>
                                         @endforeach
-
-                                    @endif
-
-                                    <br>
-                                    <div class="col-md-12">
-                                        <div class="form-group">
-                                            <label for="amount">{{__('messages.amount')}} <small>({{__('messages.rial')}})</small></label>
-                                            <input type="text" min="{{$charity['min']}}" max="{{$charity['max']}}" class="form-control amount" name="amount">
-                                        </div>
-                                    </div>
-                                    @foreach($gateways as $gateway)
-                                        <div class="col-md-4 col-xs-4" >
-                                            <div class="radio text-center">
-                                                <label>
-                                                    <strong>{!! $gateway['logo'] !!}</strong><br>
-                                                    <input type="radio" name="gateway"
-                                                           id="gateway_{{$gateway['id']}}"
-                                                           value="{{$gateway['id']}}"
-                                                           checked="checked">
-                                                    <strong><small>{{$gateway['bank']['name']}}</small></strong>
-                                                </label>
+                                        <div class="col-md-12 ">
+                                            <div class="form-group pt-20">
+                                                <button type="submit"
+                                                        class="btn btn-success btn-block p-20 pull-left btn-theme-colored">
+                                                    <strong>{{__("messages.pay")}}</strong></button>
                                             </div>
                                         </div>
-                                    @endforeach
-                                    <div class="col-md-12 ">
-                                        <div class="form-group pt-20">
-                                            <button type="submit" class="btn btn-success btn-block p-20 pull-left btn-theme-colored"><strong>{{__("messages.pay")}}</strong></button>
-                                        </div>
-                                    </div>
 
-                                </div>
+                                    </div>
                                 </div>
                             </div>
                         </form>

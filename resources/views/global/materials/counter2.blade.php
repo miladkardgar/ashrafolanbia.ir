@@ -3,7 +3,7 @@
 <!-- Divider: Funfact -->
 
 
-<section class="divider parallax layer-overlay overlay-theme-colored-9" data-bg-img="{{ URL::asset('/public/assets/global/images/bg/bg24.jpg') }}" data-parallax-ratio="0.7">
+<section class="divider parallax layer-overlay overlay-theme-colored-9" data-bg-img="" data-parallax-ratio="0.7">
     <div class="container pt-15 pb-15">
         <div class="row">
             @forelse(get_option('display_statistic',4,true) as $statistic)

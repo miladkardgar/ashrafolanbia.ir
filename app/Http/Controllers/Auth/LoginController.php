@@ -103,9 +103,10 @@ class LoginController extends Controller
         ])->exists();
         if ($unpaidExist){
             session()->flash('unpaid_exist_flash', true);
-            session()->push('unpaid_exist',true);
+            session(['unpaid_exist' => true]);
+
         }else{
-            session()->push('unpaid_exist',false);
+            session(['unpaid_exist' => false]);
         }
         // Return the results of the method we are overriding that we aliased.
         return $this->laravelRedirectPath();

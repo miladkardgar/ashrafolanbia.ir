@@ -149,7 +149,38 @@ class global_view extends Controller
                 $user['login_token'] = '';
                 $user->save();
                 Auth::loginUsingId($user['id']);
+
+            session()->flash('message', __('messages.you_are_login'));
+
+            $active_routine = charity_period::where('user_id',$user['id'])->first();
+            if (!$active_routine){
+                session()->flash('routine_is_not_active', true);
+            }elseif(strtotime($active_routine['increased_at']) < strtotime(date("Y-m-d H:i:s")." -1 year")){
+                if ((strtotime(date("Y-m-d H:i:s")." -1 year") - strtotime($active_routine['increased_at'])) < 864000)
+                {
+                    session()->flash('ask_for_increase', true);
+                }elseif($active_routine['increase_asked']<3){
+                    session()->flash('ask_for_increase', true);
+                    $active_routine['increase_asked'] = $active_routine['increase_asked']+1;
+                    $active_routine->save();
+                }else{
+                    $active_routine['increased_at'] = date("Y-m-d H:i:s",strtotime($active_routine['increased_at']." +1 year"));
+                    $active_routine->save();
+                }
             }
+            $unpaidExist = charity_periods_transaction::where( [
+                ['status', '=', 'unpaid'],
+                ['user_id', '=', $user['id']],
+            ])->exists();
+            if ($unpaidExist){
+                session()->flash('unpaid_exist_flash', true);
+                session(['unpaid_exist' => true]);
+
+            }else{
+                session(['unpaid_exist' => false]);
+            }
+            // Return the results of the method we are overriding that we aliased.
+        }
         }
         return redirect(route('global_profile'));
     }
@@ -394,6 +425,9 @@ class global_view extends Controller
                 'amount' => 'required|min:' . $patern['min'] . '|max:' . $patern['max'] . '|numeric',
                 'gateway' => 'required',
                 'email' => 'nullable|email'
+            ],
+            [
+                'amount.min' =>  "مبلغ نباید از " . number_format($patern['min']) . " ریال کمتر باشد",
             ]);
         $user_id = 0;
         if (Auth::id()) {
@@ -654,7 +688,8 @@ class global_view extends Controller
             $messages['result'] = "repeat";
         }
 
-        if ($res == true) {
+        if ($res == true)
+        {
             $phone = null;
             $email = "info@ashrafolanbia.ir";
             $amount = 0;
@@ -685,26 +720,45 @@ class global_view extends Controller
                 $reason = ($this_charity ? $this_charity['title'] : " ایتام و محرومین ");
 
                 $messages['des'] = $charity['title']['title'];
-            } elseif ($data->module == "charity_period") {
+            }
+            elseif ($data->module == "charity_period") {
                 $charity = charity_periods_transaction::withoutGlobalScope(nonGroupPayment::class)->findOrFail($data->module_id);
                 $charity->status = 'paid';
                 $charity->trans_id = $data->id;
                 $charity->pay_date = date("Y-m-d H:i:s", time());
-                $messages['des'] = __('messages.charity_period');
+                $this_charity = charity_payment_title::find($charity->title_id);
+                $reason = ($this_charity ? $this_charity['title'] : " ایتام و محرومین ");
+                $messages['des'] = $reason;
                 $user = User::find($charity['user_id']);
                 $charity->save();
 
                 if ($charity->group_pay) {
+                    $reason="";
+                    $messages['des']="";
                     $groupIds = json_decode($charity->group_ids);
                     foreach ($groupIds as $groupId) {
-                        $groupItem = charity_periods_transaction::find($groupId);
+                        $groupItem = charity_periods_transaction::with('period')->find($groupId);
                         if ($groupItem) {
+
                             $groupItem->status = 'paid';
                             $groupItem->trans_id = $data->id;
                             $groupItem->pay_date = date("Y-m-d H:i:s", time());
                             $groupItem->gateway_id = $charity->gateway_id;
                             $groupItem->save();
+
+                            $this_charity = charity_payment_title::find($groupItem->title_id);
+                            $reason .= "\n" ;
+                            $groupItemRoutin = config('charity.routine_types.'.$groupItem['period']['period'].'.title');
+                            $reason .= $groupItemRoutin.'/' .($this_charity ? $this_charity['title'] : " ایتام و محرومین ");
+                            $reason .= "، سررسيد:" ;
+                            $reason .= miladi_to_shamsi_date($groupItem->payment_date) ;
+                            if (strpos($messages['des'], ($this_charity ? $this_charity['title'] : " ایتام و محرومین ")) !== true) {
+                                $messages['des'] .= " ,".($this_charity ? $this_charity['title'] : " ایتام و محرومین ") .'/'.$groupItemRoutin;
+                            }
                         }
+
+                        $reason .= "\n";
+
                     }
                 }
 
@@ -715,10 +769,9 @@ class global_view extends Controller
                     $name = ($user->people->gender == 1 ? " آقای " : " خانم ") . $user->people->name . " " . $user->people->family;
                 }
                 $amount = $charity->amount;
-                $reason = $charity->description;
 
-
-            } elseif ($data->module == "charity_champion") {
+            }
+            elseif ($data->module == "charity_champion") {
                 $charity = champion_transaction::with('champion')->findOrFail($data->module_id);
                 $charity->status = 'paid';
                 $charity->trans_id = $data->id;
@@ -754,7 +807,8 @@ class global_view extends Controller
                 $reason = ($chapion ? $chapion['title'] : " کمپین خیریه ");
 
 
-            } elseif ($data->module == "shop") {
+            }
+            elseif ($data->module == "shop") {
                 $charity = order::findOrFail($data->module_id);
                 $charity->status = 'paid';
                 $charity->pay_date = date("Y-m-d H:i:s", time());
@@ -764,7 +818,8 @@ class global_view extends Controller
                 $messages['des'] = __('messages.shop_order');
                 $user = User::find($charity['user_id']);
                 event(new storePaymentConfirmation($user));
-            } elseif ($data->module == "c_store") {
+            }
+            elseif ($data->module == "c_store") {
                 $charity = c_store_order::findOrFail($data->module_id);
                 $charity->status = 'paid';
                 $charity->pay_date = date("Y-m-d H:i:s", time());
@@ -790,19 +845,22 @@ class global_view extends Controller
                 }
             }
             $name = "";
-            if (isset($charity) and isset($charity->name)){
+            if (isset($charity) and isset($charity->name))
+            {
                 $name = $charity->name;
-            }elseif (isset($user) and isset($user['id'])){
+            }
+            elseif (isset($user) and isset($user['id'])){
                 $name =get_name($user['id']);
             }
             $messages['result'] = "success";
-            $messages['name'] = $name;
+            $messages['name'] = $name ;
             $messages['trackingCode'] = $request['transaction_id'];
             $messages['date'] = jdate("Y/m/d");
 
             $messages['amount'] = number_format($charity->amount) . " " . __('messages.rial');
 
-            if ($phone and $amount > 0) {
+            if ($phone and $amount > 0)
+            {
                 $smsData = [
                     'phone' => $phone,
                     'name' => $name,
@@ -828,7 +886,8 @@ class global_view extends Controller
                 "موسسه خیریه اشرف الانبیا(ص)" . " %0D%0A ";
 
             return view('global.callbackmain', compact('messages'));
-        } else {
+        }
+        else {
             $gateway = config('gateway.table', 'gateway_transactions');
             $data = \DB::table($gateway)->find($request['transaction_id']);
             if ($data->module == "charity_donate" || $data->module == "charity_vow") {
@@ -887,7 +946,6 @@ class global_view extends Controller
 
     public function t_profile()
     {
-
         if (isset($_GET['lt'])) {
             $user = User::where('login_token', $_GET['lt'])->first();
             if ($user) {
@@ -908,6 +966,9 @@ class global_view extends Controller
                 ['status', '=', 'unpaid'],
                 ['user_id', '=', Auth::id()],
             ])->count();
+        if ($unpaidPeriodCount == 0){
+            session(['unpaid_exist' => false]);
+        }
         $paidPeriodCount = charity_periods_transaction::where(
             [
                 ['status', '=', 'paid'],
@@ -925,7 +986,9 @@ class global_view extends Controller
                   'body'=>$notice->body,
                 ];
             });
-        return view('global.t-profile.index', compact('period', 'history', 'unpaidPeriodCount', 'paidPeriodAmount', 'paidPeriodCount','notifications'));
+        $pattern = charity_payment_patern::where('periodic', '1')->first();
+
+        return view('global.t-profile.index', compact('period','pattern', 'history', 'unpaidPeriodCount', 'paidPeriodAmount', 'paidPeriodCount','notifications'));
     }
 
     public function t_payment_history()
@@ -945,6 +1008,58 @@ class global_view extends Controller
         return view('global.t-profile.pay_history', compact('history', 'otherHistory'));
     }
 
+    public function t_payment_history_receipt($tracking_code){
+        $GT = gateway_transaction::where('tracking_code',$tracking_code)->firstOrFail();
+        $reason='-';
+        switch ($GT['module']){
+            case "charity_period":
+
+                $charity = charity_periods_transaction::withTrashed()->withoutGlobalScopes()->findOrFail($GT['module_id']);
+                $GT['name'] = get_name($charity['user_id']);
+                if ($charity['group_ids']){
+                    foreach (json_decode($charity->group_ids) as $id){
+                        $sub_routine = charity_periods_transaction::find($id);
+                        if ($sub_routine){
+                            $title = charity_payment_title::find($sub_routine['title_id'])['title'];
+                            $reason = $reason ." - " .$title;
+                        }
+                    }
+                    $reason = trim($reason,"-");
+                }
+                else{
+                    $title = charity_payment_title::find($charity['title_id'])['title'];
+                    if (strpos($reason, $title) !== false) {
+                        $reason .= $title;
+                    }
+                }
+                break;
+            case 'charity_donate' || 'charity_vow':
+                $charity = charity_transaction::withTrashed()->findOrFail($GT['module_id']);
+                $title = charity_payment_title::find($charity['title_id'])['title'];
+                $reason = $title['title'];
+                $GT['name'] = $charity['name'];
+
+                break;
+            default:
+        }
+        $messages['name']=$GT['name'];
+        $messages['date']=miladi_to_shamsi_date($GT['payment_date']);
+        $messages['amount']=number_format($GT['price']);
+        $messages['des']= $reason;
+        $messages['trackingCode'] =$tracking_code;
+        $messages['share'] =
+            "رسید پرداخت" . " %0D%0A " .
+            " %0D%0A " .
+            "نام نیکوکار:" . $GT['name'] . " %0D%0A " .
+            "مبلغ:" . number_format($GT['price']) . " %0D%0A " .
+            "در تاریخ:" . miladi_to_shamsi_date($GT['payment_date']) . " %0D%0A " .
+            ($reason ? "بابت:" . $reason . " %0D%0A " : "") .
+            ($GT['trackingCode'] ? "شماره پیگیری:" . $GT['trackingCode'] . " %0D%0A " : "") .
+            " %0D%0A " .
+            "موسسه خیریه اشرف الانبیا(ص)" . " %0D%0A ";
+
+        return view('global.callbackmain', compact('messages'));
+    }
     public function t_addresses()
     {
 
@@ -993,6 +1108,7 @@ class global_view extends Controller
                     'amount' => $total_amount,
                     'description' => "پرداخت کمک ماهانه / هفتگی",
                     'status' => "unpaid",
+                    'title_id' => "unpaid",
                     'group_ids' => json_encode($group_id),
                     'group_pay' => 1,
                 ]

@@ -30,7 +30,9 @@ class mailListener
     public function handle(payToCharityMoney $event)
     {
         try{
-            Mail::to($event->mailData['address'])->send(new payment_confirmation($event->mailData['messages']));
+            if (isset($event->mailData['address'])){
+                Mail::to($event->mailData['address'])->send(new payment_confirmation($event->mailData['messages']));
+            }
         }catch (\Throwable $e){
             Log::error($e);
         }

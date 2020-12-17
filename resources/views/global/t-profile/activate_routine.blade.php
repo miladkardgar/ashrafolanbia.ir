@@ -1,6 +1,4 @@
-<h2 class="notifications">{{isset($routine) ? "ویرایش کمک هفتگی یا ماهانه":"ایجاد کمک هفتگی یا ماهانه"}}</h2>
-<h4>لطفا موعد کمک ماهانه یا هفتگی خود را انتخاب کنید:</h4>
-
+<h3 class="notifications " style="color: black"><b>{!!isset($routine) ? __('long_msg.edit_routine'):__("long_msg.create_routine")  !!}</b></h3>
 
 <div class="">
     <div class="mrn-status-user-widget mt-2">
@@ -30,13 +28,9 @@
                                                   style="font-weight: bold">(فعال)</span>
                                 </div>
                             @endif
-
                         </h4>
                     </label>
-
                 </li>
-
-
 
             @endforeach
         </ul>

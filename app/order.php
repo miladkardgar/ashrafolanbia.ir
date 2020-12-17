@@ -36,4 +36,9 @@ class order extends Model
 
     }
 
+    public function transactions()
+    {
+        return $this->morphMany('App\gateway_transaction', 'modulable');
+    }
+
 }

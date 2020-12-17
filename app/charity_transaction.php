@@ -33,6 +33,18 @@ class charity_transaction extends Model
         where('module', '=', 'charity_donate')->orWhere
         ('module', '=', 'charity_vow');
     }
+
+    public function transaction()
+    {
+        return $this->belongsTo('App\gateway_transaction', 'trans_id');
+    }
+
+    public function transactions()
+    {
+        return $this->morphMany('App\gateway_transaction', 'modulable');
+    }
+
+
     public function gateway()
     {
         return $this->hasOne('App\gateway', 'id', 'gateway_id');

@@ -6,7 +6,7 @@
                 <th class="text-center">تاریخ پرداخت</th>
                 <th class="text-center">بابت</th>
                 <th class="text-center">شرح</th>
-                <th class="text-center">وضعیت</th>
+                <th class="text-center">کد رهگیری</th>
             </tr>
     @forelse($otherHistory as $item_o)
         <tr>
@@ -20,7 +20,12 @@
                 {{$item_o['title']['title'] ? " - ".$item_o['title']['title'] :""}}
             </td>
             <td class="text-center"> کمک موردی {{$item_o['id']}} </td>
-            <td class="text-center" ><span class="fa fa-check"></span> </td>
+            <td class="text-center" ><a target="_blank" href="{{route('t_payment_history_receipt',$item_o->transaction['tracking_code'])}}" class="text-info">
+                    <i class="fa fa-mouse-pointer"></i>
+                    {{$item_o->transaction['tracking_code']}}
+
+
+                </a></td>
         </tr>
                 @empty
 

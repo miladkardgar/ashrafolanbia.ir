@@ -38,7 +38,8 @@ class payment_confirmation extends Mailable
     public function build()
     {
 
-        return $this->view('global.callbackmain');
+        return $this->view('global.email.receipt')
+            ->subject("رسید تایید پرداخت نیکوکار");
 //        return view('global.callbackmain', compact('messages'));
 
     }

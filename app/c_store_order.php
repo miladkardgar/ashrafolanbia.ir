@@ -10,4 +10,9 @@ class c_store_order extends Model
     {
         return $this->hasMany('App\c_store_order_item','CSO_id');
     }
+
+    public function transactions()
+    {
+        return $this->morphMany('App\gateway_transaction', 'modulable');
+    }
 }

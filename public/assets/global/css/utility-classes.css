@@ -682,6 +682,7 @@ footer.bg-deep {
 .img-fullwidth {
   width: 100% !important;
   height: 100% !important;
+  border-radius: 15px;
   object-fit: cover;
 }
 /* -------- Absolute Image Positioning ---------- */

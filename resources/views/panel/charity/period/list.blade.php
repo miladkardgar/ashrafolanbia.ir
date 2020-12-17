@@ -46,13 +46,14 @@
             <section>
                 <div class="row text-center">
                     @permission('charity_periodic_view_active_users')
+                    @foreach($active_users as $active_user)
 
-                    <div class="col-sm-6 col-xl-3">
+                    <div class="col-sm-4 col-xl-2">
                         <div class="card card-body bg-success-400 has-bg-image">
                             <div class="media">
                                 <div class="media-body text-left">
-                                    <h3 class="mb-0">{{number_format($active_users)}}  </h3>
-                                    <span class="text-uppercase font-size-xs">نیکوکار فعال کمک ماهانه</span>
+                                    <h3 class="mb-0">{{number_format($active_user['count'])}}  </h3>
+                                    <span class="text-uppercase font-size-xs"> نیکوکار فعال  {{$active_user['title'] }}</span>
                                 </div>
                                 <div class="mr-3 align-self-center">
                                     <i class="icon-users icon-3x opacity-75"></i>
@@ -61,16 +62,18 @@
                             </div>
                         </div>
                     </div>
+                    @endforeach
                     @endpermission
+
                     @permission('charity_periodic_view_inactive_users')
 
-                    <div class="col-sm-6 col-xl-3">
+                    <div class="col-sm-4 col-xl-2">
 
                         <div class="card card-body bg-danger-400 has-bg-image">
                             <div class="media">
                                 <div class="media-body text-left">
                                     <h3 class="mb-0">{{number_format($inactive_users)}}  </h3>
-                                    <span class="text-uppercase font-size-xs">نیکوکار بدون کمک ماهانه</span>
+                                    <span class="text-uppercase font-size-xs">نیکوکار بدون کمک ماهانه/هفتگي</span>
                                 </div>
                                 <div class="mr-3 align-self-center">
                                     <i class="icon-user-cancel icon-3x opacity-75"></i>
@@ -186,7 +189,11 @@
                                             <a href="#" data-param="status" data-value="all"
                                                class="dropdown-item t_filter">همه</a>
                                             <a href="#" data-param="status"
-                                               data-value="active" class="dropdown-item t_filter">فعال ها</a>
+                                               data-value="active" class="dropdown-item t_filter">همه فعال ها</a>
+                                            <a href="#" data-param="status"
+                                               data-value="active-0" class="dropdown-item t_filter">فعال كمك هفتگي</a>
+                                            <a href="#" data-param="status"
+                                               data-value="active-1" class="dropdown-item t_filter">فعال كمك ماهانه</a>
                                             <a href="#" data-param="status"
                                                data-value="inactive" class="dropdown-item t_filter">غیر فعال ها</a>
                                         </div>
@@ -247,10 +254,8 @@
                 </div>
                 <!-- /search field -->
                 <div class="card">
-
                     <div class="card-body table-responsive tableFixHead">
                         @include('panel.charity.period.table')
-
                     </div>
                     <div class="card-footer">
                     {{$users->appends(request()->except('page'))->links()}}

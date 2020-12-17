@@ -13,6 +13,7 @@ use App\building_ticket;
 use App\building_type;
 use App\building_type_itme;
 use App\building_user;
+use App\c_store_order;
 use App\c_store_setting;
 use App\caravan_doc;
 use App\caravan_host;
@@ -30,6 +31,7 @@ use App\Events\c_storePaymentAlert;
 use App\Events\payToCharityMoney;
 use App\Exports\InvoicesExport_charity_other_payments;
 use App\Exports\InvoicesExport_charity_routine;
+use App\Exports\InvoicesExport_mega_report;
 use App\gallery_category;
 use App\gateway;
 use App\gateway_transaction;
@@ -878,10 +880,11 @@ class panel_view extends Controller
         $banks = bank::groupBy('name')->get();
         return view('panel.charity.setting.payment_titles', compact('periodic_title', 'system_title', 'other_titles', 'deleted_titles', 'champion_titles', 'banks', 'champions'));
     }
+
     public function charity_payment_title_titles()
     {
         $titles = charity_payment_title::all();
-        return view('panel.charity.setting.titles',compact('titles'));
+        return view('panel.charity.setting.titles', compact('titles'));
     }
 
 
@@ -912,6 +915,16 @@ class panel_view extends Controller
                     break;
                 case 'active':
                     $user_query->whereHas('routine');
+                    break;
+                case 'active-0':
+                    $user_query->whereHas('routine', function ($q) {
+                        $q->where('period', 0);
+                    });
+                    break;
+                case 'active-1':
+                    $user_query->whereHas('routine', function ($q) {
+                        $q->where('period', 1);
+                    });
                     break;
                 case 'inactive':
                     $user_query->whereDoesntHave('routine');
@@ -1059,7 +1072,6 @@ class panel_view extends Controller
         if ($request['excel']) {
 
             $users = $this->charity_period_list_data($request, 0);
-
             $export = new InvoicesExport_charity_routine([
                 'users' => $users,
             ]);
@@ -1068,7 +1080,16 @@ class panel_view extends Controller
         } else {
             $users = $this->charity_period_list_data($request, 100);
             $count = $users->total();
-            $active_users = User::whereHas('routine')->count();
+            $routine_types = Config::get('charity.routine_types');
+            $active_users = [];
+            foreach ($routine_types as $key => $value) {
+                $active_users[$key] = [
+                    'title' => $value['title'],
+                    'count' => User::whereHas('routine', function ($q) use ($key) {
+                        $q->where('period', $key);
+                    })->count(),
+                ];
+            }
             $inactive_users = User::whereDoesntHave('routine')->count();
             $paid_routine = charity_periods_transaction::whereNotNull('pay_date')->count();
             $unpaid_routine = charity_periods_transaction::whereNull('pay_date')->count();
@@ -1085,7 +1106,13 @@ class panel_view extends Controller
 
                         break;
                     case 'active':
+                        $status = "دارای کمک ماهانه/هفتگي فعال";
+                        break;
+                    case 'active-1':
                         $status = "دارای کمک ماهانه فعال";
+                        break;
+                    case 'active-0':
+                        $status = "دارای کمک هفتگي فعال";
                         break;
                     case 'inactive':
                         $status = "بدون کمک ماهانه";
@@ -1313,111 +1340,179 @@ class panel_view extends Controller
         $selected_titles = charity_payment_title::limit(1)->get()->mapWithKeys(function ($title) {
             return [$title['id'] => $title['id']];
         })->toArray();
+        if ($request->titles) {
+            $selected_titles = $request->titles;
+        }
+        //=================
 
+        $selected_gateways = gateway::get()->mapWithKeys(function ($gateway) {
+            return [$gateway['id'] => $gateway['id']];
+        })->toArray();
+        if ($request->gateways) {
+            $selected_gateways = $request->gateways;
+        }
+        //=================
 
         $start_date = date("Y-m-d", strtotime(date('Y-m-d') . " -1 month"));
         $end_date = date("Y-m-d");
-        $with_fails = $request->with_fails;
-        $list_type = 'others';
         if ($request->start_date) {
             $start_date = shamsi_to_miladi($request->start_date);
         }
         if ($request->end_date) {
             $end_date = shamsi_to_miladi($request->end_date);
         }
-        if ($request->titles) {
-            $selected_titles = $request->titles;
-        }
+        //================
+
+        $with_fails = $request->with_fails;
+        //================
+
+        $list_type = 'others';
         if ($request->list_type) {
             $list_type = $request->list_type;
         }
-        $sum_data = $this->get_charity_sum_report($start_date,$end_date,$selected_titles);
-        $bank_balances = $this->get_bank_sum_report($start_date,$end_date,$selected_titles);
-        $charity_titles = $this->get_title_sum_report($start_date,$end_date);
+        //=================
 
-        $vow_list = $this->get_charity_list_of_transactions($start_date,$end_date,$selected_titles,$with_fails,$list_type);
-        return view('panel.charity.reports.megaReport',
-            compact('charity_titles', 'with_fails', 'selected_titles', 'start_date',
-                'end_date','sum_data','bank_balances','vow_list','list_type')
-        );
+        if ($request['excel']) {
+            if ((strtotime($end_date) - strtotime($start_date)) / (60 * 60 * 24) > 62) {
+                return back_error($request, ['بازه گزارش گيري نبايد بيشتر از 62 روز باشد']);
+            } else {
+                $vow_list = $this->get_charity_list_of_transactions($start_date, $end_date, $selected_titles, $with_fails, $list_type, $selected_gateways, true);
+
+                $export = new InvoicesExport_mega_report([
+                    'vow_list' => $vow_list,
+                ]);
+            }
+            return Excel::download($export, 'Report.xlsx');
+        }
+        else {
+            $sum_data = $this->get_charity_sum_report($start_date, $end_date, $selected_titles, $selected_gateways);
+            $bank_balances = $this->get_bank_sum_report($start_date, $end_date, $selected_titles, $selected_gateways);
+            $charity_titles = $this->get_title_sum_report($start_date, $end_date, $selected_gateways, $selected_gateways);
+            $vow_list = $this->get_charity_list_of_transactions($start_date, $end_date, $selected_titles, $with_fails, $list_type, $selected_gateways);
+
+            return view('panel.charity.reports.megaReport',
+                compact('charity_titles', 'with_fails', 'selected_titles', 'start_date',
+                    'end_date', 'sum_data', 'bank_balances', 'vow_list', 'list_type', 'selected_gateways')
+            );
+        }
     }
 
-    private function get_charity_list_of_transactions($start_date, $end_date,$titles,$with_fails,$type){
-        if ($type == 'routine') {
+    private function get_charity_list_of_transactions($start_date, $end_date, $titles, $with_fails, $type, $selected_gateways, $excel = false)
+    {
+        if ($type == 'routine')
+        {
             $routine_vow_query = charity_periods_transaction::query();
+            $routine_vow_query->with('transaction');
             $routine_vow_query->where('group_pay', 0);
             $routine_vow_query->where('status', 'paid');
             $routine_vow_query->with('title');
             $routine_vow_query->whereIn('title_id', $titles);
+            $routine_vow_query->whereIn('gateway_id', $selected_gateways);
             $routine_vow_query->whereBetween('pay_date', [$start_date, $end_date]);
-            $routine_vow = $routine_vow_query->orderBy('pay_date', 'desc')
-                ->paginate('33');
-            $routine_vow->getCollection();
+            $routine_vow_query->orderBy('pay_date', 'desc');
+            if ($excel) {
+                $routine_vow = $routine_vow_query->get();
+            } else {
+                $routine_vow = $routine_vow_query->paginate('33');
+                $routine_vow->getCollection();
+            }
             $routine_vow->transform(function ($vow) {
 
                 $vow->gateway = gateway::find($vow['gateway_id'])['title'];
                 $vow->status = __('messages.' . $vow['status']);
                 $vow->payDate = miladi_to_shamsi_date($vow['pay_date']);
                 $vow->patern = ['title' => "کمک ماهانه/هفتگی"];
+                $vow->tracking_code = $vow->transaction->tracking_code ?? "";
 
                 return $vow;
             });
             return $routine_vow;
-        }elseif ($type == 'others'){
+        }
+        elseif ($type == 'others') {
             $other_vow_query = charity_transaction::query();
-            $other_vow_query->whereIn('title_id',$titles);
+            $other_vow_query->whereIn('title_id', $titles);
+            $other_vow_query->with('transaction');
+            $other_vow_query->whereIn('gateway_id', $selected_gateways);
             $other_vow_query->whereNotIn('charity_id', [3]);
             $other_vow_query->with('patern', 'title');
             $other_vow_query->whereBetween('payment_date', [$start_date, $end_date]);
-            if (!$with_fails){
+            if (!$with_fails) {
                 $other_vow_query->where('status', 'success');
             }
-            $other_vows = $other_vow_query->orderBy('id','desc')
-                ->paginate('33');
-            $other_vows->getCollection();
-            $other_vows->transform(function ($vow){
+            $other_vow_query->orderBy('id', 'desc');
+            if ($excel) {
+                $other_vows = $other_vow_query->get();
+            } else {
+                $other_vows = $other_vow_query->paginate('33');
+                $other_vows->getCollection();
+            }
+            $other_vows->transform(function ($vow) {
 
                 $vow->gateway = gateway::find($vow['gateway_id'])['title'];
                 $vow->status = __('messages.' . $vow['status']);
                 $vow->payDate = miladi_to_shamsi_date($vow['payment_date']);
+                $vow->tracking_code = $vow->transaction->tracking_code ?? "";
 
                 return $vow;
             });
 
             return $other_vows;
-        }else{
+        } else {
             return [];
         }
 
     }
 
-    private function get_charity_sum_report($start_date, $end_date,$titles)
+    private function get_charity_sum_report($start_date, $end_date, $titles, $selected_gateways)
     {
-        $system_vow = charity_transaction::whereIn('title_id',$titles)->where('charity_id', 2)->whereBetween('payment_date', [$start_date, $end_date])->where('status', 'success')->sum('amount');
-        $other_vow = charity_transaction::whereIn('title_id',$titles)->whereNotIn('charity_id', [1,2,3])->whereBetween('payment_date', [$start_date, $end_date])->where('status', 'success')->sum('amount');
-        $routine_vow = charity_periods_transaction::whereIn('title_id',$titles)->whereBetween('pay_date', [$start_date, $end_date])->where('group_pay', 0)->where('status', 'paid')->sum('amount');
+        $system_vow = charity_transaction::whereIn('title_id', $titles)->whereIn('gateway_id', $selected_gateways)->where('charity_id', 2)->whereBetween('payment_date', [$start_date, $end_date])->where('status', 'success')->sum('amount');
+        $other_vow = charity_transaction::whereIn('title_id', $titles)->whereIn('gateway_id', $selected_gateways)->whereNotIn('charity_id', [1, 2, 3])->whereBetween('payment_date', [$start_date, $end_date])->where('status', 'success')->sum('amount');
+        $routine_vow = charity_periods_transaction::whereIn('title_id', $titles)->whereIn('gateway_id', $selected_gateways)->whereBetween('pay_date', [$start_date, $end_date])->where('group_pay', 0)->where('status', 'paid')->sum('amount');
         return [
             "system_vow" => $system_vow,
             "other_vow" => $other_vow,
             "routine_vow" => $routine_vow,
         ];
     }
-    private function get_bank_sum_report($start_date, $end_date,$titles)
-    {
-        $gateways = gateway::get()->transform(function ($gateway)use ($start_date, $end_date,$titles){
-            $charity_vow = charity_transaction::whereIn('title_id',$titles)->where('gateway_id',$gateway['id'])->whereNotIn('charity_id', [1,3])->whereBetween('payment_date', [$start_date, $end_date])->where('status', 'success')->sum('amount');
-            $routine_vow = charity_periods_transaction::whereIn('title_id',$titles)->where('gateway_id',$gateway['id'])->whereBetween('pay_date', [$start_date, $end_date])->where('group_pay', 0)->where('status', 'paid')->sum('amount');
 
+    private function get_bank_sum_report($start_date, $end_date, $titles, $selected_gateways)
+    {
+        $gateways = gateway::whereIn('id', $selected_gateways)->get()->transform(function ($gateway) use ($start_date, $end_date, $titles) {
+            $charity_vow = charity_transaction::whereIn('title_id', $titles)->where('gateway_id', $gateway['id'])->whereNotIn('charity_id', [1, 3])->whereBetween('payment_date', [$start_date, $end_date])->where('status', 'success')->sum('amount');
+            $routine_vow = charity_periods_transaction::whereIn('title_id', $titles)->where('gateway_id', $gateway['id'])->whereBetween('pay_date', [$start_date, $end_date])->where('group_pay', 0)->where('status', 'paid')->sum('amount');
+//            $sum = gateway_transaction::where('port',$gateway['port_name'])
+////                ->where('status','status')->whereHas('modulable',function ($q){
+////
+////                });
+//            $trans = gateway_transaction::where('status','SUCCEED')
+//                ->whereBetween('payment_date', [$start_date, $end_date])
+//                ->where('port',$gateway['port_name'])
+//                ->whereHasMorph('modulable',
+//                    [
+////                        charity_transaction::class,
+//                        charity_periods_transaction::class,
+////                        champion_transaction::class,
+////                        order::class,
+////                        c_store_order::class,
+//                    ],
+//                    function ($q) use ($titles){
+////                        $column = in_array($type,[
+////                            charity_transaction::class,
+////                            charity_periods_transaction::class,
+////                        ]) ? 'title_id' : 'created_at';
+//
+////                        $q->whereIn('title_id', $titles);
+//                    })->sum('price');
             $gateway->balance = $charity_vow + $routine_vow;
             return $gateway;
         });
         return $gateways;
     }
 
-    private function get_title_sum_report($start_date, $end_date)
+    private function get_title_sum_report($start_date, $end_date, $selected_gateways)
     {
-        $charity_titles = charity_payment_title::get()->transform(function ($title)use ($start_date,$end_date){
-            $charity_vow = charity_transaction::where('title_id',$title['id'])->whereNotIn('charity_id', [3])->whereBetween('payment_date', [$start_date, $end_date])->where('status', 'success')->sum('amount');
+        $charity_titles = charity_payment_title::get()->transform(function ($title) use ($start_date, $end_date, $selected_gateways) {
+            $charity_vow = charity_transaction::whereIn('id', $selected_gateways)->where('title_id', $title['id'])->whereNotIn('charity_id', [3])->whereBetween('payment_date', [$start_date, $end_date])->where('status', 'success')->sum('amount');
             $routine_vow = 0;
             $title->balance = $charity_vow + $routine_vow;
             return $title;
@@ -1737,11 +1832,19 @@ class panel_view extends Controller
 
     public function test()
     {
-//        $routines = charity_period::withTrashed()->get();
-//        foreach ($routines as $routine){
-//            $routine['increased_at'] = $routine['updated_at'];
-//            $routine->save();
-//        }
-        return "done";
+        $trans = gateway_transaction::where('status','SUCCEED')
+            ->whereHasMorph('modulable',
+                [
+                        charity_transaction::class,
+                    charity_periods_transaction::class,
+//                        champion_transaction::class,
+//                        order::class,
+//                        c_store_order::class,
+                ],
+                function ($q,$type) {
+                    $q->where('title_id',3);
+                })->get();
+
+        dd($trans);
     }
 }

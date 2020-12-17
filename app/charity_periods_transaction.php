@@ -42,6 +42,16 @@ class charity_periods_transaction extends Model
         return $this->hasMany('App\gateway_transaction', 'module_id', 'id')->
         where('module', '=', 'charity_period');
     }
+    public function transaction()
+    {
+        return $this->belongsTo('App\gateway_transaction', 'trans_id');
+    }
+
+    public function transactions()
+    {
+        return $this->morphMany('App\gateway_transaction', 'modulable');
+    }
+
     public function title()
     {
         return $this->belongsTo('App\charity_payment_title','title_id');

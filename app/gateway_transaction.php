@@ -7,12 +7,16 @@ use Illuminate\Database\Eloquent\Model;
 class gateway_transaction extends Model
 {
     //
+    public function modulable()
+    {
+        return $this->morphTo(__FUNCTION__, 'module', 'module_id');
+    }
+
 
     public function charity()
     {
         return $this->belongsTo('App\charity_transaction', 'id', 'module_id');
     }
-
 
     public function charityInfo()
     {

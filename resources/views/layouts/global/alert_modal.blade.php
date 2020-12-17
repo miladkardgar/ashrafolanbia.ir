@@ -1,4 +1,5 @@
-<div id="routine-deactive" class="modal fade" role="dialog">
+<div id="routine-deactive" class="modal fade" role="dialog" data-keyboard="false" data-backdrop="static">
+
     <div class="modal-dialog">
     @if(Session::get('ask_for_increase'))
         <!-- Modal content-->
@@ -11,13 +12,12 @@
                             <b>
                                 {{get_name($user['id'])}}
                             </b>
-                            ضمن تشکر از همراهی شما با موسسه خیریه اشرف الانبیاء(ص)
+                            {{__('long_msg.ask_for_increase_title')}}
                             <br>
                         </h3>
-
                         <p>
-    با توجه به افزایش نرخ تورم، و افزایش هزینه های اجرایی، و با توجه به گذشت مدتی از ثبت مبلغ کمک شما در صورت تمایل نسبت به افزایش مبلغ همایت خود اقدام نمایید
-</p>
+                            {{__('long_msg.ask_for_increase_message')}}
+                        </p>
 
                 </div>
 
@@ -25,10 +25,10 @@
                     <a href="{{route('t_routine_vow')}}" class="button mrn-button-success pull-right" name="submit-btn"
                        type="submit"
                     >
-                        صفحه ویرایش کمک ماهانه/هفتگی
+                        {{__('words.yes_increase')}}
                     </a>
                     <button type="button" class="button mrn-button-danger center" data-dismiss="modal">
-                        فعلا نه، شاید زمانی دیگر
+                        {{__('words.no_maybe_later')}}
                     </button>
                 </div>
             </div>

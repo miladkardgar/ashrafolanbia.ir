@@ -6,6 +6,7 @@ use App\charity_period;
 use App\charity_periods_transaction;
 use App\User;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
@@ -69,7 +70,7 @@ class CreateCharityPeriod extends Command
                             'title_id' => $item['title_id'],
                             'payment_date' => $item['next_date'],
                             'amount' => $item['amount'],
-                            'description' => $item['id'] . " " . ($description ? $description : "پرداخت دوره ای "),
+                            'description' =>  Config::get('charity.routine_types.'.$item['period'].".title"),
                             'status' => "unpaid",
                             'slug' => $random,
                         ]

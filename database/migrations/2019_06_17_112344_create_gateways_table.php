@@ -34,6 +34,7 @@ class CreateGatewaysTable extends Migration
             $table->integer('cart')->nullable();
             $table->integer('account')->nullable();
             $table->string('function_name')->nullable();
+            $table->string('port_name')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

@@ -127,7 +127,7 @@ class charity extends Controller
                 ['user_id', '=', $request['user_id']]
             ])
             ->with('gateway')->get();
-        $periodInfo = charity_period::findOrFail($request['id']);
+        $periodInfo = charity_period::find($request['id']);
 
 
         $routine = charity_period::where('user_id', $request['user_id'])->first();

@@ -133,6 +133,7 @@
                                     <tr>
                                         <th>{{__('messages.id')}}</th>
                                         <th>{{__('messages.name_family')}}</th>
+                                        <th>{{__('messages.phone')}}</th>
                                         <th>{{__('messages.amount')}}</th>
                                         <th>{{{__('messages.it\'s_over_date')}}}</th>
                                         <th>{{__('messages.payment_date')}}</th>
@@ -147,7 +148,8 @@
                                         @if($payment['status']!='paid')
                                             <tr>
                                                 <td>{{$i}}</td>
-                                                <td>{{$payment['period']['user']['people']['name']}} {{$payment['period']['user']['people']['family']}}</td>
+                                                <td>{{get_name($payment['period']['user']['id'])}}</td>
+                                                <td>{{$payment['period']['user']['phone']}}</td>
                                                 <td>{{number_format($payment['amount'])}} {{__('messages.rial')}}</td>
                                                 <td>
                                                     @if($payment['payment_date'])
@@ -206,7 +208,7 @@
                                         @if($payment['status']=='paid')
                                             <tr>
                                                 <td>{{$i}}</td>
-                                                <td>{{$payment['period']['user']['people']['name']}} {{$payment['period']['user']['people']['family']}}</td>
+                                                <td>{{get_name($payment['period']['user']['id'])}}</td>
                                                 <td>{{number_format($payment['amount'])}} {{__('messages.rial')}}</td>
                                                 <td>{{$payment['gateway']['title']}}</td>
                                                 <td>

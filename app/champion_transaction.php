@@ -30,4 +30,9 @@ class champion_transaction extends Model
     {
         return $this->hasOne('App\gateway', 'id','gateway_id');
     }
+
+    public function transactions()
+    {
+        return $this->morphMany('App\gateway_transaction', 'modulable');
+    }
 }
