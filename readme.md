@@ -27,4 +27,3 @@
 -Milad Kardgar mk.kardgar@gmail.com +989126842114
 
 
--Mehran Marandi mehranmarandi90@gmail.com +989365944410
